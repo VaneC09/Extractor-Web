@@ -1,0 +1,39 @@
+# Escenario F10 — Respuesta 429 (límite de tasa): parada inmediata, sin reintentos.
+version: 1
+project:
+  name: f10-limite-tasa
+  description: El servidor indica exceso de solicitudes con 429 + Retry-After.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/barrier/limite"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Comprobar la parada segura ante límites de tasa"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/barrier/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 3
+  max_records: 10
+  max_requests: 5
+  max_seconds: 30
+  delay_seconds: 0.2
+  timeout_seconds: 5
+  max_retries: 2
+
+extraction:
+  method: static_html
+  record_selector: "article"
+  fields:
+    - {name: texto, required: true}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

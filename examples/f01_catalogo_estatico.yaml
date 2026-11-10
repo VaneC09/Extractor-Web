@@ -1,0 +1,68 @@
+# Escenario F01 — HTML estático con paginación por enlace "Siguiente".
+# Fixture local controlado (datos ficticios). Método: Requests + BeautifulSoup.
+version: 1
+project:
+  name: f01-catalogo-estatico
+  description: Catálogo de papelería ficticio paginado (3 páginas, con un duplicado y precios sucios).
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/static/catalogo?page=1"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de la herramienta con datos ficticios"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/static/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true   # solo válido para fixtures locales
+  respect_robots_txt: true
+
+limits:
+  max_pages: 5
+  max_records: 50
+  max_requests: 10
+  max_seconds: 60
+  delay_seconds: 0.2            # local; para sitios remotos el mínimo es 1 s
+  timeout_seconds: 5
+  max_retries: 1
+
+extraction:
+  method: static_html
+  record_selector: "article.product"
+  pagination:
+    mode: next_link
+    next_selector: "a.next"
+  deduplicate_on: [sku]
+  fields:
+    - name: sku
+      attribute: data-sku
+      required: true
+      validate: {regex: "SKU-\\d{3}"}
+    - name: nombre
+      selector: ".product-name"
+      required: true
+      normalize: [collapse_whitespace]
+    - name: precio
+      selector: ".price"
+      type: float
+      normalize: [remove_currency, thousands_comma, empty_to_none]
+      validate: {min: 0, max: 100000}
+    - name: disponible
+      selector: ".stock"
+      type: boolean
+    - name: actualizado
+      selector: "time.updated"
+      attribute: datetime
+      type: date
+    - name: url_detalle
+      selector: "a.detail"
+      attribute: href
+      type: url
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

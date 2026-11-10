@@ -1,0 +1,8 @@
+# Dependencias de ejecución. Rangos acotados; las versiones mínimas son las verificadas
+# en el entorno de desarrollo (Python 3.12, noviembre de 2026). Ver docs/informe_tecnico.md.
+requests>=2.32,<3
+beautifulsoup4>=4.12,<5
+selenium>=4.20,<5
+pandas>=2.2,<4
+pydantic>=2.7,<3
+PyYAML>=6.0,<7

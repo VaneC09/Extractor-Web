@@ -1,0 +1,51 @@
+# Escenario F06 — API pública y documentada (JSON) con paginación declarada en la respuesta.
+# La API está documentada en /api/docs.html; sin documented+documentation_url no se ejecuta.
+version: 1
+project:
+  name: f06-api-documentada
+  description: Productos ficticios desde una API JSON documentada.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/api/v1/products"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de consumo de API documentada"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/api/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 5
+  max_records: 100
+  max_requests: 8
+  max_seconds: 30
+  delay_seconds: 0.2   # la documentación ficticia publica 1 sol/s; en local se acelera la prueba
+  timeout_seconds: 5
+
+extraction:
+  method: api
+  records_path: data
+  api:
+    documented: true
+    documentation_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/api/docs.html"
+  pagination:
+    mode: next_field
+    next_field: links.next
+  deduplicate_on: [id]
+  fields:
+    - {name: id, path: id, type: integer, required: true}
+    - {name: nombre, path: name, required: true}
+    - {name: precio, path: price.amount, type: float, validate: {min: 0}}
+    - {name: moneda, path: price.currency, validate: {choices: [MXN]}}
+    - {name: categoria, path: category}
+    - {name: activo, path: active, type: boolean}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

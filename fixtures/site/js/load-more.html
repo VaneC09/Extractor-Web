@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Eventos (carga bajo demanda)</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script>
+    // 14 eventos ficticios; se muestran de 4 en 4 al pulsar «Cargar más».
+    const EVENTOS = Array.from({ length: 14 }, (_, i) => ({
+      codigo: `EV-${String(i + 1).padStart(3, "0")}`,
+      nombre: `Evento comunitario ${i + 1}`,
+      cupo: 20 + (i * 7) % 30,
+      sede: ["Centro", "Norte", "Sur"][i % 3]
+    }));
+    let visibles = 0;
+    function render() {
+      const lista = document.getElementById("lista");
+      EVENTOS.slice(visibles, visibles + 4).forEach(e => {
+        const li = document.createElement("li");
+        li.className = "event";
+        li.innerHTML = `<span class="code">${e.codigo}</span> <strong class="name">${e.nombre}</strong>
+                        <span class="seats">${e.cupo} lugares</span> <em class="venue">${e.sede}</em>`;
+        lista.appendChild(li);
+      });
+      visibles += 4;
+      if (visibles >= EVENTOS.length) document.getElementById("load-more").remove();
+    }
+    window.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("root").innerHTML =
+        '<h1>Eventos</h1><ul id="lista"></ul><button id="load-more" type="button">Cargar más</button>';
+      document.getElementById("load-more").addEventListener("click", () => setTimeout(render, 200));
+      render();
+    });
+  </script>
+</body>
+</html>

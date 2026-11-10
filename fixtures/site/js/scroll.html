@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Galería (scroll infinito)</title>
+  <style>.photo{height:260px;border-bottom:1px solid #ddd}</style>
+</head>
+<body>
+  <h1>Galería de obras (ficticias)</h1>
+  <div id="feed" class="infinite-scroll"></div>
+  <div id="sentinel"></div>
+  <script>
+    // 20 obras ficticias en lotes de 5; se cargan al acercarse al final (IntersectionObserver).
+    const OBRAS = Array.from({ length: 20 }, (_, i) => ({
+      id: i + 1, titulo: `Obra número ${i + 1}`, autor: `Autor ficticio ${(i % 4) + 1}`, anio: 1990 + i
+    }));
+    let cargadas = 0;
+    function lote() {
+      const feed = document.getElementById("feed");
+      OBRAS.slice(cargadas, cargadas + 5).forEach(o => {
+        const div = document.createElement("div");
+        div.className = "photo";
+        div.innerHTML = `<h3 class="title">${o.titulo}</h3><p class="author">${o.autor}</p><p class="year">${o.anio}</p>`;
+        feed.appendChild(div);
+      });
+      cargadas += 5;
+    }
+    lote();
+    new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && cargadas < OBRAS.length) setTimeout(lote, 250);
+    }).observe(document.getElementById("sentinel"));
+  </script>
+</body>
+</html>

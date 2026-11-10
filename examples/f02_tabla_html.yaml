@@ -1,0 +1,47 @@
+# Escenario F02 — Tabla HTML con encabezados, separadores de miles y valores faltantes.
+version: 1
+project:
+  name: f02-tabla-html
+  description: Indicadores municipales ficticios en una tabla HTML.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/static/tabla.html"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de extracción de tablas"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/static/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 100
+  max_requests: 4
+  max_seconds: 30
+  delay_seconds: 0.2
+  timeout_seconds: 5
+
+extraction:
+  method: static_html
+  table_selector: "table#indicadores"
+  deduplicate_on: [municipio, anio]
+  fields:
+    - {name: municipio, column: "Municipio", required: true, normalize: [collapse_whitespace]}
+    - {name: anio, column: "Año", type: integer, validate: {min: 2000, max: 2100}}
+    - {name: poblacion, column: "Población", type: integer, normalize: [thousands_comma, empty_to_none]}
+    - name: tasa_empleo
+      column: "Tasa de empleo (%)"
+      type: float
+      normalize: [remove_percent, empty_to_none]
+      validate: {min: 0, max: 100}
+    - {name: actualizado, column: "Actualizado", type: date, date_format: "%d/%m/%Y"}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

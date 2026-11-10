@@ -1,0 +1,39 @@
+# Escenario F11 — Ruta prohibida por robots.txt: no se solicita y se registra incidencia de política.
+version: 1
+project:
+  name: f11-robots-prohibido
+  description: Recurso bajo /privado/, prohibido por robots.txt del fixture.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/privado/datos.html"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Comprobar el respeto a robots.txt"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/privado/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+  respect_robots_txt: true
+
+limits:
+  max_pages: 1
+  max_records: 10
+  max_requests: 3
+  max_seconds: 30
+  delay_seconds: 0.2
+  timeout_seconds: 5
+
+extraction:
+  method: static_html
+  record_selector: "h1"
+  fields:
+    - {name: texto, required: true}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

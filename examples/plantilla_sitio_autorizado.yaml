@@ -1,0 +1,53 @@
+# Plantilla para un sitio REAL. Sustituya los placeholders SOLO cuando tenga autorización.
+# Mientras authorization.confirmed sea false, la herramienta solo permite validar la
+# configuración y (si se indica authorized_by) un diagnóstico pasivo de 1-2 solicitudes.
+version: 1
+project:
+  name: sitio-autorizado-ejemplo
+  description: "PLACEHOLDER — describa el conjunto de datos autorizado"
+target_url: "https://www.example.org/ruta/autorizada"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico; contacto: correo-del-equipo@example.org)"
+
+authorization:
+  confirmed: false                 # true solo con permiso verificable
+  authorized_by: null              # p. ej. "Nombre, cargo, organización propietaria"
+  purpose: null                    # finalidad concreta y limitada
+  terms_reviewed: false            # términos de uso, licencia y políticas revisados
+  evidence_reference: null         # p. ej. "Correo del 2026-11-01, ticket #123"
+  environment: production
+  allow_authentication: false
+  personal_data: none
+  valid_until: null                # p. ej. 2026-12-31
+
+scope:
+  allowed_domains: ["www.example.org"]
+  allowed_path_prefixes: ["/ruta/autorizada"]
+  allowed_schemes: ["https"]
+  allow_private_network: false
+  respect_robots_txt: true
+
+limits:                            # conservadores por defecto
+  max_pages: 2
+  max_records: 50
+  max_requests: 5
+  max_seconds: 120
+  delay_seconds: 3.0
+  timeout_seconds: 15
+  max_retries: 1
+
+diagnosis:
+  max_requests: 2
+  render_with_browser: false
+
+extraction:
+  method: auto                     # elija un método explícito tras el diagnóstico
+  record_selector: "PLACEHOLDER .registro"
+  fields:
+    - name: titulo
+      selector: "PLACEHOLDER .titulo"
+      required: true
+      normalize: [collapse_whitespace]
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

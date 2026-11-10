@@ -1,0 +1,46 @@
+# Escenario F05 — Scroll infinito con tope explícito (max_scrolls).
+# Hay 20 obras en lotes de 5; con max_scrolls=2 se obtienen 15.
+version: 1
+project:
+  name: f05-scroll-infinito
+  description: Galería ficticia que carga al desplazarse.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/js/scroll.html"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de scroll infinito acotado"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/js/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 50
+  max_requests: 6
+  max_scrolls: 2
+  max_seconds: 60
+  delay_seconds: 0.3
+  timeout_seconds: 10
+
+extraction:
+  method: browser
+  record_selector: "div.photo"
+  browser:
+    infinite_scroll: true
+    scroll_pause_seconds: 0.3
+    wait_timeout_seconds: 4
+  fields:
+    - {name: titulo, selector: ".title", required: true}
+    - {name: autor, selector: ".author"}
+    - {name: anio, selector: ".year", type: integer, validate: {min: 1900, max: 2100}}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

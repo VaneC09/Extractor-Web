@@ -1,0 +1,48 @@
+# Escenario F04 — Botón «Cargar más» con tope explícito de clics (max_clicks).
+# Hay 14 eventos; con max_clicks=2 se obtienen 12 y la ejecución queda "completado_con_limites".
+version: 1
+project:
+  name: f04-cargar-mas
+  description: Eventos ficticios cargados bajo demanda.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/js/load-more.html"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de carga bajo demanda"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/js/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 50
+  max_requests: 6
+  max_clicks: 2
+  max_seconds: 60
+  delay_seconds: 0.3
+  timeout_seconds: 10
+
+extraction:
+  method: browser
+  record_selector: "li.event"
+  browser:
+    wait_selector: "li.event"
+    load_more_selector: "#load-more"
+    wait_timeout_seconds: 5
+  deduplicate_on: [codigo]
+  fields:
+    - {name: codigo, selector: ".code", required: true, validate: {regex: "EV-\\d{3}"}}
+    - {name: nombre, selector: ".name", required: true}
+    - {name: lugares, selector: ".seats", type: integer, pattern: "(\\d+)"}
+    - {name: sede, selector: ".venue", validate: {choices: [Centro, Norte, Sur]}}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

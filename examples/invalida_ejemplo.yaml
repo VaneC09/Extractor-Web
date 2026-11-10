@@ -1,0 +1,19 @@
+# Configuración INTENCIONALMENTE inválida: sirve para demostrar el rechazo con mensajes claros.
+version: 1
+project:
+  name: Invalida Con Espacios
+target_url: "ftp://datos.example.org/archivo.csv"
+password: "nunca-aqui"
+scope:
+  allowed_domains: ["datos.example.org"]
+limits:
+  delay_seconds: 0
+  max_requests: 100000
+extraction:
+  method: static_html
+  fields:
+    - name: curp
+      selector: ".curp"
+    - name: precio
+      type: dinero
+      normalize: [quitar_todo]

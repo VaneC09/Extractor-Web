@@ -1,0 +1,50 @@
+# Escenario F03 — Contenido renderizado con JavaScript (SPA). Método: Selenium (Chrome headless).
+version: 1
+project:
+  name: f03-js-renderizado
+  description: Novedades ficticias generadas en el navegador tras la carga.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/js/render.html"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de contenido renderizado"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/js/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 20
+  max_requests: 4
+  max_seconds: 60
+  delay_seconds: 0.2
+  timeout_seconds: 10
+
+diagnosis:
+  render_with_browser: true
+
+extraction:
+  method: browser
+  record_selector: "article.news-item"
+  browser:
+    wait_selector: "article.news-item"
+    wait_timeout_seconds: 5
+  fields:
+    - {name: id, attribute: data-id, required: true}
+    - {name: titulo, selector: ".headline", required: true}
+    - {name: fecha, selector: "time.date", attribute: datetime, type: date}
+    - name: categoria
+      selector: ".category"
+      validate: {choices: [Cultura, Movilidad, Educación, Servicios]}
+    - {name: enlace, selector: "a.more", attribute: href, type: url}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

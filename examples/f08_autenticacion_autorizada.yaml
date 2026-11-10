@@ -1,0 +1,53 @@
+# Escenario F08 — Autenticación AUTORIZADA en un sistema controlado con credenciales ficticias.
+# Las credenciales NO van en este archivo: se leen de variables de entorno por nombre.
+#   export WE_FIXTURE_USER=usuario_demo
+#   export WE_FIXTURE_PASSWORD=clave-ficticia-solo-pruebas
+version: 1
+project:
+  name: f08-autenticacion
+  description: Informes ficticios detrás de un formulario de acceso del entorno de prueba.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/auth/privado"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario del entorno de prueba)"
+  purpose: "Validar el flujo de autenticación autorizada sin datos reales"
+  terms_reviewed: true
+  environment: fixture
+  allow_authentication: true
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/auth/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 20
+  max_requests: 8
+  max_seconds: 30
+  delay_seconds: 0.2
+  timeout_seconds: 5
+
+auth:
+  type: form
+  login_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/auth/login"
+  username_field: username
+  password_field: password
+  username_env: WE_FIXTURE_USER
+  password_env: WE_FIXTURE_PASSWORD
+  failure_text: "Credenciales incorrectas"
+
+extraction:
+  method: static_html
+  table_selector: "table#informes"
+  fields:
+    - {name: folio, column: "Folio", required: true}
+    - {name: titulo, column: "Título", required: true}
+    - {name: estado, column: "Estado", validate: {choices: [Publicado, Borrador]}}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

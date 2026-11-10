@@ -1,0 +1,7 @@
+id_estacion,nombre,municipio,latitud,longitud,activa,ultima_lectura
+EST-01,Estación Río Claro,Villa Aurora,19.4326,-99.1332,si,2025-03-01
+EST-02,Estación Loma Verde,San Ficticio,19.5012,-99.2011,si,2025-03-01
+EST-03,Estación Bahía,Puerto Ejemplo,19.2877,-99.6557,no,2025-02-15
+EST-04,Estación Llano,Llano Demo,abc,-99.1000,si,2025-03-02
+EST-05,Estación Cumbre,Cerro Prueba,19.6100,-99.0500,si,fecha desconocida
+EST-02,Estación Loma Verde,San Ficticio,19.5012,-99.2011,si,2025-03-01

@@ -1,0 +1,9 @@
+# Versiones exactas con las que se ejecutaron las pruebas documentadas (pip freeze, Python 3.12.3).
+beautifulsoup4==4.15.0
+numpy==2.5.4
+pandas==3.1.1
+pydantic==2.14.3
+pytest==9.2.0
+PyYAML==6.0.3
+requests==2.34.2
+selenium==4.52.0

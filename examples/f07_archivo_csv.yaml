@@ -1,0 +1,45 @@
+# Escenario F07 — Archivo estructurado descargable (CSV con licencia abierta ficticia).
+version: 1
+project:
+  name: f07-archivo-csv
+  description: Estaciones de monitoreo ficticias publicadas como CSV.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/files/estaciones.csv"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de los fixtures locales)"
+  purpose: "Pruebas académicas de archivos estructurados"
+  terms_reviewed: true
+  environment: fixture
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/files/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 100
+  max_requests: 3
+  max_seconds: 30
+  delay_seconds: 0.2
+  timeout_seconds: 5
+
+extraction:
+  method: structured_file
+  file_format: csv
+  deduplicate_on: [id_estacion]
+  fields:
+    - {name: id_estacion, path: id_estacion, required: true, validate: {regex: "EST-\\d{2}"}}
+    - {name: nombre, path: nombre, required: true}
+    - {name: municipio, path: municipio}
+    - {name: latitud, path: latitud, type: float, validate: {min: -90, max: 90}}
+    - {name: longitud, path: longitud, type: float, validate: {min: -180, max: 180}}
+    - {name: activa, path: activa, type: boolean}
+    - {name: ultima_lectura, path: ultima_lectura, type: date}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

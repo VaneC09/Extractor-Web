@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Novedades (renderizado en cliente)</title>
+  <style>.card{border:1px solid #ccc;margin:8px;padding:8px}</style>
+</head>
+<body>
+  <div id="app"></div>
+  <noscript>Esta página necesita JavaScript para mostrar las novedades.</noscript>
+  <script>
+    // Datos ficticios incrustados: simulan una SPA que construye el DOM tras cargar.
+    const NOVEDADES = [
+      { id: "N-001", titulo: "Apertura de biblioteca comunitaria", fecha: "2025-02-01", categoria: "Cultura" },
+      { id: "N-002", titulo: "Nuevo horario de transporte", fecha: "2025-02-03", categoria: "Movilidad" },
+      { id: "N-003", titulo: "Taller gratuito de programación", fecha: "2025-02-05", categoria: "Educación" },
+      { id: "N-004", titulo: "Mantenimiento del parque central", fecha: "2025-02-07", categoria: "Servicios" },
+      { id: "N-005", titulo: "Feria local de ciencia", fecha: "2025-02-10", categoria: "Educación" }
+    ];
+    setTimeout(() => {
+      const app = document.getElementById("app");
+      app.innerHTML = "<h1>Novedades</h1>" + NOVEDADES.map(n =>
+        `<article class="card news-item" data-id="${n.id}">
+           <h2 class="headline">${n.titulo}</h2>
+           <time class="date" datetime="${n.fecha}">${n.fecha}</time>
+           <span class="category">${n.categoria}</span>
+           <a class="more" href="/js/render.html#${n.id}">Leer</a>
+         </article>`).join("");
+    }, 300);
+  </script>
+</body>
+</html>

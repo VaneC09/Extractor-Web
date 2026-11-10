@@ -1,0 +1,21 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API pública de catálogo (ficticia)",
+    "version": "1.0.0",
+    "description": "API de pruebas, pública y de solo lectura. Límite publicado: 1 solicitud/segundo."
+  },
+  "paths": {
+    "/api/v1/products": {
+      "get": {
+        "summary": "Lista paginada de productos",
+        "parameters": [
+          {"name": "page", "in": "query", "schema": {"type": "integer", "minimum": 1}}
+        ],
+        "responses": {
+          "200": {"description": "Página de productos con data, meta y links.next"}
+        }
+      }
+    }
+  }
+}
