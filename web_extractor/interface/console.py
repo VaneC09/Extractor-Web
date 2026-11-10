@@ -85,7 +85,7 @@ def records_frame(preview_records) -> pd.DataFrame:
         row = dict(r.data)
         row["_estado"] = r.lineage["validation_status"]
         rows.append(row)
-    return pd.DataFrame(rows)
+    return pd.DataFrame(rows, dtype=object).fillna("—")
 
 
 def show_preview(p: PreviewResult) -> None:
