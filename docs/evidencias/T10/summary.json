@@ -1,0 +1,124 @@
+{
+  "run_id": "20261110T225503Z-88096c",
+  "project": "f10-limite-tasa",
+  "target_url": "http://127.0.0.1:44555/barrier/limite",
+  "method": "static_html",
+  "status": "detenido_barrera",
+  "status_message": "Barrera detectada (rate_limit): HTTP 429: límite de solicitudes",
+  "started_at": "2026-11-10T22:55:03Z",
+  "finished_at": "2026-11-10T22:55:03Z",
+  "budget": {
+    "requests": 2,
+    "pages": 1,
+    "records": 0,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 0.2,
+    "max_requests": 5,
+    "max_pages": 3,
+    "max_records": 10,
+    "max_seconds": 30.0
+  },
+  "quality": {
+    "total_raw": 0,
+    "valid": 0,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 0,
+    "fields": {
+      "texto": {
+        "filled": 0,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 0.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [
+    {
+      "kind": "rate_limit",
+      "message": "HTTP 429: límite de solicitudes — evidencia: Retry-After=120",
+      "url": "http://127.0.0.1:44555/barrier/limite",
+      "next_step": "Detener y reducir frecuencia; consultar con el propietario los límites admitidos antes de volver a intentar en otro momento.",
+      "severity": "alta",
+      "timestamp": "2026-11-10T22:55:03Z"
+    }
+  ],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f10-limite-tasa/20261110T225503Z-88096c/data.csv",
+    "json": "outputs/matrix/f10-limite-tasa/20261110T225503Z-88096c/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f10-limite-tasa/20261110T225503Z-88096c/actions.jsonl",
+    "log": "outputs/matrix/f10-limite-tasa/20261110T225503Z-88096c/run.log",
+    "profile": "outputs/matrix/f10-limite-tasa/20261110T225503Z-88096c/profile.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Detener y reducir frecuencia; consultar con el propietario los límites admitidos antes de volver a intentar en otro momento."
+  ],
+  "structure": [],
+  "config": {
+    "project": "f10-limite-tasa",
+    "target_url": "http://127.0.0.1:44555/barrier/limite",
+    "method": "static_html",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Comprobar la parada segura ante límites de tasa",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/barrier/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 3,
+      "max_records": 10,
+      "max_requests": 5,
+      "max_seconds": 30.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 2,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "texto"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "La línea base del perfil no se actualizó porque la ejecución no terminó correctamente."
+  ]
+}

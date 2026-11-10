@@ -1,0 +1,5 @@
+{"action": "browser_start", "target": "", "detail": "Chrome headless", "outcome": "ok", "timestamp": "2026-11-10T22:54:55Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:55Z"}
+{"action": "browser_get", "target": "http://127.0.0.1:44555/js/render.html", "detail": "página 1", "outcome": "ok", "timestamp": "2026-11-10T22:54:55Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/js/render.html", "detail": "5 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:54:56Z"}
+{"action": "browser_close", "target": "", "detail": "navegador cerrado", "outcome": "ok", "timestamp": "2026-11-10T22:54:56Z"}

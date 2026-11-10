@@ -1,0 +1,6 @@
+id_estacion,nombre,municipio,latitud,longitud,activa,ultima_lectura,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+EST-01,Estación Río Claro,Villa Aurora,19.4326,-99.1332,True,2025-03-01,39e173c2da69fa3d,20261110T225501Z-172ea3,http://127.0.0.1:44555/files/estaciones.csv,2026-11-10T22:55:01Z,structured_file,0,valido,
+EST-02,Estación Loma Verde,San Ficticio,19.5012,-99.2011,True,2025-03-01,87526f29533a6c31,20261110T225501Z-172ea3,http://127.0.0.1:44555/files/estaciones.csv,2026-11-10T22:55:01Z,structured_file,0,valido,
+EST-03,Estación Bahía,Puerto Ejemplo,19.2877,-99.6557,False,2025-02-15,ec7a9d80e9ba35f8,20261110T225501Z-172ea3,http://127.0.0.1:44555/files/estaciones.csv,2026-11-10T22:55:01Z,structured_file,0,valido,
+EST-04,Estación Llano,Llano Demo,,-99.1,True,2025-03-02,4706d63b33cbed17,20261110T225501Z-172ea3,http://127.0.0.1:44555/files/estaciones.csv,2026-11-10T22:55:01Z,structured_file,0,advertencia,latitud: 'abc' no es un número
+EST-05,Estación Cumbre,Cerro Prueba,19.61,-99.05,True,,e734b891544b4d04,20261110T225501Z-172ea3,http://127.0.0.1:44555/files/estaciones.csv,2026-11-10T22:55:01Z,structured_file,0,advertencia,ultima_lectura: 'fecha desconocida' no es una fecha válida (ISO 8601)

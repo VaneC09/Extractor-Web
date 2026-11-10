@@ -1,0 +1,6 @@
+municipio,anio,poblacion,tasa_empleo,actualizado,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+Villa Aurora,2025,12450.0,61.2,2025-01-15,0987070f9964b8f9,20261110T225454Z-45c5da,http://127.0.0.1:44555/static/tabla.html,2026-11-10T22:54:55Z,static_html,0,valido,
+San Ficticio,2025,8903.0,58.9,2025-01-15,1aef2d65a4f588cd,20261110T225454Z-45c5da,http://127.0.0.1:44555/static/tabla.html,2026-11-10T22:54:55Z,static_html,0,valido,
+Puerto Ejemplo,2025,45120.0,,2025-01-16,eda1c2d56e749aa5,20261110T225454Z-45c5da,http://127.0.0.1:44555/static/tabla.html,2026-11-10T22:54:55Z,static_html,0,advertencia,
+Llano Demo,2025,3210.0,49.5,2025-01-16,bf5ea2d58e315c37,20261110T225454Z-45c5da,http://127.0.0.1:44555/static/tabla.html,2026-11-10T22:54:55Z,static_html,0,valido,
+Cerro Prueba,2025,,55.0,2025-01-17,9a81deeb45d25a53,20261110T225454Z-45c5da,http://127.0.0.1:44555/static/tabla.html,2026-11-10T22:54:55Z,static_html,0,advertencia,poblacion: 'cifra pendiente' no es un entero

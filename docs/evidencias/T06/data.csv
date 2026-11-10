@@ -1,0 +1,10 @@
+id,nombre,precio,moneda,categoria,activo,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+1,Producto API 1,13.25,MXN,arte,True,354aaef7a5f6ecbb,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products,2026-11-10T22:55:00Z,api,0,valido,
+2,Producto API 2,16.5,MXN,oficina,True,828e18e69c0ec539,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products,2026-11-10T22:55:00Z,api,0,valido,
+3,Producto API 3,19.75,MXN,papelería,True,e7e47cffe2c80334,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products,2026-11-10T22:55:00Z,api,0,valido,
+4,Producto API 4,23.0,MXN,arte,False,4edbed4a6bd38c62,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products,2026-11-10T22:55:00Z,api,0,valido,
+5,Producto API 5,26.25,MXN,oficina,True,e78d5393ac7603d5,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products?page=2,2026-11-10T22:55:00Z,api,1,valido,
+6,Producto API 6,29.5,MXN,papelería,True,cb4d5d2a2ae6bf43,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products?page=2,2026-11-10T22:55:00Z,api,1,valido,
+7,Producto API 7,32.75,MXN,arte,True,ad559f4e2220ee73,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products?page=2,2026-11-10T22:55:00Z,api,1,valido,
+8,Producto API 8,36.0,MXN,oficina,False,ebdd578efd416910,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products?page=2,2026-11-10T22:55:00Z,api,1,valido,
+9,Producto API 9,39.25,MXN,papelería,True,725eeaa9234ceb28,20261110T225500Z-fdfcbd,http://127.0.0.1:44555/api/v1/products?page=3,2026-11-10T22:55:00Z,api,2,valido,

@@ -1,0 +1,180 @@
+{
+  "run_id": "20261110T225506Z-34a7b6",
+  "project": "f01-catalogo-estatico",
+  "target_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+  "method": "static_html",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-10T22:55:06Z",
+  "finished_at": "2026-11-10T22:55:06Z",
+  "budget": {
+    "requests": 4,
+    "pages": 3,
+    "records": 11,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 0.61,
+    "max_requests": 10,
+    "max_pages": 5,
+    "max_records": 50,
+    "max_seconds": 60.0
+  },
+  "quality": {
+    "total_raw": 11,
+    "valid": 0,
+    "with_warnings": 9,
+    "invalid": 1,
+    "duplicates_removed": 1,
+    "dropped_invalid": 0,
+    "exported": 10,
+    "fields": {
+      "sku": {
+        "filled": 10,
+        "empty": 1,
+        "invalid": 0,
+        "fill_rate": 0.9091
+      },
+      "nombre": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "precio": {
+        "filled": 0,
+        "empty": 11,
+        "invalid": 0,
+        "fill_rate": 0.0
+      },
+      "disponible": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "actualizado": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "url_detalle": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": [
+      "#9 (http://127.0.0.1:44555/static/catalogo?page=3): sku: obligatorio y vacío"
+    ]
+  },
+  "incidents": [
+    {
+      "kind": "change_detected",
+      "message": "Cambios relevantes frente al perfil anterior; no se corrige nada automáticamente",
+      "url": "http://127.0.0.1:44555/static/catalogo?page=1",
+      "next_step": "Revisión humana de selectores y alcance.",
+      "severity": "alta",
+      "timestamp": "2026-11-10T22:55:06Z"
+    }
+  ],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f01-catalogo-estatico/20261110T225506Z-34a7b6/data.csv",
+    "json": "outputs/matrix/f01-catalogo-estatico/20261110T225506Z-34a7b6/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f01-catalogo-estatico/20261110T225506Z-34a7b6/actions.jsonl",
+    "log": "outputs/matrix/f01-catalogo-estatico/20261110T225506Z-34a7b6/run.log",
+    "profile": "outputs/matrix/f01-catalogo-estatico/20261110T225506Z-34a7b6/profile.json"
+  },
+  "profile_changes": [
+    {
+      "kind": "rule_changed",
+      "severity": "media",
+      "message": "precio.selector: '.price' -> '.precio-rediseñado'"
+    },
+    {
+      "kind": "fill_rate_drop",
+      "severity": "alta",
+      "message": "precio: tasa de llenado 91% -> 0% (posible selector roto o cambio de estructura)"
+    }
+  ],
+  "requires_human_review": true,
+  "next_steps": [
+    "Revisión humana de selectores y alcance.",
+    "Revise los cambios detectados frente al perfil anterior antes de volver a ejecutar; no se actualizó la línea base.",
+    "Revise los registros inválidos (columna _validation_errors) y ajuste reglas o selectores."
+  ],
+  "structure": [
+    "a.detail",
+    "h2.product-name",
+    "span.price",
+    "span.stock",
+    "time.updated"
+  ],
+  "config": {
+    "project": "f01-catalogo-estatico",
+    "target_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+    "method": "static_html",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Pruebas académicas de la herramienta con datos ficticios",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/static/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 5,
+      "max_records": 50,
+      "max_requests": 10,
+      "max_seconds": 60.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "sku",
+      "nombre",
+      "precio",
+      "disponible",
+      "actualizado",
+      "url_detalle"
+    ],
+    "pagination": "next_link",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "La línea base del perfil NO se actualizó por requerir revisión humana."
+  ]
+}

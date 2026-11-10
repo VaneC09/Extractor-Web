@@ -1,0 +1,13 @@
+codigo,nombre,lugares,sede,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+EV-001,Evento comunitario 1,20,Centro,adca53ca8d0050f8,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-002,Evento comunitario 2,27,Norte,4585fa457bd062a8,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-003,Evento comunitario 3,34,Sur,0fc7bdba5534c231,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-004,Evento comunitario 4,41,Centro,226cff21cd30fd15,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-005,Evento comunitario 5,48,Norte,28355bfcf27b98a1,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-006,Evento comunitario 6,25,Sur,d15c21bce9b5cc04,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-007,Evento comunitario 7,32,Centro,b24088841f3a1cad,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-008,Evento comunitario 8,39,Norte,ddaf0a535a0a8516,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-009,Evento comunitario 9,46,Sur,7243cca4ec5675a8,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-010,Evento comunitario 10,23,Centro,bec49098a7b666a0,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-011,Evento comunitario 11,30,Norte,e34473d8dacdb4d2,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,
+EV-012,Evento comunitario 12,37,Sur,979fff5d5a2fd739,20261110T225456Z-1cc5da,http://127.0.0.1:44555/js/load-more.html,2026-11-10T22:54:58Z,browser,0,valido,

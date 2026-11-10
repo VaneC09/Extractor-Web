@@ -1,0 +1,3 @@
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:01Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/files/estaciones.csv", "detail": "descarga de archivo csv -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:01Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/files/estaciones.csv", "detail": "6 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:55:01Z"}

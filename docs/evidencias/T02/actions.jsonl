@@ -1,0 +1,4 @@
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/static/tabla.html", "detail": "página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:55Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/static/tabla.html", "detail": "6 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:54:55Z"}
+{"action": "pagination_end", "target": "http://127.0.0.1:44555/static/tabla.html", "detail": "1 página(s) recorridas", "outcome": "ok", "timestamp": "2026-11-10T22:54:55Z"}

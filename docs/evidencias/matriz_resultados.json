@@ -1,0 +1,287 @@
+{
+  "generated_at": "2026-11-10T22:55:07Z",
+  "rows": [
+    {
+      "id": "T01",
+      "scenario": "HTML estático + paginación por enlace",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "sku, nombre, precio, disponible, actualizado, url_detalle",
+      "request_limit": "10",
+      "expected": "3 páginas, 10 registros exportados (1 duplicado eliminado, 1 inválido sin SKU)",
+      "observed": "estado=completado; registros=10 (crudos 11, válidos 8, advert. 1, inválidos 1, dup. 1); solicitudes=4/10; páginas=3; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f01-catalogo-estatico/20261110T225454Z-4370cb/report.md",
+      "errors": "—",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 6,
+      "extra": {
+        "diagnóstico": "static_html (alta, 0.75)"
+      }
+    },
+    {
+      "id": "T02",
+      "scenario": "Tabla HTML",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "municipio, anio, poblacion, tasa_empleo, actualizado",
+      "request_limit": "4",
+      "expected": "5 filas tras deduplicar, advertencias por N/D y cifra pendiente",
+      "observed": "estado=completado; registros=5 (crudos 6, válidos 3, advert. 2, inválidos 0, dup. 1); solicitudes=2/4; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f02-tabla-html/20261110T225454Z-45c5da/report.md",
+      "errors": "—",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 4,
+      "extra": {
+        "diagnóstico": "static_html (alta, 0.75)"
+      }
+    },
+    {
+      "id": "T03",
+      "scenario": "Contenido renderizado con JavaScript (Selenium)",
+      "method": "browser",
+      "environment": "fixture",
+      "fields": "id, titulo, fecha, categoria, enlace",
+      "request_limit": "4",
+      "expected": "5 novedades obtenidas del DOM renderizado",
+      "observed": "estado=completado; registros=5 (crudos 5, válidos 5, advert. 0, inválidos 0, dup. 0); solicitudes=2/4; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f03-js-renderizado/20261110T225455Z-d6c25c/report.md",
+      "errors": "—",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 5,
+      "extra": {
+        "diagnóstico": "browser (alta, 0.9)"
+      }
+    },
+    {
+      "id": "T04",
+      "scenario": "Botón «Cargar más» con max_clicks=2",
+      "method": "browser",
+      "environment": "fixture",
+      "fields": "codigo, nombre, lugares, sede",
+      "request_limit": "6",
+      "expected": "12 de 14 eventos; parada por max_clicks",
+      "observed": "estado=completado_con_limites; registros=12 (crudos 12, válidos 12, advert. 0, inválidos 0, dup. 0); solicitudes=4/6; páginas=1; clics=2; scrolls=0",
+      "evidence": "outputs/matrix/f04-cargar-mas/20261110T225456Z-1cc5da/report.md",
+      "errors": "limit: Límite alcanzado: max_clicks (2)",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 5,
+      "extra": {
+        "diagnóstico": "browser (alta, 0.75)"
+      }
+    },
+    {
+      "id": "T05",
+      "scenario": "Scroll infinito con max_scrolls=2",
+      "method": "browser",
+      "environment": "fixture",
+      "fields": "titulo, autor, anio",
+      "request_limit": "6",
+      "expected": "15 de 20 obras; parada por max_scrolls",
+      "observed": "estado=completado_con_limites; registros=15 (crudos 15, válidos 15, advert. 0, inválidos 0, dup. 0); solicitudes=4/6; páginas=1; clics=0; scrolls=2",
+      "evidence": "outputs/matrix/f05-scroll-infinito/20261110T225458Z-93a539/report.md",
+      "errors": "limit: Límite alcanzado: max_scrolls (2)",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 5,
+      "extra": {
+        "diagnóstico": "browser (media, 0.6)"
+      }
+    },
+    {
+      "id": "T06",
+      "scenario": "API pública documentada (JSON) + paginación links.next",
+      "method": "api",
+      "environment": "fixture",
+      "fields": "id, nombre, precio, moneda, categoria, activo",
+      "request_limit": "8",
+      "expected": "9 productos en 3 páginas",
+      "observed": "estado=completado; registros=9 (crudos 9, válidos 9, advert. 0, inválidos 0, dup. 0); solicitudes=4/8; páginas=3; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f06-api-documentada/20261110T225500Z-fdfcbd/report.md",
+      "errors": "—",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 6,
+      "extra": {
+        "diagnóstico": "api (media, 0.7)"
+      }
+    },
+    {
+      "id": "T07",
+      "scenario": "Archivo estructurado CSV descargable",
+      "method": "structured_file",
+      "environment": "fixture",
+      "fields": "id_estacion, nombre, municipio, latitud, longitud, activa, ultima_lectura",
+      "request_limit": "3",
+      "expected": "5 estaciones tras deduplicar; latitud y fecha inválidas como advertencia",
+      "observed": "estado=completado; registros=5 (crudos 6, válidos 3, advert. 2, inválidos 0, dup. 1); solicitudes=2/3; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f07-archivo-csv/20261110T225501Z-172ea3/report.md",
+      "errors": "—",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 4,
+      "extra": {
+        "diagnóstico": "structured_file (alta, 0.8)"
+      }
+    },
+    {
+      "id": "T08",
+      "scenario": "Autenticación autorizada (credenciales ficticias por variables de entorno)",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "folio, titulo, estado",
+      "request_limit": "8",
+      "expected": "5 informes tras iniciar sesión; contraseña ausente de logs",
+      "observed": "estado=completado; registros=5 (crudos 5, válidos 5, advert. 0, inválidos 0, dup. 0); solicitudes=5/8; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f08-autenticacion/20261110T225501Z-08bf39/report.md",
+      "errors": "—",
+      "decision": "Continuar",
+      "passed": true,
+      "server_hits": 8,
+      "extra": {
+        "diagnóstico": "static_html (baja, 0.3)"
+      }
+    },
+    {
+      "id": "T09",
+      "scenario": "CAPTCHA",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "texto",
+      "request_limit": "5",
+      "expected": "Parada segura con incidencia 'captcha', sin reintentos",
+      "observed": "estado=detenido_barrera; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=2/5; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f09-barrera-captcha/20261110T225502Z-bf5cc9/report.md",
+      "errors": "captcha: Indicios de CAPTCHA en la página — evidencia: requerida</title> </head> <body> <h1>Verifica que eres humano</h1> <p>Para continuar, completa la v",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 4,
+      "extra": {
+        "diagnóstico": "detenido: captcha"
+      }
+    },
+    {
+      "id": "T10",
+      "scenario": "Límite de tasa (HTTP 429)",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "texto",
+      "request_limit": "5",
+      "expected": "Parada segura 'rate_limit', 1 sola solicitud a la ruta",
+      "observed": "estado=detenido_barrera; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=2/5; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f10-limite-tasa/20261110T225503Z-88096c/report.md",
+      "errors": "rate_limit: HTTP 429: límite de solicitudes — evidencia: Retry-After=120",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 4,
+      "extra": {
+        "diagnóstico": "detenido: rate_limit"
+      }
+    },
+    {
+      "id": "T11",
+      "scenario": "Ruta prohibida por robots.txt",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "texto",
+      "request_limit": "3",
+      "expected": "Detenido por política; la ruta /privado/ nunca se solicita",
+      "observed": "estado=detenido_politica; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=1/3; páginas=1; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f11-robots-prohibido/20261110T225503Z-5e0992/report.md",
+      "errors": "robots_disallow: robots.txt no permite acceder a http://127.0.0.1:44555/privado/datos.html",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 2,
+      "extra": {
+        "diagnóstico": "detenido: robots_disallow"
+      }
+    },
+    {
+      "id": "T12",
+      "scenario": "Cancelación durante la paginación",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "(F01)",
+      "request_limit": "10",
+      "expected": "Estado 'cancelado' antes de recorrer las 3 páginas",
+      "observed": "estado=cancelado; registros=4 (crudos 4, válidos 4, advert. 0, inválidos 0, dup. 0); solicitudes=3/10; páginas=2; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/t12-cancelacion/20261110T225504Z-b3de10/report.md",
+      "errors": "cancelled: Ejecución cancelada: cancelación de prueba",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 4,
+      "extra": {
+        "diagnóstico": "static_html (alta, 0.75)"
+      }
+    },
+    {
+      "id": "T13",
+      "scenario": "Detección de cambios: selector de precio roto frente al perfil de T01",
+      "method": "static_html",
+      "environment": "fixture",
+      "fields": "(F01)",
+      "request_limit": "10",
+      "expected": "Cambio de severidad alta, revisión humana, perfil no actualizado",
+      "observed": "estado=completado; registros=10 (crudos 11, válidos 0, advert. 9, inválidos 1, dup. 1); solicitudes=4/10; páginas=3; clics=0; scrolls=0",
+      "evidence": "outputs/matrix/f01-catalogo-estatico/20261110T225506Z-34a7b6/report.md",
+      "errors": "change_detected: Cambios relevantes frente al perfil anterior; no se corrige nada automáticamente",
+      "decision": "Detenerse (revisión humana)",
+      "passed": true,
+      "server_hits": 6,
+      "extra": {
+        "diagnóstico": "static_html (alta, 0.75)"
+      }
+    },
+    {
+      "id": "T14",
+      "scenario": "Configuración inválida (ftp, secreto, campo sensible, tipos desconocidos)",
+      "method": "—",
+      "environment": "—",
+      "fields": "—",
+      "request_limit": "—",
+      "expected": "Rechazo con mensajes por campo, sin solicitudes",
+      "observed": "rechazada con 7 errores: project.name: String should match pattern '^[a-z0-9][a-z0-9_-]{1,63}$' | target_url: solo se admiten URLs http(s); otros protocolos (ftp, file, data...) se rechazan | limits.max_requests: Input should be less than or equal to 500 | extraction.fields.0.name: el campo 'curp' parece un dato sensible o ",
+      "evidence": "",
+      "errors": "",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 0,
+      "extra": {}
+    },
+    {
+      "id": "T15",
+      "scenario": "Sitio real sin autorización confirmada (plantilla)",
+      "method": "auto",
+      "environment": "production",
+      "fields": "titulo",
+      "request_limit": "5",
+      "expected": "Extracción bloqueada; se enumera lo que falta",
+      "observed": "bloqueada; faltan 7 requisitos: Para diagnosticar un sitio no controlado indique authorization.authorized_by (quién permite la inspección) o confirme la autorización. | authorization.confirmed debe ser true (confirmación humana de permiso y alcance) | authorization.authorized_by: indique quién autoriza la extracción | authorizatio",
+      "evidence": "",
+      "errors": "",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 0,
+      "extra": {}
+    },
+    {
+      "id": "T16",
+      "scenario": "API sin documentación verificada",
+      "method": "api",
+      "environment": "fixture",
+      "fields": "(F06)",
+      "request_limit": "8",
+      "expected": "Marcada 'no verificado / no ejecutar'; sin solicitudes",
+      "observed": "bloqueada: API no verificada como pública y documentada (extraction.api.documented + documentation_url): no ejecutar",
+      "evidence": "",
+      "errors": "",
+      "decision": "Detenerse",
+      "passed": true,
+      "server_hits": 0,
+      "extra": {}
+    }
+  ]
+}

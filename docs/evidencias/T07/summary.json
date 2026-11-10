@@ -1,0 +1,168 @@
+{
+  "run_id": "20261110T225501Z-172ea3",
+  "project": "f07-archivo-csv",
+  "target_url": "http://127.0.0.1:44555/files/estaciones.csv",
+  "method": "structured_file",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-10T22:55:01Z",
+  "finished_at": "2026-11-10T22:55:01Z",
+  "budget": {
+    "requests": 2,
+    "pages": 1,
+    "records": 6,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 0.21,
+    "max_requests": 3,
+    "max_pages": 1,
+    "max_records": 100,
+    "max_seconds": 30.0
+  },
+  "quality": {
+    "total_raw": 6,
+    "valid": 3,
+    "with_warnings": 2,
+    "invalid": 0,
+    "duplicates_removed": 1,
+    "dropped_invalid": 0,
+    "exported": 5,
+    "fields": {
+      "id_estacion": {
+        "filled": 6,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "nombre": {
+        "filled": 6,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "municipio": {
+        "filled": 6,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "latitud": {
+        "filled": 5,
+        "empty": 1,
+        "invalid": 1,
+        "fill_rate": 0.8333
+      },
+      "longitud": {
+        "filled": 6,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "activa": {
+        "filled": 6,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "ultima_lectura": {
+        "filled": 5,
+        "empty": 1,
+        "invalid": 1,
+        "fill_rate": 0.8333
+      }
+    },
+    "error_samples": [
+      "#3 (http://127.0.0.1:44555/files/estaciones.csv): latitud: 'abc' no es un número",
+      "#4 (http://127.0.0.1:44555/files/estaciones.csv): ultima_lectura: 'fecha desconocida' no es una fecha válida (ISO 8601)"
+    ]
+  },
+  "incidents": [],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f07-archivo-csv/20261110T225501Z-172ea3/data.csv",
+    "json": "outputs/matrix/f07-archivo-csv/20261110T225501Z-172ea3/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f07-archivo-csv/20261110T225501Z-172ea3/actions.jsonl",
+    "log": "outputs/matrix/f07-archivo-csv/20261110T225501Z-172ea3/run.log",
+    "profile": "outputs/matrix/f07-archivo-csv/20261110T225501Z-172ea3/profile.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Validar muestras manualmente y documentar el resultado en la matriz de pruebas."
+  ],
+  "structure": [
+    "column:id_estacion",
+    "column:nombre",
+    "column:municipio",
+    "column:latitud",
+    "column:longitud",
+    "column:activa",
+    "column:ultima_lectura"
+  ],
+  "config": {
+    "project": "f07-archivo-csv",
+    "target_url": "http://127.0.0.1:44555/files/estaciones.csv",
+    "method": "structured_file",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Pruebas académicas de archivos estructurados",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/files/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 100,
+      "max_requests": 3,
+      "max_seconds": 30.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "id_estacion",
+      "nombre",
+      "municipio",
+      "latitud",
+      "longitud",
+      "activa",
+      "ultima_lectura"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'f07-archivo-csv' actualizado como línea base."
+  ]
+}

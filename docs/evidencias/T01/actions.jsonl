@@ -1,0 +1,8 @@
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/static/catalogo?page=1", "detail": "página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/static/catalogo?page=1", "detail": "4 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/static/catalogo?page=2", "detail": "página 2 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/static/catalogo?page=2", "detail": "4 registros en página 2", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/static/catalogo?page=3", "detail": "página 3 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/static/catalogo?page=3", "detail": "3 registros en página 3", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}
+{"action": "pagination_end", "target": "http://127.0.0.1:44555/static/catalogo?page=1", "detail": "3 página(s) recorridas", "outcome": "ok", "timestamp": "2026-11-10T22:54:54Z"}

@@ -1,0 +1,8 @@
+{"action": "browser_start", "target": "", "detail": "Chrome headless", "outcome": "ok", "timestamp": "2026-11-10T22:54:58Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:54:58Z"}
+{"action": "browser_get", "target": "http://127.0.0.1:44555/js/scroll.html", "detail": "página 1", "outcome": "ok", "timestamp": "2026-11-10T22:54:59Z"}
+{"action": "scroll", "target": "http://127.0.0.1:44555/js/scroll.html", "detail": "altura previa 1438px", "outcome": "ok", "timestamp": "2026-11-10T22:54:59Z"}
+{"action": "scroll", "target": "http://127.0.0.1:44555/js/scroll.html", "detail": "altura previa 2837px", "outcome": "ok", "timestamp": "2026-11-10T22:54:59Z"}
+{"action": "limit", "target": "http://127.0.0.1:44555/js/scroll.html", "detail": "max_scrolls alcanzado", "outcome": "stop", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/js/scroll.html", "detail": "15 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "browser_close", "target": "", "detail": "navegador cerrado", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}

@@ -1,0 +1,69 @@
+{
+  "profile_name": "f01-catalogo-estatico",
+  "saved_at": "2026-11-10T22:54:54Z",
+  "run_id": "20261110T225454Z-4370cb",
+  "target_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+  "method": "static_html",
+  "record_selector": "article.product",
+  "table_selector": null,
+  "records_path": null,
+  "record_count": 11,
+  "max_records": 50,
+  "fields": {
+    "sku": {
+      "selector": null,
+      "path": null,
+      "column": null,
+      "attribute": "data-sku",
+      "type": "string",
+      "fill_rate": 0.9091
+    },
+    "nombre": {
+      "selector": ".product-name",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "precio": {
+      "selector": ".price",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "float",
+      "fill_rate": 0.9091
+    },
+    "disponible": {
+      "selector": ".stock",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "boolean",
+      "fill_rate": 1.0
+    },
+    "actualizado": {
+      "selector": "time.updated",
+      "path": null,
+      "column": null,
+      "attribute": "datetime",
+      "type": "date",
+      "fill_rate": 1.0
+    },
+    "url_detalle": {
+      "selector": "a.detail",
+      "path": null,
+      "column": null,
+      "attribute": "href",
+      "type": "url",
+      "fill_rate": 1.0
+    }
+  },
+  "structure": [
+    "a.detail",
+    "h2.product-name",
+    "span.price",
+    "span.stock",
+    "time.updated"
+  ]
+}

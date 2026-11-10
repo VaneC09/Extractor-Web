@@ -1,0 +1,1 @@
+2026-11-10 22:55:03,378 WARNING web_extractor.engine: INCIDENCIA rate_limit: HTTP 429: límite de solicitudes — evidencia: Retry-After=120 http://127.0.0.1:44555/barrier/limite

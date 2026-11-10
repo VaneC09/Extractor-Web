@@ -1,0 +1,6 @@
+folio,titulo,estado,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+INF-001,Informe interno de prueba 1,Publicado,b1636d891d814dfd,20261110T225501Z-08bf39,http://127.0.0.1:44555/auth/privado,2026-11-10T22:55:02Z,static_html,0,valido,
+INF-002,Informe interno de prueba 2,Borrador,0b2486c8bdf2f82a,20261110T225501Z-08bf39,http://127.0.0.1:44555/auth/privado,2026-11-10T22:55:02Z,static_html,0,valido,
+INF-003,Informe interno de prueba 3,Publicado,c6b6ba51ecaf08bb,20261110T225501Z-08bf39,http://127.0.0.1:44555/auth/privado,2026-11-10T22:55:02Z,static_html,0,valido,
+INF-004,Informe interno de prueba 4,Borrador,723217d80ca08bde,20261110T225501Z-08bf39,http://127.0.0.1:44555/auth/privado,2026-11-10T22:55:02Z,static_html,0,valido,
+INF-005,Informe interno de prueba 5,Publicado,1b9c050e5cf86991,20261110T225501Z-08bf39,http://127.0.0.1:44555/auth/privado,2026-11-10T22:55:02Z,static_html,0,valido,

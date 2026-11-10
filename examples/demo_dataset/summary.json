@@ -1,0 +1,159 @@
+{
+  "run_id": "20261110T225454Z-4370cb",
+  "project": "f01-catalogo-estatico",
+  "target_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+  "method": "static_html",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-10T22:54:54Z",
+  "finished_at": "2026-11-10T22:54:54Z",
+  "budget": {
+    "requests": 4,
+    "pages": 3,
+    "records": 11,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 0.61,
+    "max_requests": 10,
+    "max_pages": 5,
+    "max_records": 50,
+    "max_seconds": 60.0
+  },
+  "quality": {
+    "total_raw": 11,
+    "valid": 8,
+    "with_warnings": 1,
+    "invalid": 1,
+    "duplicates_removed": 1,
+    "dropped_invalid": 0,
+    "exported": 10,
+    "fields": {
+      "sku": {
+        "filled": 10,
+        "empty": 1,
+        "invalid": 0,
+        "fill_rate": 0.9091
+      },
+      "nombre": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "precio": {
+        "filled": 10,
+        "empty": 1,
+        "invalid": 1,
+        "fill_rate": 0.9091
+      },
+      "disponible": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "actualizado": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "url_detalle": {
+        "filled": 11,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": [
+      "#5 (http://127.0.0.1:44555/static/catalogo?page=2): precio: 'Consultar' no es un número",
+      "#9 (http://127.0.0.1:44555/static/catalogo?page=3): sku: obligatorio y vacío"
+    ]
+  },
+  "incidents": [],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f01-catalogo-estatico/20261110T225454Z-4370cb/data.csv",
+    "json": "outputs/matrix/f01-catalogo-estatico/20261110T225454Z-4370cb/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f01-catalogo-estatico/20261110T225454Z-4370cb/actions.jsonl",
+    "log": "outputs/matrix/f01-catalogo-estatico/20261110T225454Z-4370cb/run.log",
+    "profile": "outputs/matrix/f01-catalogo-estatico/20261110T225454Z-4370cb/profile.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Revise los registros inválidos (columna _validation_errors) y ajuste reglas o selectores."
+  ],
+  "structure": [
+    "a.detail",
+    "h2.product-name",
+    "span.price",
+    "span.stock",
+    "time.updated"
+  ],
+  "config": {
+    "project": "f01-catalogo-estatico",
+    "target_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+    "method": "static_html",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Pruebas académicas de la herramienta con datos ficticios",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/static/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 5,
+      "max_records": 50,
+      "max_requests": 10,
+      "max_seconds": 60.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "sku",
+      "nombre",
+      "precio",
+      "disponible",
+      "actualizado",
+      "url_detalle"
+    ],
+    "pagination": "next_link",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'f01-catalogo-estatico' actualizado como línea base."
+  ]
+}

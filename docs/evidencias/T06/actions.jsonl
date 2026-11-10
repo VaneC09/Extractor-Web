@@ -1,0 +1,7 @@
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/api/v1/products", "detail": "API página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/api/v1/products", "detail": "4 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/api/v1/products?page=2", "detail": "API página 2 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/api/v1/products?page=2", "detail": "4 registros en página 2", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/api/v1/products?page=3", "detail": "API página 3 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/api/v1/products?page=3", "detail": "1 registros en página 3", "outcome": "ok", "timestamp": "2026-11-10T22:55:00Z"}

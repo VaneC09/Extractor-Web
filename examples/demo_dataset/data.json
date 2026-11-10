@@ -1,0 +1,626 @@
+{
+  "run_id": "20261110T225454Z-4370cb",
+  "project": "f01-catalogo-estatico",
+  "metadata": {
+    "target_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+    "method": "static_html",
+    "status": "completado",
+    "started_at": "2026-11-10T22:54:54Z",
+    "finished_at": "2026-11-10T22:54:54Z",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Pruebas académicas de la herramienta con datos ficticios",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "limits": {
+      "max_pages": 5,
+      "max_records": 50,
+      "max_requests": 10,
+      "max_seconds": 60.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "quality": {
+      "total_raw": 11,
+      "valid": 8,
+      "with_warnings": 1,
+      "invalid": 1,
+      "duplicates_removed": 1,
+      "dropped_invalid": 0,
+      "exported": 10,
+      "fields": {
+        "sku": {
+          "filled": 10,
+          "empty": 1,
+          "invalid": 0,
+          "fill_rate": 0.9091
+        },
+        "nombre": {
+          "filled": 11,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "precio": {
+          "filled": 10,
+          "empty": 1,
+          "invalid": 1,
+          "fill_rate": 0.9091
+        },
+        "disponible": {
+          "filled": 11,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "actualizado": {
+          "filled": 11,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "url_detalle": {
+          "filled": 11,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        }
+      },
+      "error_samples": [
+        "#5 (http://127.0.0.1:44555/static/catalogo?page=2): precio: 'Consultar' no es un número",
+        "#9 (http://127.0.0.1:44555/static/catalogo?page=3): sku: obligatorio y vacío"
+      ]
+    }
+  },
+  "fields": [
+    "sku",
+    "nombre",
+    "precio",
+    "disponible",
+    "actualizado",
+    "url_detalle"
+  ],
+  "records": [
+    {
+      "data": {
+        "sku": "SKU-001",
+        "nombre": "Cuaderno reciclado A5",
+        "precio": 45.5,
+        "disponible": true,
+        "actualizado": "2025-01-10",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-001"
+      },
+      "raw": {
+        "sku": "SKU-001",
+        "nombre": "Cuaderno reciclado A5",
+        "precio": "$45.50 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-10",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-001"
+      },
+      "lineage": {
+        "record_id": "be2bff057e49dc0a",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 0,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-002",
+        "nombre": "Lápiz de grafito HB",
+        "precio": 8.0,
+        "disponible": true,
+        "actualizado": "2025-01-11",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-002"
+      },
+      "raw": {
+        "sku": "SKU-002",
+        "nombre": "Lápiz de grafito HB",
+        "precio": "$8.00 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-11",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-002"
+      },
+      "lineage": {
+        "record_id": "61b32d146ba0e00e",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 1,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-003",
+        "nombre": "Mochila escolar azul",
+        "precio": 1299.0,
+        "disponible": false,
+        "actualizado": "2025-01-12",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-003"
+      },
+      "raw": {
+        "sku": "SKU-003",
+        "nombre": "Mochila escolar  azul",
+        "precio": "$1,299.00 MXN",
+        "disponible": "Agotado",
+        "actualizado": "2025-01-12",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-003"
+      },
+      "lineage": {
+        "record_id": "275ca61f20e699ef",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 2,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-004",
+        "nombre": "Calculadora científica",
+        "precio": 389.9,
+        "disponible": true,
+        "actualizado": "2025-01-12",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-004"
+      },
+      "raw": {
+        "sku": "SKU-004",
+        "nombre": "Calculadora científica",
+        "precio": "$389.90 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-12",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-004"
+      },
+      "lineage": {
+        "record_id": "473aaa35bfdc7774",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 3,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=1",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-005",
+        "nombre": "Juego de geometría",
+        "precio": 62.0,
+        "disponible": true,
+        "actualizado": "2025-01-13",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-005"
+      },
+      "raw": {
+        "sku": "SKU-005",
+        "nombre": "Juego de geometría",
+        "precio": "$62.00 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-13",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-005"
+      },
+      "lineage": {
+        "record_id": "c9c50b68ed2bd3f6",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 4,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=2",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 1,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-006",
+        "nombre": "Marcadores pastel (12)",
+        "precio": null,
+        "disponible": true,
+        "actualizado": "2025-01-14",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-006"
+      },
+      "raw": {
+        "sku": "SKU-006",
+        "nombre": "Marcadores pastel (12)",
+        "precio": "Consultar",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-14",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-006"
+      },
+      "lineage": {
+        "record_id": "1ab7d1c7bb99ce5f",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 5,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=2",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 1,
+        "validation_status": "advertencia",
+        "validation_errors": [
+          "precio: 'Consultar' no es un número"
+        ],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-007",
+        "nombre": "Carpeta de argollas",
+        "precio": 95.0,
+        "disponible": false,
+        "actualizado": "2025-01-15",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-007"
+      },
+      "raw": {
+        "sku": "SKU-007",
+        "nombre": "Carpeta de argollas",
+        "precio": "$95.00 MXN",
+        "disponible": "Agotado",
+        "actualizado": "2025-01-15",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-007"
+      },
+      "lineage": {
+        "record_id": "2d2552af5ad4cd27",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 6,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=2",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 1,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-008",
+        "nombre": "Regla de 30 cm",
+        "precio": 15.0,
+        "disponible": true,
+        "actualizado": "2025-01-15",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-008"
+      },
+      "raw": {
+        "sku": "SKU-008",
+        "nombre": "Regla de 30 cm",
+        "precio": "$15.00 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-15",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-008"
+      },
+      "lineage": {
+        "record_id": "34236f94e777c8c0",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 7,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=2",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 1,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": "SKU-009",
+        "nombre": "Pegamento en barra",
+        "precio": 22.5,
+        "disponible": true,
+        "actualizado": "2025-01-16",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-009"
+      },
+      "raw": {
+        "sku": "SKU-009",
+        "nombre": "Pegamento en barra",
+        "precio": "$22.50 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-16",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/SKU-009"
+      },
+      "lineage": {
+        "record_id": "71c0211fc674282c",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 8,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=3",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 2,
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "sku": [
+            "cast:string"
+          ],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    },
+    {
+      "data": {
+        "sku": null,
+        "nombre": "Producto sin código",
+        "precio": 10.0,
+        "disponible": true,
+        "actualizado": "2025-01-16",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/sin-codigo"
+      },
+      "raw": {
+        "sku": "",
+        "nombre": "Producto sin código",
+        "precio": "$10.00 MXN",
+        "disponible": "Disponible",
+        "actualizado": "2025-01-16",
+        "url_detalle": "http://127.0.0.1:44555/static/producto/sin-codigo"
+      },
+      "lineage": {
+        "record_id": "6cd12ae4e2054522",
+        "run_id": "20261110T225454Z-4370cb",
+        "position": 9,
+        "source_url": "http://127.0.0.1:44555/static/catalogo?page=3",
+        "retrieved_at": "2026-11-10T22:54:54Z",
+        "method": "static_html",
+        "page_index": 2,
+        "validation_status": "invalido",
+        "validation_errors": [
+          "sku: obligatorio y vacío"
+        ],
+        "transformations": {
+          "sku": [],
+          "nombre": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "precio": [
+            "remove_currency",
+            "thousands_comma",
+            "empty_to_none",
+            "cast:float"
+          ],
+          "disponible": [
+            "cast:boolean"
+          ],
+          "actualizado": [
+            "cast:date"
+          ],
+          "url_detalle": [
+            "cast:url"
+          ]
+        }
+      }
+    }
+  ]
+}

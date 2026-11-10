@@ -1,0 +1,5 @@
+sku,nombre,precio,disponible,actualizado,url_detalle,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+SKU-001,Cuaderno reciclado A5,45.5,True,2025-01-10,http://127.0.0.1:44555/static/producto/SKU-001,be2bff057e49dc0a,20261110T225504Z-b3de10,http://127.0.0.1:44555/static/catalogo?page=1,2026-11-10T22:55:05Z,static_html,0,valido,
+SKU-002,Lápiz de grafito HB,8.0,True,2025-01-11,http://127.0.0.1:44555/static/producto/SKU-002,61b32d146ba0e00e,20261110T225504Z-b3de10,http://127.0.0.1:44555/static/catalogo?page=1,2026-11-10T22:55:05Z,static_html,0,valido,
+SKU-003,Mochila escolar azul,1299.0,False,2025-01-12,http://127.0.0.1:44555/static/producto/SKU-003,275ca61f20e699ef,20261110T225504Z-b3de10,http://127.0.0.1:44555/static/catalogo?page=1,2026-11-10T22:55:05Z,static_html,0,valido,
+SKU-004,Calculadora científica,389.9,True,2025-01-12,http://127.0.0.1:44555/static/producto/SKU-004,473aaa35bfdc7774,20261110T225504Z-b3de10,http://127.0.0.1:44555/static/catalogo?page=1,2026-11-10T22:55:05Z,static_html,0,valido,

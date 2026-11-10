@@ -1,0 +1,158 @@
+{
+  "run_id": "20261110T225500Z-fdfcbd",
+  "project": "f06-api-documentada",
+  "target_url": "http://127.0.0.1:44555/api/v1/products",
+  "method": "api",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-10T22:55:00Z",
+  "finished_at": "2026-11-10T22:55:00Z",
+  "budget": {
+    "requests": 4,
+    "pages": 3,
+    "records": 9,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 0.6,
+    "max_requests": 8,
+    "max_pages": 5,
+    "max_records": 100,
+    "max_seconds": 30.0
+  },
+  "quality": {
+    "total_raw": 9,
+    "valid": 9,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 9,
+    "fields": {
+      "id": {
+        "filled": 9,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "nombre": {
+        "filled": 9,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "precio": {
+        "filled": 9,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "moneda": {
+        "filled": 9,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "categoria": {
+        "filled": 9,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "activo": {
+        "filled": 9,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f06-api-documentada/20261110T225500Z-fdfcbd/data.csv",
+    "json": "outputs/matrix/f06-api-documentada/20261110T225500Z-fdfcbd/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f06-api-documentada/20261110T225500Z-fdfcbd/actions.jsonl",
+    "log": "outputs/matrix/f06-api-documentada/20261110T225500Z-fdfcbd/run.log",
+    "profile": "outputs/matrix/f06-api-documentada/20261110T225500Z-fdfcbd/profile.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Validar muestras manualmente y documentar el resultado en la matriz de pruebas."
+  ],
+  "structure": [
+    "active",
+    "category",
+    "id",
+    "name",
+    "price",
+    "price.amount",
+    "price.currency"
+  ],
+  "config": {
+    "project": "f06-api-documentada",
+    "target_url": "http://127.0.0.1:44555/api/v1/products",
+    "method": "api",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Pruebas académicas de consumo de API documentada",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/api/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 5,
+      "max_records": 100,
+      "max_requests": 8,
+      "max_seconds": 30.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "id",
+      "nombre",
+      "precio",
+      "moneda",
+      "categoria",
+      "activo"
+    ],
+    "pagination": "next_field",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'f06-api-documentada' actualizado como línea base."
+  ]
+}

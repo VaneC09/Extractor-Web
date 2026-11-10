@@ -1,0 +1,8 @@
+{"action": "http_get", "target": "http://127.0.0.1:44555/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:01Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/auth/login", "detail": "formulario de acceso autorizado -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:01Z"}
+{"action": "http_post", "target": "http://127.0.0.1:44555/auth/login", "detail": "envío de credenciales autorizadas -> 303", "outcome": "ok", "timestamp": "2026-11-10T22:55:02Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/auth/privado", "detail": "envío de credenciales autorizadas -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:02Z"}
+{"action": "login", "target": "http://127.0.0.1:44555/auth/login", "detail": "sesión iniciada", "outcome": "ok", "timestamp": "2026-11-10T22:55:02Z"}
+{"action": "http_get", "target": "http://127.0.0.1:44555/auth/privado", "detail": "página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-10T22:55:02Z"}
+{"action": "parse", "target": "http://127.0.0.1:44555/auth/privado", "detail": "5 registros en página 1", "outcome": "ok", "timestamp": "2026-11-10T22:55:02Z"}
+{"action": "pagination_end", "target": "http://127.0.0.1:44555/auth/privado", "detail": "1 página(s) recorridas", "outcome": "ok", "timestamp": "2026-11-10T22:55:02Z"}

@@ -1,0 +1,124 @@
+{
+  "run_id": "20261110T225503Z-5e0992",
+  "project": "f11-robots-prohibido",
+  "target_url": "http://127.0.0.1:44555/privado/datos.html",
+  "method": "static_html",
+  "status": "detenido_politica",
+  "status_message": "robots.txt no permite acceder a http://127.0.0.1:44555/privado/datos.html",
+  "started_at": "2026-11-10T22:55:03Z",
+  "finished_at": "2026-11-10T22:55:03Z",
+  "budget": {
+    "requests": 1,
+    "pages": 1,
+    "records": 0,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 0.0,
+    "max_requests": 3,
+    "max_pages": 1,
+    "max_records": 10,
+    "max_seconds": 30.0
+  },
+  "quality": {
+    "total_raw": 0,
+    "valid": 0,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 0,
+    "fields": {
+      "texto": {
+        "filled": 0,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 0.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [
+    {
+      "kind": "robots_disallow",
+      "message": "robots.txt no permite acceder a http://127.0.0.1:44555/privado/datos.html",
+      "url": "http://127.0.0.1:44555/privado/datos.html",
+      "next_step": "Respetar robots.txt; solicitar permiso explícito o una vía alternativa autorizada.",
+      "severity": "alta",
+      "timestamp": "2026-11-10T22:55:03Z"
+    }
+  ],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f11-robots-prohibido/20261110T225503Z-5e0992/data.csv",
+    "json": "outputs/matrix/f11-robots-prohibido/20261110T225503Z-5e0992/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f11-robots-prohibido/20261110T225503Z-5e0992/actions.jsonl",
+    "log": "outputs/matrix/f11-robots-prohibido/20261110T225503Z-5e0992/run.log",
+    "profile": "outputs/matrix/f11-robots-prohibido/20261110T225503Z-5e0992/profile.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Respetar robots.txt; solicitar permiso explícito o una vía alternativa autorizada."
+  ],
+  "structure": [],
+  "config": {
+    "project": "f11-robots-prohibido",
+    "target_url": "http://127.0.0.1:44555/privado/datos.html",
+    "method": "static_html",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Comprobar el respeto a robots.txt",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/privado/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 10,
+      "max_requests": 3,
+      "max_seconds": 30.0,
+      "delay_seconds": 0.2,
+      "timeout_seconds": 5.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "texto"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "La línea base del perfil no se actualizó porque la ejecución no terminó correctamente."
+  ]
+}

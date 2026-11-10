@@ -1,0 +1,144 @@
+{
+  "run_id": "20261110T225458Z-93a539",
+  "project": "f05-scroll-infinito",
+  "target_url": "http://127.0.0.1:44555/js/scroll.html",
+  "method": "browser",
+  "status": "completado_con_limites",
+  "status_message": "Límite alcanzado: max_scrolls (2)",
+  "started_at": "2026-11-10T22:54:58Z",
+  "finished_at": "2026-11-10T22:55:00Z",
+  "budget": {
+    "requests": 4,
+    "pages": 1,
+    "records": 15,
+    "clicks": 0,
+    "scrolls": 2,
+    "elapsed_seconds": 1.53,
+    "max_requests": 6,
+    "max_pages": 1,
+    "max_records": 50,
+    "max_seconds": 60.0
+  },
+  "quality": {
+    "total_raw": 15,
+    "valid": 15,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 15,
+    "fields": {
+      "titulo": {
+        "filled": 15,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "autor": {
+        "filled": 15,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "anio": {
+        "filled": 15,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [
+    {
+      "kind": "limit",
+      "message": "Límite alcanzado: max_scrolls (2)",
+      "url": "http://127.0.0.1:44555/js/scroll.html",
+      "next_step": "Ampliar límites solo dentro de lo autorizado.",
+      "severity": "baja",
+      "timestamp": "2026-11-10T22:55:00Z"
+    }
+  ],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs/matrix/f05-scroll-infinito/20261110T225458Z-93a539/data.csv",
+    "json": "outputs/matrix/f05-scroll-infinito/20261110T225458Z-93a539/data.json",
+    "sqlite": "outputs/matrix/web_extractor.sqlite",
+    "actions": "outputs/matrix/f05-scroll-infinito/20261110T225458Z-93a539/actions.jsonl",
+    "log": "outputs/matrix/f05-scroll-infinito/20261110T225458Z-93a539/run.log",
+    "profile": "outputs/matrix/f05-scroll-infinito/20261110T225458Z-93a539/profile.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Ampliar límites solo dentro de lo autorizado.",
+    "Si necesita más datos, amplíe límites solo dentro de lo autorizado y con pausas adecuadas."
+  ],
+  "structure": [
+    "h3.title",
+    "p.author",
+    "p.year"
+  ],
+  "config": {
+    "project": "f05-scroll-infinito",
+    "target_url": "http://127.0.0.1:44555/js/scroll.html",
+    "method": "browser",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Equipo del proyecto (propietario de los fixtures locales)",
+      "purpose": "Pruebas académicas de scroll infinito acotado",
+      "terms_reviewed": true,
+      "environment": "fixture",
+      "evidence_reference": null,
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "127.0.0.1",
+        "localhost"
+      ],
+      "allowed_path_prefixes": [
+        "/js/"
+      ],
+      "allowed_schemes": [
+        "http"
+      ],
+      "allow_private_network": true,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 50,
+      "max_requests": 6,
+      "max_seconds": 60.0,
+      "delay_seconds": 0.3,
+      "timeout_seconds": 10.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 2,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "titulo",
+      "autor",
+      "anio"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Se alcanzó max_scrolls: puede haber más contenido sin cargar",
+    "Perfil 'f05-scroll-infinito' actualizado como línea base."
+  ]
+}

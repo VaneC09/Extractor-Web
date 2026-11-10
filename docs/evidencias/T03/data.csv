@@ -1,0 +1,6 @@
+id,titulo,fecha,categoria,enlace,_record_id,_run_id,_source_url,_retrieved_at,_method,_page_index,_validation_status,_validation_errors
+N-001,Apertura de biblioteca comunitaria,2025-02-01,Cultura,http://127.0.0.1:44555/js/render.html#N-001,60c6574cd8245db4,20261110T225455Z-d6c25c,http://127.0.0.1:44555/js/render.html,2026-11-10T22:54:56Z,browser,0,valido,
+N-002,Nuevo horario de transporte,2025-02-03,Movilidad,http://127.0.0.1:44555/js/render.html#N-002,78a6d35f4aad1736,20261110T225455Z-d6c25c,http://127.0.0.1:44555/js/render.html,2026-11-10T22:54:56Z,browser,0,valido,
+N-003,Taller gratuito de programación,2025-02-05,Educación,http://127.0.0.1:44555/js/render.html#N-003,4c82a2ae82aac968,20261110T225455Z-d6c25c,http://127.0.0.1:44555/js/render.html,2026-11-10T22:54:56Z,browser,0,valido,
+N-004,Mantenimiento del parque central,2025-02-07,Servicios,http://127.0.0.1:44555/js/render.html#N-004,5269e87d5919f695,20261110T225455Z-d6c25c,http://127.0.0.1:44555/js/render.html,2026-11-10T22:54:56Z,browser,0,valido,
+N-005,Feria local de ciencia,2025-02-10,Educación,http://127.0.0.1:44555/js/render.html#N-005,26cc5a787558ca78,20261110T225455Z-d6c25c,http://127.0.0.1:44555/js/render.html,2026-11-10T22:54:56Z,browser,0,valido,
