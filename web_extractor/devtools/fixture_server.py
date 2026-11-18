@@ -7,7 +7,9 @@ Rutas dinámicas:
 - ``/api/v1/products?page=N``: API JSON documentada en ``/api/docs.html``.
 - ``/auth/login`` y ``/auth/privado``: autenticación por formulario con credenciales ficticias
   (``FIXTURE_LOGIN_USER`` / ``FIXTURE_LOGIN_PASSWORD``, con valores por defecto de prueba).
-  ``/auth/informes.csv`` es el mismo contenido como archivo descargable tras iniciar sesión.
+  ``/auth/informes.csv`` es el mismo contenido como archivo descargable tras iniciar sesión y
+  ``/auth/panel`` lo dibuja con JavaScript (para el navegador con sesión).
+- ``/api/v1/privado``: API documentada que exige ``Authorization: Bearer`` (``FIXTURE_API_TOKEN``).
 - ``/barrier/limite`` (429), ``/barrier/prohibido`` (403), ``/barrier/inestable`` (502 una vez).
 - ``/privado/...``: existe, pero robots.txt lo prohíbe; sirve para comprobar que no se solicita.
 - ``/nuevo/agenda?pagina=N``: sitio "no visto" sin configuración de ejemplo (ISO-8859-1, otra estructura).
@@ -32,6 +34,7 @@ from urllib.parse import parse_qs, urlsplit
 SITE_DIR = Path(__file__).resolve().parents[2] / "fixtures" / "site"
 DEFAULT_USER = "usuario_demo"
 DEFAULT_PASSWORD = "clave-ficticia-solo-pruebas"
+DEFAULT_API_TOKEN = "token-ficticio-solo-pruebas"
 
 PRODUCTS = [
     {"sku": "SKU-001", "name": "Cuaderno reciclado A5", "price": "$45.50 MXN", "stock": "Disponible", "updated": "2025-01-10"},
@@ -175,6 +178,29 @@ class FixtureHandler(BaseHTTPRequestHandler):
             return self._send(200, f"""<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Informes</title></head>
 <body><h1>Informes del área (ficticios)</h1><table id="informes"><thead><tr><th>Folio</th><th>Título</th><th>Estado</th></tr></thead>
 <tbody>{rows}</tbody></table><a href="/auth/logout">Salir</a></body></html>""")
+        if path == "/auth/panel":
+            if not self._logged_in():
+                return self._send(302, "", headers={"Location": "/auth/login"})
+            data = json.dumps([{"folio": f"INF-{i:03d}", "titulo": f"Informe interno de prueba {i}",
+                                "estado": "Publicado" if i % 2 else "Borrador"} for i in range(1, 6)], ensure_ascii=False)
+            return self._send(200, f"""<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Panel</title></head>
+<body><h1>Panel del área (ficticio)</h1><div id="root"></div><a href="/auth/logout">Salir</a>
+<script>
+setTimeout(function () {{
+  var rows = {data};
+  document.getElementById("root").innerHTML = rows.map(function (r) {{
+    return '<div class="informe"><span class="folio">' + r.folio + '</span><span class="titulo">' + r.titulo +
+           '</span><span class="estado">' + r.estado + '</span></div>';
+  }}).join("");
+}}, 300);
+</script></body></html>""")
+        if path == "/api/v1/privado":
+            token = os.environ.get("FIXTURE_API_TOKEN", DEFAULT_API_TOKEN)
+            if self.headers.get("Authorization") != f"Bearer {token}":
+                return self._send(401, json.dumps({"error": "token ausente o inválido"}), "application/json")
+            items = [{"codigo": f"ART-{i:02d}", "descripcion": f"Artículo interno {i}", "existencias": i * 7}
+                     for i in range(1, 7)]
+            return self._send(200, json.dumps({"data": items}, ensure_ascii=False), "application/json; charset=utf-8")
         if path == "/auth/informes.csv":
             if not self._logged_in():
                 return self._send(302, "", headers={"Location": "/auth/login"})

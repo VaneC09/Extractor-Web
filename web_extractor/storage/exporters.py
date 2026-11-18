@@ -17,7 +17,8 @@ import pandas as pd
 
 from web_extractor.models.results import Incident, ProcessedRecord
 
-LINEAGE_COLUMNS = ("record_id", "run_id", "source_url", "retrieved_at", "method", "page_index", "validation_status")
+LINEAGE_COLUMNS = ("record_id", "run_id", "source_url", "retrieved_at", "method", "page_index", "validation_status",
+                   "config_sha256")
 
 
 @dataclass
@@ -79,7 +80,8 @@ class SqliteExporter:
     SCHEMA = """
     CREATE TABLE IF NOT EXISTS runs (
         run_id TEXT PRIMARY KEY, project TEXT NOT NULL, target_url TEXT, method TEXT,
-        status TEXT, started_at TEXT, finished_at TEXT, metadata_json TEXT
+        status TEXT, started_at TEXT, finished_at TEXT, metadata_json TEXT,
+        config_sha256 TEXT, tool_version TEXT
     );
     CREATE TABLE IF NOT EXISTS records (
         run_id TEXT NOT NULL REFERENCES runs(run_id), position INTEGER NOT NULL,
@@ -102,10 +104,16 @@ class SqliteExporter:
         meta = bundle.metadata
         with sqlite3.connect(self.db_path) as conn:
             conn.executescript(self.SCHEMA)
+            existing = {row[1] for row in conn.execute("PRAGMA table_info(runs)")}
+            for column in ("config_sha256", "tool_version"):  # bases creadas por versiones anteriores
+                if column not in existing:
+                    conn.execute(f"ALTER TABLE runs ADD COLUMN {column} TEXT")
             conn.execute(
-                "INSERT OR REPLACE INTO runs VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT OR REPLACE INTO runs (run_id, project, target_url, method, status, started_at, finished_at, "
+                "metadata_json, config_sha256, tool_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (bundle.run_id, bundle.project, meta.get("target_url"), meta.get("method"), meta.get("status"),
-                 meta.get("started_at"), meta.get("finished_at"), json.dumps(meta, ensure_ascii=False, default=str)),
+                 meta.get("started_at"), meta.get("finished_at"), json.dumps(meta, ensure_ascii=False, default=str),
+                 meta.get("config_sha256"), meta.get("tool_version")),
             )
             conn.execute("DELETE FROM records WHERE run_id = ?", (bundle.run_id,))
             conn.executemany(

@@ -1,0 +1,56 @@
+# Escenario F12 — Autenticación AUTORIZADA con navegador sobre un panel generado con JavaScript.
+# Las credenciales NO van en este archivo: se leen de variables de entorno por nombre.
+#   export WE_FIXTURE_USER=usuario_demo
+#   export WE_FIXTURE_PASSWORD=clave-ficticia-solo-pruebas
+version: 1
+project:
+  name: f12-navegador-autenticado
+  description: Informes ficticios que se dibujan con JavaScript tras iniciar sesión.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/auth/panel"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario del entorno de prueba)"
+  purpose: "Validar la autenticación autorizada con navegador sin datos reales"
+  terms_reviewed: true
+  environment: fixture
+  allow_authentication: true
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/auth/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 20
+  max_requests: 6
+  max_seconds: 60
+  delay_seconds: 0.2
+  timeout_seconds: 10
+
+auth:
+  type: form
+  login_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/auth/login"
+  username_field: username
+  password_field: password
+  username_env: WE_FIXTURE_USER
+  password_env: WE_FIXTURE_PASSWORD
+  failure_text: "Credenciales incorrectas"
+
+extraction:
+  method: browser
+  record_selector: "div.informe"
+  browser:
+    wait_selector: "div.informe"
+    wait_timeout_seconds: 8
+  fields:
+    - {name: folio, selector: ".folio", required: true, validate: {regex: "^INF-\\d{3}$"}}
+    - {name: titulo, selector: ".titulo", required: true}
+    - {name: estado, selector: ".estado", validate: {choices: [Publicado, Borrador]}}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

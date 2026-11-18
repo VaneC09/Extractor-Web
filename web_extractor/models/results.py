@@ -194,11 +194,15 @@ class RunResult:
     next_steps: list[str] = field(default_factory=list)
     structure: list[str] = field(default_factory=list)
     run_dir: str = ""
+    config_sha256: str = ""
+    tool_version: str = ""
 
     def summary_dict(self) -> dict[str, Any]:
         return {
             "run_id": self.run_id,
             "project": self.project,
+            "config_sha256": self.config_sha256,
+            "tool_version": self.tool_version,
             "target_url": self.target_url,
             "method": self.method,
             "status": self.status,

@@ -1,0 +1,53 @@
+# Escenario F13 — API documentada que exige un token emitido por el propietario.
+# El token NO va en este archivo: se lee de la variable de entorno indicada en auth.token_env.
+#   export WE_FIXTURE_API_TOKEN=token-ficticio-solo-pruebas
+# Se envía solo en solicitudes dentro del alcance (nunca a robots.txt) y se enmascara en logs.
+version: 1
+project:
+  name: f13-api-con-token
+  description: Inventario ficticio desde una API documentada con token Bearer.
+target_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/api/v1/privado"
+user_agent: "WebExtractorAcademico/0.1 (+pruebas locales con fixtures)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Equipo del proyecto (propietario de la API de prueba)"
+  purpose: "Validar el consumo autorizado de una API documentada con token"
+  terms_reviewed: true
+  environment: fixture
+  allow_authentication: true
+
+scope:
+  allowed_domains: ["127.0.0.1", "localhost"]
+  allowed_path_prefixes: ["/api/"]
+  allowed_schemes: ["http"]
+  allow_private_network: true
+
+limits:
+  max_pages: 1
+  max_records: 50
+  max_requests: 3
+  max_seconds: 30
+  delay_seconds: 0.2
+  timeout_seconds: 5
+
+auth:
+  type: header
+  header_name: Authorization
+  header_prefix: "Bearer "
+  token_env: WE_FIXTURE_API_TOKEN
+
+extraction:
+  method: api
+  records_path: data
+  api:
+    documented: true
+    documentation_url: "${FIXTURE_BASE_URL:-http://127.0.0.1:8765}/api/docs.html"
+  fields:
+    - {name: codigo, path: codigo, required: true, validate: {regex: "^ART-\\d{2}$"}}
+    - {name: descripcion, path: descripcion, required: true}
+    - {name: existencias, path: existencias, type: integer, validate: {min: 0}}
+
+output:
+  directory: outputs
+  formats: [csv, json, sqlite]

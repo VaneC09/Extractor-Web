@@ -5,6 +5,10 @@ Acciones acotadas por ``limits``: navegación (cuenta como solicitud), clics en 
 registra, se respeta la pausa entre acciones, se comprueba cancelación y se buscan barreras en
 el DOM resultante. El navegador se cierra siempre en ``close()``.
 
+Con ``auth.type=form`` autorizado, inicia sesión escribiendo en el formulario las credenciales
+leídas de variables de entorno (nunca se registran); si el acceso se rechaza o aparece una
+barrera, se detiene sin reintentar.
+
 No se usan opciones para ocultar la automatización ni se modifica la huella del navegador.
 Limitación conocida: Selenium no expone el código HTTP de la navegación ni filtra los
 subrecursos que cargue la página; el presupuesto cuenta navegaciones y acciones, no subrecursos.
@@ -14,8 +18,9 @@ from __future__ import annotations
 
 from typing import Iterator
 
+from web_extractor.core.auth import read_credentials
 from web_extractor.core.barriers import detect_barrier
-from web_extractor.core.errors import BarrierDetected, BrowserUnavailable, LimitReached
+from web_extractor.core.errors import AuthFailed, BarrierDetected, BrowserUnavailable, LimitReached
 from web_extractor.extractors.base import AcquisitionContext, BaseAdapter
 from web_extractor.extractors.static_html import find_next_link
 from web_extractor.models.results import FetchedDocument
@@ -59,7 +64,54 @@ class SeleniumSession:
             finally:
                 self.driver = None
 
-    def navigate(self, url: str, purpose: str) -> None:
+    def login(self, auth) -> None:
+        """Inicio de sesión autorizado en el navegador. Ante rechazo o barrera se detiene; no reintenta."""
+        from selenium.common.exceptions import NoSuchElementException, TimeoutException, WebDriverException
+        from selenium.webdriver.common.by import By
+        from selenium.webdriver.common.keys import Keys
+        from selenium.webdriver.support.ui import WebDriverWait
+
+        ctx = self.ctx
+        username, password = read_credentials(auth)
+        self.navigate(auth.login_url, "formulario de acceso autorizado", auth_expected=True)
+        try:
+            user_input = self.driver.find_element(By.NAME, auth.username_field)
+            pass_input = self.driver.find_element(By.NAME, auth.password_field)
+        except NoSuchElementException:
+            raise AuthFailed(f"No se encontró un formulario con los campos '{auth.username_field}' y "
+                             f"'{auth.password_field}'") from None
+        login_page = self.driver.current_url
+        ctx.budget.check()
+        ctx.budget.consume_request()
+        ctx.rate.wait_turn()
+        try:
+            user_input.clear()
+            user_input.send_keys(username)
+            pass_input.clear()
+            pass_input.send_keys(password)
+            buttons = pass_input.find_elements(
+                By.XPATH, "./ancestor::form//*[self::button[not(@type) or @type='submit'] or self::input[@type='submit']]")
+            if buttons:
+                buttons[0].click()
+            else:
+                pass_input.send_keys(Keys.ENTER)
+            WebDriverWait(self.driver, ctx.cfg.extraction.browser.wait_timeout_seconds, poll_frequency=0.2).until(
+                lambda d: d.current_url != login_page or not d.find_elements(By.NAME, auth.password_field)
+                or bool(auth.failure_text and auth.failure_text in d.page_source))
+        except TimeoutException:
+            pass
+        except WebDriverException as exc:
+            ctx.actions.record("login", self.driver.current_url, f"fallo del navegador: {exc.msg}", "error")
+            raise AuthFailed("No se pudo completar el inicio de sesión autorizado; no se reintenta.") from None
+        source = self.driver.page_source
+        if self.driver.find_elements(By.NAME, auth.password_field) or (auth.failure_text and auth.failure_text in source):
+            ctx.actions.record("login", self.driver.current_url, "credenciales rechazadas", "stop")
+            raise AuthFailed("El inicio de sesión autorizado fue rechazado; no se reintenta.")
+        ctx.client.ensure_allowed(self.driver.current_url)
+        self.check_barrier()
+        ctx.actions.record("login", self.driver.current_url, "sesión iniciada en el navegador", "ok")
+
+    def navigate(self, url: str, purpose: str, *, auth_expected: bool = False) -> None:
         from selenium.common.exceptions import TimeoutException, WebDriverException
 
         ctx = self.ctx
@@ -76,11 +128,11 @@ class SeleniumSession:
             ctx.actions.record("browser_get", url, f"{purpose}: {exc.msg}", "error")
             raise
         ctx.actions.record("browser_get", url, purpose)
-        self.check_barrier()
+        self.check_barrier(auth_expected=auth_expected)
         ctx.client.ensure_allowed(self.driver.current_url)
 
-    def check_barrier(self) -> None:
-        barrier = detect_barrier(None, {}, self.driver.page_source)
+    def check_barrier(self, *, auth_expected: bool = False) -> None:
+        barrier = detect_barrier(None, {}, self.driver.page_source, auth_expected=auth_expected)
         if barrier:
             barrier.url = self.driver.current_url
             self.ctx.actions.record("barrier_detected", self.driver.current_url, barrier.kind, "stop")
@@ -210,6 +262,8 @@ class SeleniumBrowserAdapter(BaseAdapter):
         extraction = ctx.cfg.extraction
         browser = extraction.browser
         self.session.start()
+        if ctx.cfg.auth.type == "form":
+            self.session.login(ctx.cfg.auth)
         url: str | None = ctx.cfg.target_url
         visited: set[str] = set()
         index = 0

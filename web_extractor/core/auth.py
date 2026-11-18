@@ -21,6 +21,24 @@ from web_extractor.core.http_client import PoliteHttpClient
 from web_extractor.utils.redaction import SECRETS
 
 
+def apply_header_auth(client: PoliteHttpClient, auth: AuthConfig) -> None:
+    """Clave/token de una API documentada: se envía en un encabezado y se enmascara en toda salida."""
+    token = os.environ.get(auth.token_env or "", "")
+    if not token:
+        raise AuthFailed(f"Falta el token en la variable de entorno {auth.token_env}. Defínala en su entorno; "
+                         "nunca en el YAML.")
+    SECRETS.register(token)
+    client.auth_headers[auth.header_name] = f"{auth.header_prefix}{token}"
+    client.actions.record("auth_header", "", f"encabezado {auth.header_name} configurado (valor oculto)")
+
+
+def prepare_auth(client: PoliteHttpClient, auth: AuthConfig) -> None:
+    if auth.type == "form":
+        form_login(client, auth)
+    elif auth.type == "header":
+        apply_header_auth(client, auth)
+
+
 def read_credentials(auth: AuthConfig) -> tuple[str, str]:
     username = os.environ.get(auth.username_env or "", "")
     password = os.environ.get(auth.password_env or "", "")

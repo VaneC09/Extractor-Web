@@ -71,7 +71,8 @@ class TransformPipeline:
         self.extraction = extraction
         self.dedup_keys = extraction.deduplicate_on or [f.name for f in extraction.fields]
 
-    def process(self, raw_records: list[RawRecord], run_id: str) -> tuple[list[ProcessedRecord], QualityReport]:
+    def process(self, raw_records: list[RawRecord], run_id: str,
+                provenance: dict[str, Any] | None = None) -> tuple[list[ProcessedRecord], QualityReport]:
         quality = QualityReport(total_raw=len(raw_records),
                                 fields={f.name: FieldQuality() for f in self.extraction.fields})
         processed: list[ProcessedRecord] = []
@@ -110,6 +111,7 @@ class TransformPipeline:
                 "validation_status": status,
                 "validation_errors": errors,
                 "transformations": transformations,
+                **(provenance or {}),
             }
             for err in errors:
                 if len(quality.error_samples) < MAX_ERROR_SAMPLES:

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Iterator
 
-from web_extractor.core.auth import form_login
+from web_extractor.core.auth import prepare_auth
 from web_extractor.core.errors import ExtractionError
 from web_extractor.extractors.base import BaseAdapter
 from web_extractor.models.results import FetchedDocument
@@ -16,8 +16,7 @@ class StructuredFileAdapter(BaseAdapter):
     def iter_documents(self) -> Iterator[FetchedDocument]:
         ctx = self.ctx
         fmt = ctx.cfg.extraction.file_format
-        if ctx.cfg.auth.type == "form":
-            form_login(ctx.client, ctx.cfg.auth)
+        prepare_auth(ctx.client, ctx.cfg.auth)
         ctx.budget.consume_page()
         accept = "text/csv" if fmt == "csv" else "application/json"
         doc = ctx.client.get(ctx.cfg.target_url, purpose=f"descarga de archivo {fmt}", accept=accept)

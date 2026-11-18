@@ -11,6 +11,10 @@
   <h2>GET /api/v1/products?page={n}</h2>
   <p>Devuelve <code>data</code> (lista de productos), <code>meta</code> (página y total) y
      <code>links.next</code> (URL de la página siguiente o <code>null</code>).</p>
+  <h2>GET /api/v1/privado (requiere token)</h2>
+  <p>Inventario interno ficticio. Requiere el encabezado <code>Authorization: Bearer &lt;token&gt;</code>
+     con un token emitido por el propietario a cada equipo autorizado. Sin token válido responde
+     <code>401</code>. Mismo límite: 1 solicitud por segundo.</p>
   <p>Especificación: <a href="/api/openapi.json">OpenAPI (JSON)</a></p>
 </body>
 </html>

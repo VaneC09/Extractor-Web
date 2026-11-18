@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 
 from web_extractor.config.loader import load_config, parse_config
-from web_extractor.devtools.fixture_server import DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
+from web_extractor.devtools.fixture_server import DEFAULT_API_TOKEN, DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
 from web_extractor.utils.redaction import SECRETS
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -56,6 +56,7 @@ def fixture_env(server, monkeypatch):
     monkeypatch.setenv("FIXTURE_BASE_URL", server.base_url)
     monkeypatch.setenv("WE_FIXTURE_USER", DEFAULT_USER)
     monkeypatch.setenv("WE_FIXTURE_PASSWORD", DEFAULT_PASSWORD)
+    monkeypatch.setenv("WE_FIXTURE_API_TOKEN", DEFAULT_API_TOKEN)
     return server
 
 

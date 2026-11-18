@@ -30,7 +30,7 @@ from web_extractor.config.templates import FIELD_COLUMNS, default_config_dict, f
 from web_extractor.core.authorization import missing_for_diagnosis, missing_for_extraction
 from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError, WebExtractorError
-from web_extractor.devtools.fixture_server import DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
+from web_extractor.devtools.fixture_server import DEFAULT_API_TOKEN, DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
 from web_extractor.gui.jobs import ExtractionJob
 from web_extractor.reports.diagnosis_report import diagnosis_markdown
 from web_extractor.reports.run_report import STATUS_TEXT
@@ -197,6 +197,7 @@ def _port_open(port: int) -> bool:
 def fixture_server() -> tuple[FixtureServer | None, str]:
     os.environ.setdefault("WE_FIXTURE_USER", DEFAULT_USER)
     os.environ.setdefault("WE_FIXTURE_PASSWORD", DEFAULT_PASSWORD)
+    os.environ.setdefault("WE_FIXTURE_API_TOKEN", DEFAULT_API_TOKEN)
     base = f"http://127.0.0.1:{FIXTURE_PORT}"
     os.environ["FIXTURE_BASE_URL"] = base
     if _port_open(FIXTURE_PORT):

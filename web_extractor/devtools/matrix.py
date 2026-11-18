@@ -19,7 +19,7 @@ from web_extractor.config.schema import ProjectConfig
 from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError
 from web_extractor.core.limits import CancelToken
-from web_extractor.devtools.fixture_server import DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
+from web_extractor.devtools.fixture_server import DEFAULT_API_TOKEN, DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
 from web_extractor.selection.suggest import suggest_extraction
 from web_extractor.utils.timeutils import utc_now_iso
 
@@ -75,6 +75,7 @@ def run_matrix(output_dir: Path, include_browser: bool = True, docs_path: Path |
     output_dir.mkdir(parents=True, exist_ok=True)
     os.environ.setdefault("WE_FIXTURE_USER", DEFAULT_USER)
     os.environ.setdefault("WE_FIXTURE_PASSWORD", DEFAULT_PASSWORD)
+    os.environ.setdefault("WE_FIXTURE_API_TOKEN", DEFAULT_API_TOKEN)
     rows: list[MatrixRow] = []
     with FixtureServer() as server:
         os.environ["FIXTURE_BASE_URL"] = server.base_url

@@ -47,6 +47,8 @@ def run_markdown(result: RunResult, config_summary: dict[str, Any], notes: list[
         f"- Estado: **{result.status}** — {STATUS_TEXT.get(result.status, '')}",
         f"- Detalle: {result.status_message}",
         f"- Inicio / fin (UTC): {result.started_at} / {result.finished_at}",
+        f"- Configuración (SHA-256): `{result.config_sha256}` — copia en `config_efectiva.json`",
+        f"- Versión de la herramienta: {result.tool_version}",
         f"- Revisión humana requerida: {'sí' if result.requires_human_review else 'no'}", "",
         "## Autorización y alcance declarados", "",
         "```json", json.dumps({"authorization": config_summary.get("authorization"), "scope": config_summary.get("scope")},

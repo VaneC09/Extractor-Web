@@ -238,20 +238,32 @@ class ExtractionConfig(StrictModel):
 
 
 class AuthConfig(StrictModel):
-    """Autenticación por formulario, solo con autorización expresa y credenciales del usuario."""
+    """Autenticación solo con autorización expresa y credenciales del usuario.
 
-    type: Literal["none", "form"] = "none"
+    - ``form``: formulario de acceso (HTTP o navegador); usuario y contraseña en variables de entorno.
+    - ``header``: clave o token de una API/archivo documentado, enviado en un encabezado; el valor
+      vive en una variable de entorno y nunca en la configuración.
+    """
+
+    type: Literal["none", "form", "header"] = "none"
     login_url: str | None = None
     username_field: str = "username"
     password_field: str = "password"
     username_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")
     password_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")
     failure_text: str | None = None
+    header_name: str = Field("Authorization", pattern=r"^[A-Za-z0-9-]{1,64}$")
+    header_prefix: str = Field("Bearer ", max_length=20)
+    token_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")
 
     @model_validator(mode="after")
     def _requirements(self) -> "AuthConfig":
         if self.type == "form" and not (self.login_url and self.username_env and self.password_env):
             raise ValueError("auth.type=form requiere login_url, username_env y password_env")
+        if self.type == "header" and not self.token_env:
+            raise ValueError("auth.type=header requiere token_env (nombre de la variable de entorno con el token)")
+        if self.type == "header" and self.header_name.lower() in ("cookie", "host", "user-agent"):
+            raise ValueError(f"auth.header_name '{self.header_name}' no está permitido")
         return self
 
 
@@ -318,8 +330,8 @@ class ProjectConfig(StrictModel):
             raise ValueError("allow_private_network solo puede usarse con dominios locales (fixtures)")
         if self.auth.type != "none" and not self.authorization.allow_authentication:
             raise ValueError("auth configurada sin authorization.allow_authentication=true")
-        if self.auth.type != "none" and self.extraction.method == "browser":
-            raise ValueError("autenticación con navegador no está soportada en el MVP (use static_html)")
+        if self.auth.type == "header" and self.extraction.method not in ("api", "structured_file"):
+            raise ValueError("auth.type=header solo aplica a APIs o archivos documentados (api, structured_file)")
         if self.extraction.api.documentation_url:
             if not self.extraction.api.documentation_url.startswith(("https://", "http://")):
                 raise ValueError("api.documentation_url debe ser http(s)")

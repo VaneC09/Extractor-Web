@@ -54,6 +54,8 @@ class PoliteHttpClient:
         self.session = session or requests.Session()
         self.session.headers.update({"User-Agent": cfg.user_agent, "Accept-Language": "es,en;q=0.7"})
         self.robots = RobotsPolicy(self._fetch_robots, cfg.user_agent, rate.raise_min_delay)
+        # Encabezados de autenticación autorizada: solo en solicitudes dentro del alcance, nunca a robots.txt.
+        self.auth_headers: dict[str, str] = {}
 
     def close(self) -> None:
         self.session.close()
@@ -125,9 +127,10 @@ class PoliteHttpClient:
                 self.robots.ensure_allowed(url)
             self.budget.consume_request()
             self.rate.wait_turn()
+            send_headers = {**(headers or {}), **self.auth_headers} if check_robots else headers
             try:
                 response = self.session.request(
-                    method, url, headers=headers, data=data, timeout=limits.timeout_seconds,
+                    method, url, headers=send_headers, data=data, timeout=limits.timeout_seconds,
                     allow_redirects=False, stream=True,
                 )
                 text, truncated = self._read_limited(response)

@@ -7,7 +7,7 @@ import json
 from typing import Iterator
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
-from web_extractor.core.auth import form_login
+from web_extractor.core.auth import prepare_auth
 from web_extractor.core.errors import AuthorizationError
 from web_extractor.extractors.base import BaseAdapter
 from web_extractor.models.results import FetchedDocument
@@ -30,8 +30,7 @@ class DocumentedApiAdapter(BaseAdapter):
         api = cfg.extraction.api
         if not (api.documented and api.documentation_url):
             raise AuthorizationError(["API no verificada como pública y documentada: no ejecutar"])
-        if cfg.auth.type == "form":
-            form_login(ctx.client, cfg.auth)
+        prepare_auth(ctx.client, cfg.auth)
         pagination = cfg.extraction.pagination
         page = pagination.start_page
         url: str | None = (

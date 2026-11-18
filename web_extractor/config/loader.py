@@ -7,6 +7,7 @@ no parezcan secretos, para que nunca se inyecten credenciales dentro del objeto 
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import re
@@ -73,6 +74,12 @@ def load_config(path: str | Path) -> ProjectConfig:
     except (yaml.YAMLError, json.JSONDecodeError) as exc:
         raise ConfigError([f"sintaxis inválida en {path}: {exc}"]) from None
     return parse_config(data)
+
+
+def config_fingerprint(effective: dict[str, Any]) -> str:
+    """SHA-256 de la configuración efectiva (variables ya expandidas; nunca contiene secretos)."""
+    canonical = json.dumps(effective, ensure_ascii=False, sort_keys=True, separators=(",", ":"), default=str)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def config_summary(cfg: ProjectConfig) -> dict[str, Any]:

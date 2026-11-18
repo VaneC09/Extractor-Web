@@ -17,7 +17,8 @@ import logging
 from pathlib import Path
 from typing import Callable
 
-from web_extractor.config.loader import config_summary
+from web_extractor import __version__
+from web_extractor.config.loader import config_fingerprint, config_summary
 from web_extractor.config.schema import ProjectConfig
 from web_extractor.core.authorization import missing_for_diagnosis, missing_for_extraction
 from web_extractor.core.errors import (
@@ -310,8 +311,15 @@ class ExtractionEngine:
 
     def _finish(self, result: RunResult, ctx: AcquisitionContext, raw_records: list[RawRecord], run_dir: Path) -> RunResult:
         cfg = self.cfg
-        records, quality = TransformPipeline(cfg.extraction).process(raw_records, result.run_id)
+        effective_config = cfg.model_dump(mode="json", by_alias=True)
+        result.config_sha256 = config_fingerprint(effective_config)
+        result.tool_version = __version__
+        provenance = {"config_sha256": result.config_sha256, "tool_version": result.tool_version}
+        records, quality = TransformPipeline(cfg.extraction).process(raw_records, result.run_id, provenance)
         result.records, result.quality = records, quality
+        run_dir.mkdir(parents=True, exist_ok=True)
+        (run_dir / "config_efectiva.json").write_text(
+            json.dumps(effective_config, ensure_ascii=False, indent=2, sort_keys=True), encoding="utf-8")
         result.incidents = ctx.incidents.items
         result.budget = ctx.budget.snapshot()
 
@@ -339,6 +347,7 @@ class ExtractionEngine:
             run_id=result.run_id, project=cfg.project.name, field_names=[f.name for f in cfg.extraction.fields],
             records=records, incidents=result.incidents,
             metadata={"target_url": cfg.target_url, "method": cfg.extraction.method, "status": result.status,
+                      "config_sha256": result.config_sha256, "tool_version": result.tool_version,
                       "started_at": result.started_at, "finished_at": result.finished_at,
                       "authorization": summary["authorization"], "limits": summary["limits"],
                       "quality": quality.to_dict()},
@@ -349,6 +358,7 @@ class ExtractionEngine:
         result.outputs["actions"] = str(run_dir / "actions.jsonl")
         result.outputs["log"] = str(run_dir / "run.log")
         result.outputs["profile"] = str(run_dir / "profile.json")
+        result.outputs["config"] = str(run_dir / "config_efectiva.json")
         result.next_steps = next_steps_for(result)
         result.outputs.update(write_run_report(result, run_dir, summary, notes))
         self.logger.info("Fin de ejecución %s: %s (%d registros exportados)", result.run_id, result.status, quality.exported)
