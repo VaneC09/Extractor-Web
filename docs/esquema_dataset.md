@@ -38,10 +38,13 @@ papelería, 3 páginas) generada con `python -m web_extractor matrix`. Todos los
 | `_validation_errors` / `validation_errors` | Errores por campo |
 | — / `transformations` | Pasos aplicados por campo, p. ej. `["remove_currency", "thousands_comma", "empty_to_none", "cast:float"]` |
 | — / `position` | Posición del registro crudo antes de deduplicar |
+| `_config_sha256` / `config_sha256` | Huella SHA-256 de la configuración efectiva (copia en `config_efectiva.json` de la ejecución) |
+| — / `tool_version` | Versión de la herramienta que produjo el registro |
 
 ## SQLite (`outputs/web_extractor.sqlite`)
 
-- `runs(run_id, project, target_url, method, status, started_at, finished_at, metadata_json)`
+- `runs(run_id, project, target_url, method, status, started_at, finished_at, metadata_json, config_sha256, tool_version)`.
+  Las bases antiguas se migran automáticamente.
 - `records(run_id, position, record_id, validation_status, source_url, retrieved_at, data_json, raw_json, lineage_json)`
 - `incidents(run_id, timestamp, kind, severity, url, message, next_step)`
 

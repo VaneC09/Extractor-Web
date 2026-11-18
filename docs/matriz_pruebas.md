@@ -1,7 +1,7 @@
 # Matriz de pruebas y criterios de aceptación
 
 Los **resultados observados** se generan con `python -m web_extractor matrix` y están en
-[evidencias/matriz_resultados.md](evidencias/matriz_resultados.md) (18/18 casos cumplieron lo
+[evidencias/matriz_resultados.md](evidencias/matriz_resultados.md) (20/20 casos cumplieron lo
 esperado en la ejecución del 2026-11-18 UTC). Todos los escenarios usan fixtures locales con datos
 ficticios servidos por `web_extractor/devtools/fixture_server.py`; **no se probó ningún sitio real**.
 
@@ -27,16 +27,25 @@ ficticios servidos por `web_extractor/devtools/fixture_server.py`; **no se prob�
 | T16 | API sin documentación | — | `f06` alterado | fixture | 8 | "No verificado / no ejecutar" | Detenerse |
 | T17 | Sitio no visto (ISO-8859-1, sin YAML de ejemplo) | Requests + BS4 | plantilla + reglas sugeridas | fixture | 5 | 7 registros con acentos correctos, `completado_con_limites` por `max_pages=2` | Continuar |
 | T18 | Sitio no visto que redirige a otro host | — | plantilla | fixture | 3 | Redirección no seguida, `out_of_scope` | Detenerse |
+| T19 | Navegador con autenticación autorizada | Selenium | `f12` | fixture, `allow_authentication`, credenciales ficticias | 6 | 5 informes renderizados tras el login; 1 POST; contraseña ausente de salidas | Continuar |
+| T20 | API documentada con token | Requests (JSON) + encabezado | `f13` | fixture, API documentada, token ficticio por variable de entorno | 3 | 6 registros; token ausente de salidas; huella en el linaje | Continuar |
 
 Cobertura: 4 mecanismos de adquisición distintos (HTML estático, navegador, archivo estructurado,
-API), 11 configuraciones de sitio sobre el mismo motor, y todos los casos mínimos solicitados
+API), 13 configuraciones de sitio sobre el mismo motor, y todos los casos mínimos solicitados
 (estático, JS, archivo/API, paginación, scroll/cargar más, tabla, autenticación, CAPTCHA/bloqueo).
+La autenticación autorizada se prueba con tres mecanismos: formulario con Requests (T08), formulario
+con navegador (T19) y token documentado para APIs (T20).
+
+En T20 el diagnóstico pasivo se detiene con `auth_required`. Es intencional: el diagnóstico nunca
+envía credenciales ni tokens.
 
 Además, `python -m pytest` cubre de forma aislada: límites `max_pages`, `max_records`,
 `max_requests` y `max_seconds`; archivo STOP; 403; 502 reintentado dentro del tope y fallo sin
 reintentos; paginación fuera de alcance bloqueada; plantilla de URL que termina en 404; login
 rechazado sin reintento; credenciales ausentes; página protegida sin autenticación configurada;
-redacción de secretos; normalizadores, tipos y validadores; inspección y clasificación de cada
+login con navegador rechazado sin reintento; token ausente (sin solicitudes a la API) o
+equivocado (401, una sola solicitud); el token nunca llega a robots.txt; encabezado no permitido
+para HTML o navegador; redacción de secretos; normalizadores, tipos y validadores; inspección y clasificación de cada
 fixture; sugerencias; comparación de perfiles; códigos de salida de la CLI.
 
 ## Criterios de aceptación
@@ -48,11 +57,13 @@ fixture; sugerencias; comparación de perfiles; códigos de salida de la CLI.
 | A3 | El usuario revisa campos y vista previa antes de extraer; sin confirmación no hay solicitudes de extracción | `run` muestra vista previa y pide `si`; `test_run_requires_confirmation_when_not_interactive`, `test_requires_confirmation` |
 | A4 | Se aplican límites de páginas, registros, tiempo, solicitudes, clics y scrolls; la cancelación funciona | T04, T05, T12; `test_limits_are_enforced`, `test_stop_file_cancels` |
 | A5 | Las barreras provocan parada segura e incidencia, sin evasión ni reintentos | T09, T10, T11; `test_barriers_stop_without_retries` |
-| A6 | CSV/JSON/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones) | `examples/demo_dataset/`; `test_static_pagination_end_to_end` |
-| A7 | Errores y logs sin credenciales ni secretos | T08; `test_authorized_login_without_leaking_secrets`, `TestRedaction` |
-| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (171 pruebas superadas el 2026-11-18 UTC) |
+| A6 | CSV/JSON/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones, huella de configuración, versión) | `examples/demo_dataset/`; `test_static_pagination_end_to_end`, `test_every_output_carries_provenance` |
+| A7 | Errores y logs sin credenciales ni secretos | T08, T19, T20; `test_authorized_login_without_leaking_secrets`, `test_api_with_token_header`, `TestRedaction` |
+| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (189 pruebas superadas el 2026-11-18 UTC) |
 | A10 | Un sitio que no es de los ejemplos sigue el mismo flujo y las mismas paradas | T17, T18; `tests/integration/test_sitio_no_incluido.py`; [sitios_no_incluidos.md](sitios_no_incluidos.md) |
 | A11 | La interfaz gráfica no permite solicitudes sin la autorización requerida y permite cancelar | `tests/integration/test_gui.py` |
+| A12 | La autenticación autorizada funciona igual con Requests, navegador y API con token, y se detiene sin reintentar si falla | T08, T19, T20; `tests/integration/test_rubrica.py` |
+| A13 | Cada ejecución es reproducible: misma configuración ⇒ misma huella SHA-256, guardada con la versión | `test_fingerprint_changes_only_with_configuration`, `test_sqlite_created_by_previous_version_is_migrated` |
 | A9 | Entregables coherentes: código, dataset, informe, matriz, manual, guion | `README.md`, `docs/` |
 
 ## Sustitución por URLs autorizadas

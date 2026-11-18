@@ -28,7 +28,8 @@ entorno de desarrollo contra fixtures locales; no implica validación en sitios 
   de topes explícitos, con registro de acciones, cancelación y cierre limpio.
 - **Alcance:** `static_html` (paginación `next_link` y `url_template`), `browser` (espera, «cargar
   más», scroll infinito, paginación por enlace), `structured_file` (CSV/JSON), `api` (documentada,
-  paginación `next_field` y `page_param`), autenticación por formulario autorizada.
+  paginación `next_field` y `page_param`), autenticación autorizada por formulario (Requests y
+  navegador) y por token documentado en un encabezado (API y archivo).
 - **Archivos:** `extractors/*`, `core/auth.py`, `core/engine.py`, `core/tracing.py`.
 - **Pruebas:** `tests/integration/test_engine_http.py` (límites, barreras, reintentos, robots,
   alcance, autenticación, cancelación) y `test_browser.py`.
@@ -36,7 +37,7 @@ entorno de desarrollo contra fixtures locales; no implica validación en sitios 
 - **Terminado cuando:** el mismo motor ejecuta ≥ 4 mecanismos solo cambiando la configuración;
   los topes se respetan y se reflejan en el estado `completado_con_limites`; las barreras no se
   reintentan; el navegador se cierra siempre.
-- **Estado:** implementado (autenticación con navegador fuera del MVP, rechazada por validación).
+- **Estado:** implementado, incluida la autenticación con navegador (T19) y por token (T20).
 
 ## Fase 3 — Selección, transformación y calidad de datos
 
@@ -75,7 +76,7 @@ entorno de desarrollo contra fixtures locales; no implica validación en sitios 
 
 - **Objetivo:** evidencia reproducible, documentación coherente y endurecimiento.
 - **Alcance:**
-  - Matriz de 18 casos con resultados observados. T17 y T18 son un sitio «no visto» sin YAML
+  - Matriz de 20 casos con resultados observados. T17 y T18 son un sitio «no visto» sin YAML
     de ejemplo; ver [sitios_no_incluidos.md](sitios_no_incluidos.md).
   - Manual, informe técnico y guion de demostración.
 - **Archivos:** `devtools/matrix.py`, `docs/*`, `examples/demo_dataset/`.

@@ -31,6 +31,8 @@ indica `authorized_by`, y pruebas con archivos locales (`preview --from-file`).
 6. **Extraer**: `python -m web_extractor run mi.yaml`. Se muestra autorización, diagnóstico y vista
    previa; escriba `si` para confirmar. `--yes` equivale a esa confirmación explícita.
 7. **Revisar resultados** en `outputs/<proyecto>/<run_id>/report.md` y los datos en CSV/JSON/SQLite.
+   `config_efectiva.json` guarda la configuración exacta usada. Su huella SHA-256 aparece en cada
+   registro (`_config_sha256`) y en el informe.
 8. **Cancelar** en cualquier momento con `Ctrl+C` o creando `outputs/STOP` (bórrelo después).
 
 ### Con la interfaz gráfica
@@ -103,7 +105,9 @@ Paginación: `next_link` (+`next_selector`), `url_template` (+`url_template` con
 en 404 o página vacía), `next_field` y `page_param` (solo API). Navegador: `wait_selector`,
 `load_more_selector`, `infinite_scroll`, con topes `limits.max_clicks` y `limits.max_scrolls`.
 
-Autenticación autorizada (solo `static_html`/`api`):
+Autenticación autorizada por formulario (`static_html`, `browser`, `structured_file` y `api`). Con
+`browser`, el navegador abre `login_url`, localiza los campos por su atributo `name`, envía el
+formulario una sola vez y continúa en la misma sesión. Ejemplo: `examples/f12_navegador_autenticado.yaml`.
 
 ```yaml
 authorization: {allow_authentication: true, ...}
@@ -114,6 +118,29 @@ auth:
   password_env: MI_CLAVE
   failure_text: "Credenciales incorrectas"
 ```
+
+Token o API key **emitido por el propietario y documentado** (solo `api` y `structured_file`).
+Ejemplo: `examples/f13_api_con_token.yaml`.
+
+```yaml
+authorization: {allow_authentication: true, ...}
+auth:
+  type: header
+  header_name: Authorization    # el que indique la documentación (p. ej. X-API-Key)
+  header_prefix: "Bearer "      # vacío si la documentación no usa prefijo
+  token_env: MI_API_TOKEN       # nombre de la variable, nunca el valor
+```
+
+Reglas del token:
+
+- Se envía solo en solicitudes dentro del alcance; nunca a robots.txt.
+- Se enmascara en logs e informes.
+- Si falta la variable, la ejecución termina en `fallido` sin hacer solicitudes a la API.
+- Si el servidor responde 401, la ejecución se detiene con `auth_required` y no se reintenta.
+- `Cookie`, `Host` y `User-Agent` no se admiten como encabezado.
+
+En la interfaz gráfica, la sección «Autenticación autorizada» de la pestaña «Campos y reglas»
+ofrece las mismas tres opciones: sin autenticación, formulario y token.
 
 ## 4. Interpretar el estado final
 

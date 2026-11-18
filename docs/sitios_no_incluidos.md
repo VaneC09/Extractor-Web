@@ -44,7 +44,7 @@ qué se validó y qué no.
 | 403 con «Just a moment… / cf-chl» | Se detiene después de 1 solicitud | `bot_challenge` | Pedir acceso autorizado; no evadir | Sesión simulada + fixture local |
 | CAPTCHA (reCAPTCHA, hCaptcha, Turnstile) | Se detiene después de 1 solicitud | `captcha` | Pedir una vía autorizada (API, exportación) | Sesión simulada + T09 |
 | 429 / 503 | Se detiene sin reintentar | `rate_limit` / `overload` | Reducir la frecuencia y consultar los límites | Sesión simulada + T10 |
-| 401 o formulario de contraseña inesperado | Se detiene | `auth_required` | Solo continuar con `auth.type=form` autorizado | Sesión simulada + T08 |
+| 401 o formulario de contraseña inesperado | Se detiene | `auth_required` | Solo continuar con `auth.type=form` (Requests o navegador) o, en una API documentada, `auth.type=header` con un token emitido por el propietario | Sesión simulada + T08, T19, T20 |
 | Página en ISO-8859-1 sin `charset` en la cabecera | Lee `<meta charset>`; si no lo hay, prueba UTF-8 y luego windows-1252 | — | — | Sesión simulada + fixture local (T17) |
 | Contenido generado con JavaScript | Sugiere Navegador; el render compara el texto visible | — | Activar «Comparar con render» | Fixtures T03–T05 |
 | API detectada pero no documentada | La marca «no verificado / no ejecutar» | Bloqueo en `run` | Conseguir la documentación pública del propietario | T16 |

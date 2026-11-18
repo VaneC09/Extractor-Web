@@ -27,8 +27,9 @@ Funciona con cuatro mecanismos de adquisición intercambiables:
 - Respeta robots.txt (RFC 9309), alcance de dominios/rutas, pausas mínimas (≥ 1 s en remoto),
   concurrencia 1 y topes de páginas, registros, solicitudes, clics, scrolls y tiempo.
 - No admite campos con nombres de datos sensibles (CURP, RFC, tarjetas, contraseñas…) ni secretos
-  en la configuración; las credenciales autorizadas se leen de variables de entorno y se enmascaran
-  en logs e informes.
+  en la configuración; las credenciales y los tokens autorizados se leen de variables de entorno y
+  se enmascaran en logs e informes. La autenticación autorizada funciona con formulario (Requests
+  o navegador) y con un token documentado en un encabezado (APIs y archivos).
 
 ## Instalación
 
@@ -85,13 +86,19 @@ python -m web_extractor run      examples/f01_catalogo_estatico.yaml   # pide co
 ```
 
 Resultados en `outputs/<proyecto>/<run_id>/`: `data.csv`, `data.json`, `report.md`,
-`summary.json`, `actions.jsonl`, `run.log`, `profile.json`, y la base acumulativa
-`outputs/web_extractor.sqlite`.
+`summary.json`, `actions.jsonl`, `run.log`, `profile.json`, `config_efectiva.json`, y la base
+acumulativa `outputs/web_extractor.sqlite`.
+
+Cada registro lleva en su linaje lo siguiente:
+
+- el origen, la fecha de adquisición y el método;
+- el estado de validación y las transformaciones;
+- la huella SHA-256 de la configuración y la versión de la herramienta.
 
 Matriz de pruebas completa (arranca su propio servidor en un puerto libre):
 
 ```bash
-python -m web_extractor matrix        # 18 casos; escribe docs/evidencias/matriz_resultados.md
+python -m web_extractor matrix        # 20 casos; escribe docs/evidencias/matriz_resultados.md
 python -m pytest                      # pruebas unitarias e integración con fixtures
 ```
 

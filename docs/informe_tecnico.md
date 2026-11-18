@@ -5,17 +5,17 @@
 Construir una herramienta reutilizable que, para una URL **autorizada**, diagnostique cómo se
 entrega la información, proponga un método de adquisición con evidencia y confianza, permita a una
 persona definir campos y reglas, extraiga dentro de límites, limpie y valide, conserve linaje y
-genere informes. El alcance del MVP excluye cualquier técnica de evasión, la autenticación con
-navegador y bases de datos de servidor.
+genere informes. El alcance del MVP excluye cualquier técnica de evasión y las bases de datos de
+servidor.
 
 ### Datos imprescindibles que faltan (y supuestos)
 
 | Dato | Estado | Supuesto mientras falta |
 |---|---|---|
-| URLs reales aprobadas | No proporcionadas | Se usan 11 escenarios de fixtures locales controlados |
+| URLs reales aprobadas | No proporcionadas | Se usan 13 escenarios de fixtures locales controlados |
 | Confirmación de autorización por URL (quién, finalidad, términos, evidencia, vigencia) | No proporcionada | La plantilla `examples/plantilla_sitio_autorizado.yaml` queda con `confirmed: false` y bloquea la extracción |
 | Límites de frecuencia aceptados por cada propietario | No proporcionados | Pausa ≥ 1 s en remoto (3 s en la plantilla), concurrencia 1, ≤ 5 solicitudes por defecto |
-| Credenciales autorizadas | No aplican aún | Solo credenciales ficticias del entorno de prueba, por variables de entorno |
+| Credenciales o tokens autorizados | No aplican aún | Solo credenciales y un token ficticios del entorno de prueba, por variables de entorno |
 | Campos de interés reales | No proporcionados | Campos ficticios por escenario |
 
 ## 2. Arquitectura
@@ -50,7 +50,7 @@ Interfaces (protocolos) principales:
 Separación de responsabilidades: la configuración solo describe; el núcleo decide políticas; los
 adaptadores solo adquieren documentos; `selection` solo interpreta; `transforms` solo limpia;
 `storage` solo persiste; `interface`/`app` solo presentan y preguntan. No hay selectores ni URLs
-de sitios concretos en el código: los once escenarios usan el mismo motor con YAML distintos.
+de sitios concretos en el código: los trece escenarios usan el mismo motor con YAML distintos.
 
 ## 3. Decisiones técnicas
 
@@ -69,6 +69,9 @@ de sitios concretos en el código: los once escenarios usan el mismo motor con Y
 | SQLite con columnas JSON | Persistencia local sin servidor, consultable y acumulativa |
 | Línea base de perfil solo tras ejecución correcta sin cambios graves | No "reparar" ni aceptar silenciosamente cambios de estructura |
 | Paquete `selection/` en lugar de `selectors/` | Evitar sombrear el módulo estándar `selectors` |
+| Autenticación con navegador = mismo formulario y mismas reglas que con Requests | Credenciales desde variables de entorno; el formulario se localiza por el atributo `name` configurado; un rechazo se registra como `auth_failed` y no se reintenta |
+| Token de API solo como encabezado documentado (`auth.type: header`) | Válido únicamente con `api` o `structured_file`; nunca se envía a robots.txt; `Cookie`, `Host` y `User-Agent` están prohibidos como encabezado |
+| Huella SHA-256 de la configuración efectiva | Cada registro y cada ejecución indican exactamente con qué reglas y qué versión se obtuvieron |
 
 ### Versiones
 
@@ -112,13 +115,28 @@ no es requisito porque Selenium cubre los escenarios del MVP.
   límites no publicados, variaciones por usuario/región, contenido tras autenticación no autorizada,
   ni el código HTTP de una navegación en Selenium.
 
+### Trazabilidad de cada ejecución
+
+Cada ejecución guarda `config_efectiva.json` (la configuración ya validada y expandida, sin
+secretos, porque el esquema solo admite nombres de variables) y su huella SHA-256 calculada sobre
+JSON canónico. La huella y la versión de la herramienta aparecen en:
+
+- el linaje de cada registro (columna `_config_sha256` del CSV);
+- los metadatos del JSON, `summary.json` e `report.md`;
+- las columnas `runs.config_sha256` y `runs.tool_version` de SQLite.
+
+Las bases SQLite creadas por versiones anteriores se migran añadiendo las columnas.
+
+Dos ejecuciones con la misma huella usaron exactamente las mismas reglas. Si las huellas difieren,
+comparar los dos `config_efectiva.json` muestra qué cambió.
+
 ## 6. Riesgos y mitigaciones
 
 | Riesgo | Mitigación |
 |---|---|
 | Uso sin autorización | Puerta de autorización + confirmación por ejecución; plantilla bloqueada por defecto |
 | Carga excesiva | Concurrencia 1, pausa mínima, topes duros, parada ante 429/503, Crawl-delay |
-| Fuga de secretos | Credenciales por variable de entorno, registro de secretos, filtro de logs, URLs redactadas, `extra="forbid"`; prueba que busca la contraseña en todas las salidas |
+| Fuga de secretos | Credenciales y tokens por variable de entorno, registro de secretos, filtro de logs, URLs redactadas, `extra="forbid"`; pruebas que buscan la contraseña y el token en todas las salidas; el token no se envía a robots.txt |
 | Recopilar datos sensibles | Rechazo de nombres de campo sensibles, `personal_data: none` por defecto, minimización a campos configurados |
 | Acceso a red interna (SSRF) | Rechazo de IPs privadas/loopback salvo `allow_private_network` con dominios locales |
 | Selectores rotos o cambio de estructura | Perfiles, tasa de llenado, firma estructural, revisión humana obligatoria |
@@ -127,12 +145,14 @@ no es requisito porque Selenium cubre los escenarios del MVP.
 
 ## 7. Resultados
 
-Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **18/18 casos cumplen lo
+Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **20/20 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest`: 171 pruebas superadas. Incluye:
+`python -m pytest`: 189 pruebas superadas. Incluye:
 
-- 7 pruebas con Chrome headless.
-- 7 pruebas de la interfaz gráfica con `streamlit.testing`.
+- 10 pruebas con Chrome headless (3 de ellas con inicio de sesión en el navegador).
+- 8 pruebas de la interfaz gráfica con `streamlit.testing`.
+- 15 pruebas de `tests/integration/test_rubrica.py`. Cubren la autenticación en el navegador, el
+  token por encabezado y la huella de configuración en CSV, JSON, SQLite, `summary.json` e informe.
 - 14 pruebas de sitios no incluidos, que usan el sitio local «no visto» y una sesión HTTP simulada.
 
 Todas las ejecuciones se hicieron **solo contra fixtures locales o respuestas simuladas**; no hay
@@ -147,7 +167,8 @@ extracción propia.
 
 - `gui/jobs.py` ejecuta `run()` en un hilo. Comparte un `CancelToken` con el botón Cancelar y
   recibe cada acción mediante el gancho `on_action` del motor, para mostrar el progreso en vivo.
-- Las credenciales nunca se escriben en la interfaz: solo el nombre de la variable de entorno.
+- Las credenciales y los tokens nunca se escriben en la interfaz: solo el nombre de la variable de
+  entorno, con un indicador de si está definida en el proceso.
 - Limitación: la interfaz es local y para una sola persona. Las descargas y el historial leen
   `outputs/`. Algunos textos internos de Streamlit, como los del selector de archivos, aparecen en
   inglés.
@@ -162,11 +183,12 @@ extracción propia.
 | «Cargar más» / scroll | Media | Igual; mayor carga por acción | Topes de clics/scrolls bajos |
 | API documentada | Alta | Alta si la documentación permite el uso | Respetar cuotas y términos de la API |
 | Archivo CSV/JSON | Alta | Alta con licencia abierta | Verificar licencia y vigencia |
-| Autenticación | Media | Solo con autorización expresa y cuenta propia | Credenciales del usuario; nunca de terceros |
+| Autenticación (Requests o navegador) | Media | Solo con autorización expresa y cuenta propia | Credenciales del usuario; nunca de terceros |
+| API con token | Alta | Solo si el propietario emite el token y documenta su uso | Token propio por variable de entorno; respetar cuotas |
 | CAPTCHA / 429 / 403 / robots | No aplica: se detiene | No se continúa | Vía alternativa autorizada por el propietario |
 
 ## 9. Extensiones previstas
 
 Interfaz web multiusuario (la GUI actual es local); Excel,
 PostgreSQL y MongoDB como exportadores adicionales; caché condicional HTTP; adaptador Playwright;
-autenticación con navegador; CI.
+CI.
