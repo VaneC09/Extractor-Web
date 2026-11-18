@@ -52,6 +52,10 @@ def _with_output(cfg: ProjectConfig, directory: Path, **extraction_updates) -> P
     return cfg.model_copy(update=update)
 
 
+def _secret_absent(result, secret: str) -> bool:
+    return not any(secret in p.read_text(encoding="utf-8", errors="ignore") for p in Path(result.run_dir).iterdir())
+
+
 def _row_from_run(row: MatrixRow, result, expected_status: set[str], check: Callable | None = None) -> MatrixRow:
     q, b = result.quality, result.budget
     row.observed = (f"estado={result.status}; registros={q.exported} (crudos {q.total_raw}, válidos {q.valid}, "
@@ -159,6 +163,16 @@ def run_matrix(output_dir: Path, include_browser: bool = True, docs_path: Path |
 
         rows.extend(_unseen_site_cases(server, output_dir))
 
+        if include_browser:
+            case("T19", "f12_navegador_autenticado.yaml",
+                 "Navegador con autenticación autorizada + contenido JavaScript tras el login",
+                 "5 informes del panel; 1 solo POST de login; contraseña ausente de todas las salidas", {"completado"},
+                 lambda r: r.quality.exported == 5 and _secret_absent(r, DEFAULT_PASSWORD))
+        case("T20", "f13_api_con_token.yaml", "API documentada con token (encabezado Authorization desde variable de entorno)",
+             "6 artículos; token ausente de salidas; huella SHA-256 de la configuración en el linaje", {"completado"},
+             lambda r: r.quality.exported == 6 and _secret_absent(r, DEFAULT_API_TOKEN)
+             and all(x.lineage.get("config_sha256") == r.config_sha256 for x in r.records))
+
     rows.extend(_config_cases())
     return _write(rows, output_dir, docs_path)
 
@@ -245,6 +259,7 @@ def _config_cases() -> list[MatrixRow]:
 
 
 def _write(rows: list[MatrixRow], output_dir: Path, docs_path: Path | None) -> int:
+    rows = sorted(rows, key=lambda r: r.id)
     payload = {"generated_at": utc_now_iso(), "rows": [asdict(r) for r in rows]}
     (output_dir / "matriz_resultados.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     lines = [

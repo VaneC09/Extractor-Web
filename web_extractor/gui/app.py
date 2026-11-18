@@ -75,13 +75,16 @@ SIMPLE_WIDGETS = [
     "extraction.browser.infinite_scroll", "extraction.browser.wait_timeout_seconds",
     "extraction.api.documented", "extraction.api.documentation_url",
     "auth.type", "auth.login_url", "auth.username_field", "auth.password_field",
-    "auth.username_env", "auth.password_env", "auth.failure_text", "output.formats",
+    "auth.username_env", "auth.password_env", "auth.failure_text",
+    "auth.header_name", "auth.header_prefix", "auth.token_env", "output.formats",
 ]
 DEFAULTS_UA = default_config_dict("https://www.example.org/")["user_agent"]
 LIST_TEXT_WIDGETS = ["scope.allowed_domains", "scope.allowed_path_prefixes"]
 NULLABLE_WIDGETS = {"authorization.valid_until", "extraction.file_format"}
+VERBATIM_TEXT = {"auth.header_prefix"}  # «Bearer » lleva el espacio como separador
 NON_NULL_TEXT = {"project.description": "", "user_agent": DEFAULTS_UA, "extraction.pagination.page_param": "page",
-                 "auth.username_field": "username", "auth.password_field": "password"}
+                 "auth.username_field": "username", "auth.password_field": "password",
+                 "auth.header_name": "Authorization", "auth.header_prefix": ""}
 DEFAULTS = default_config_dict("https://www.example.org/")
 DEFAULTS["extraction"].update({
     "record_selector": None, "table_selector": None, "records_path": None, "file_format": None,
@@ -93,7 +96,8 @@ DEFAULTS["extraction"].update({
     "api": {"documented": False, "documentation_url": None},
 })
 DEFAULTS["auth"].update({"login_url": None, "username_field": "username", "password_field": "password",
-                         "username_env": None, "password_env": None, "failure_text": None})
+                         "username_env": None, "password_env": None, "failure_text": None,
+                         "header_name": "Authorization", "header_prefix": "Bearer ", "token_env": None})
 
 
 # --------------------------------------------------------------------------- utilidades
@@ -153,7 +157,7 @@ def collect() -> dict:
     data: dict = {}
     for path in SIMPLE_WIDGETS:
         value = st.session_state.get(wkey(path), get_path(DEFAULTS, path))
-        if isinstance(value, str):
+        if isinstance(value, str) and path not in VERBATIM_TEXT:
             value = value.strip() or NON_NULL_TEXT.get(path)
         if isinstance(value, date):
             value = value.isoformat()
@@ -168,8 +172,13 @@ def collect() -> dict:
     data["extraction"]["deduplicate_on"] = [d for d in data["extraction"].get("deduplicate_on") or [] if d in names]
     data["version"] = 1
     data["output"]["directory"] = str(ROOT / "outputs")
-    if data["auth"]["type"] == "none":
+    auth_type = data["auth"]["type"]
+    if auth_type == "none":
         data["auth"] = {"type": "none"}
+    elif auth_type == "form":
+        data["auth"] = {k: v for k, v in data["auth"].items() if k not in ("header_name", "header_prefix", "token_env")}
+    else:
+        data["auth"] = {k: data["auth"].get(k) for k in ("type", "header_name", "header_prefix", "token_env")}
     return data
 
 
@@ -580,8 +589,9 @@ def tab_fields(data: dict, errors: list[str]) -> None:
                 st.checkbox("Es pública y está documentada por el propietario", key=wkey("extraction.api.documented"))
                 st.text_input("URL de la documentación", key=wkey("extraction.api.documentation_url"))
         with st.expander("Autenticación autorizada"):
-            st.selectbox("Tipo", ["none", "form"], key=wkey("auth.type"),
-                         format_func={"none": "Sin autenticación", "form": "Formulario (credenciales propias)"}.get)
+            st.selectbox("Tipo", ["none", "form", "header"], key=wkey("auth.type"),
+                         format_func={"none": "Sin autenticación", "form": "Formulario (credenciales propias)",
+                                      "header": "Token/API key documentado (encabezado)"}.get)
             if st.session_state.get(wkey("auth.type")) == "form":
                 st.text_input("URL de acceso", key=wkey("auth.login_url"))
                 st.text_input("Campo de usuario", key=wkey("auth.username_field"))
@@ -593,6 +603,16 @@ def tab_fields(data: dict, errors: list[str]) -> None:
                     if name:
                         defined = bool(os.environ.get(name))
                         st.caption(f"{'✓' if defined else '✗'} `{name}` {'definida' if defined else 'no definida en este proceso'}")
+            elif st.session_state.get(wkey("auth.type")) == "header":
+                st.caption("Solo para APIs o archivos cuya documentación indique el encabezado y emita el token.")
+                st.text_input("Encabezado", key=wkey("auth.header_name"))
+                st.text_input("Prefijo del valor", key=wkey("auth.header_prefix"), help="Ej.: «Bearer » o vacío")
+                st.text_input("Variable de entorno del token", key=wkey("auth.token_env"), placeholder="MI_API_TOKEN")
+                name = st.session_state.get(wkey("auth.token_env"))
+                if name:
+                    defined = bool(os.environ.get(name))
+                    st.caption(f"{'✓' if defined else '✗'} `{name}` {'definida' if defined else 'no definida en este proceso'}")
+            if st.session_state.get(wkey("auth.type")) != "none":
                 st.caption("Las credenciales nunca se escriben aquí: solo el nombre de la variable de entorno.")
     with c2:
         st.markdown("#### Campos")
@@ -805,7 +825,8 @@ def tab_results(cfg: ProjectConfig | None) -> None:
         cols = st.columns(3)
         downloads = [("csv", "Datos CSV", "text/csv"), ("json", "Datos JSON", "application/json"),
                      ("report", "Informe (Markdown)", "text/markdown"), ("summary", "Resumen JSON", "application/json"),
-                     ("actions", "Acciones (JSONL)", "application/json"), ("log", "Log sin secretos", "text/plain")]
+                     ("actions", "Acciones (JSONL)", "application/json"), ("log", "Log sin secretos", "text/plain"),
+                     ("config", "Configuración efectiva", "application/json")]
         for i, (key, label, mime) in enumerate(downloads):
             path = result.outputs.get(key)
             if path and Path(path).exists():
@@ -814,6 +835,7 @@ def tab_results(cfg: ProjectConfig | None) -> None:
         if result.outputs.get("sqlite"):
             st.caption(f"Base SQLite acumulativa: `{result.outputs['sqlite']}`")
         st.caption(f"Carpeta de la ejecución: `{result.run_dir}`")
+        st.caption(f"Huella SHA-256 de la configuración: `{result.config_sha256}` · herramienta {result.tool_version}")
     render_history(cfg)
 
 

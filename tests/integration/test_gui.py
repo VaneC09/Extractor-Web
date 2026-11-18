@@ -149,3 +149,22 @@ def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
     assert not at.exception
     assert job.result.status == "completado" and job.result.quality.exported > 0
     assert any("completado" in s.value for s in at.success)
+
+
+def test_token_example_round_trips_and_runs(fixture_env, monkeypatch):
+    monkeypatch.setenv("WE_GUI_FIXTURE_PORT", str(fixture_env.base_url.rsplit(":", 1)[1]))
+    at = _app().run()
+    option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f13"))
+    at.selectbox(key="example_choice").select(option)
+    _button(at, "Cargar ejemplo").click().run()
+    assert not at.exception and not at.error
+    assert at.session_state["w:auth.type"] == "header"
+    assert at.session_state["w:auth.token_env"] == "WE_FIXTURE_API_TOKEN"
+    assert any("WE_FIXTURE_API_TOKEN" in c.value and "definida" in c.value for c in at.caption)
+
+    at.checkbox(key="run_confirm").check().run()
+    _button(at, "Iniciar extracción").click().run()
+    job = _wait_job(at)
+    assert not at.exception
+    assert job.result.status == "completado" and job.result.quality.exported == 6
+    assert any(job.result.config_sha256 in c.value for c in at.caption)
