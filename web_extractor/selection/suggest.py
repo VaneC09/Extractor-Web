@@ -57,7 +57,12 @@ def suggest_extraction(diagnosis: Diagnosis) -> dict[str, Any] | None:
     if records:
         top = records[0]
         fields = []
-        for child in top["child_selectors"][:8]:
+        children = top["child_selectors"][:8]
+        for child in sorted(children, key=lambda c: not _HEADING.match(c)):
+            if _HEADING.match(child):
+                fields.append({"name": _field_name("titulo", used), "selector": child,
+                               "type": "string", "normalize": ["collapse_whitespace"]})
+                continue
             cls = child.split(".", 1)[1] if "." in child else child
             fields.append({"name": _field_name(cls.split(".")[0], used), "selector": "." + cls,
                            "type": "string", "normalize": ["collapse_whitespace"]})
@@ -65,6 +70,13 @@ def suggest_extraction(diagnosis: Diagnosis) -> dict[str, Any] | None:
             fields.append({"name": _field_name("url", used), "selector": "a[href]", "attribute": "href", "type": "url"})
         if not fields:
             fields = [{"name": "texto", "type": "string", "normalize": ["collapse_whitespace"]}]
-        return {"method": best if best in ("static_html", "browser") else "static_html",
-                "record_selector": top["selector"], "fields": fields}
+        method = best if best in ("static_html", "browser") else "static_html"
+        block = {"method": method, "record_selector": top["selector"], "fields": fields}
+        pagination = cand.get("pagination")
+        if pagination and (method == "static_html" or pagination["mode"] == "next_link"):
+            block["pagination"] = dict(pagination)
+        return block
     return None
+
+
+_HEADING = re.compile(r"^h[1-6]$")

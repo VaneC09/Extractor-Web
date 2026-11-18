@@ -9,6 +9,8 @@ Rutas dinámicas:
   (``FIXTURE_LOGIN_USER`` / ``FIXTURE_LOGIN_PASSWORD``, con valores por defecto de prueba).
 - ``/barrier/limite`` (429), ``/barrier/prohibido`` (403), ``/barrier/inestable`` (502 una vez).
 - ``/privado/...``: existe, pero robots.txt lo prohíbe; sirve para comprobar que no se solicita.
+- ``/nuevo/agenda?pagina=N``: sitio "no visto" sin configuración de ejemplo (ISO-8859-1, otra estructura).
+- ``/nuevo/redirige`` (301 a otro host: ``localhost``) y ``/nuevo/desafio`` (403 con desafío anti-bot).
 
 Registra cada solicitud en ``hits`` para que las pruebas verifiquen los topes.
 """
@@ -50,6 +52,36 @@ API_ITEMS = [
     for i in range(1, 10)
 ]
 API_PAGE_SIZE = 4
+
+EVENTS = [
+    ("Taller de encuadernación", "12/03/2025", "Biblioteca Ñuñoa", "Cupo: 25"),
+    ("Charla: datos abiertos", "14/03/2025", "Auditorio José Martí", "Cupo: 120"),
+    ("Club de lectura juvenil", "15/03/2025", "Sala Gabriela Mistral", "Cupo: 18"),
+    ("Exposición de cartografía", "18/03/2025", "Galería Pública", "Entrada libre"),
+    ("Taller de fotografía", "20/03/2025", "Biblioteca Ñuñoa", "Cupo: 15"),
+    ("Concierto de cámara", "22/03/2025", "Auditorio José Martí", "Cupo: 200"),
+    ("Curso de catalogación", "25/03/2025", "Sala Gabriela Mistral", "Cupo: 30"),
+]
+EVENT_PAGES = [EVENTS[0:4], EVENTS[4:7]]
+
+
+def agenda_page(page: int) -> bytes:
+    """Sitio "no visto": otra estructura, ISO-8859-1 declarado solo en <meta> y paginación ?pagina=N."""
+    cards = "\n".join(
+        f"""<div class="evento">
+      <h3><a href="/nuevo/evento/{(page - 1) * 4 + i + 1}">{html.escape(title)}</a></h3>
+      <p class="fecha">{when}</p><p class="lugar">{html.escape(place)}</p><span class="cupo">{html.escape(seats)}</span>
+    </div>"""
+        for i, (title, when, place, seats) in enumerate(EVENT_PAGES[page - 1])
+    )
+    nxt = f'<a href="/nuevo/agenda?pagina={page + 1}">Siguiente »</a>' if page < len(EVENT_PAGES) else ""
+    body = f"""<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Agenda cultural (ficticia)</title></head><body>
+<div id="cabecera"><h1>Agenda cultural del municipio</h1><p>Actividades ficticias de demostración.</p></div>
+<div class="listado">{cards}</div>
+<div class="paginador"><span>Página {page} de {len(EVENT_PAGES)}</span> {nxt}</div>
+</body></html>"""
+    return body.encode("iso-8859-1")
 
 
 def catalog_page(page: int) -> str:
@@ -153,6 +185,18 @@ class FixtureHandler(BaseHTTPRequestHandler):
             return self._send(200, catalog_page(1))
         if path.startswith("/privado/"):
             return self._send(200, "<h1>Recurso que robots.txt prohíbe</h1>")
+        if path == "/nuevo/agenda":
+            number = query.get("pagina", ["1"])[0]
+            number = int(number) if number.isdigit() else 0
+            if 1 <= number <= len(EVENT_PAGES):
+                return self._send(200, agenda_page(number), "text/html")
+            return self._send(404, "<h1>No encontrado</h1>")
+        if path == "/nuevo/redirige":
+            port = self.server.server_address[1]  # type: ignore[attr-defined]
+            return self._send(301, "", headers={"Location": f"http://localhost:{port}/nuevo/agenda"})
+        if path == "/nuevo/desafio":
+            return self._send(403, "<html><head><title>Just a moment...</title></head><body>"
+                                   "<div id='cf-chl-widget'>Checking your browser before accessing.</div></body></html>")
         return self._serve_file(path)
 
     def do_HEAD(self) -> None:  # noqa: N802

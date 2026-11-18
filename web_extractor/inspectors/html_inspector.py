@@ -31,6 +31,8 @@ _INFINITE = re.compile(r"infinite[-_ ]?scroll|IntersectionObserver|data-infinite
 _DATA_EXT = re.compile(r"\.(csv|json|xlsx?|xml|geojson|parquet|zip)(\?|$)", re.I)
 _API_DOC = re.compile(r"\b(api|openapi|swagger|developers?|desarrolladores|datos abiertos|open data)\b", re.I)
 _PAGE_PARAM = re.compile(r"[?&](page|p|pagina|offset|start)=\d+", re.I)
+_HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"]
+_PAGE_NUMBER = re.compile(r"(?<=[?&])(page|p|pg|pagina|página)=\d+", re.I)
 
 
 def _css_for(tag: Tag) -> str:
@@ -66,7 +68,7 @@ class HtmlInspector:
         self._render_hints(doc, soup, visible_text, scripts, script_chars, noscript_text, f)
         self._tables(soup, out)
         self._repeated(body, out)
-        self._pagination(doc, soup, f)
+        self._pagination(doc, soup, out)
         self._on_demand(doc, soup, f)
         self._structured(doc, soup, out)
         self._forms(soup, f)
@@ -129,6 +131,9 @@ class HtmlInspector:
                 if avg_text >= 10:
                     sample = tags[0]
                     children = Counter(_css_for(c) for c in sample.find_all(True) if c.get("class"))
+                    for heading in sample.find_all(_HEADINGS):
+                        if not heading.get("class"):
+                            children[heading.name] += 1
                     candidates.append({"selector": selector, "count": len(tags), "avg_text": round(avg_text),
                                        "child_selectors": [c for c, _ in children.most_common(8)],
                                        "has_link": sample.find("a", href=True) is not None})
@@ -140,17 +145,31 @@ class HtmlInspector:
                                         ", ".join(top["child_selectors"][:5]), {"static_html": 0.15}))
             out.candidates["record_selectors"] = candidates[:5]
 
-    def _pagination(self, doc, soup, f) -> None:
+    def _pagination(self, doc, soup, out: InspectionOutput) -> None:
+        f = out.findings
         evidence = []
+        suggestion: dict | None = None
         rel_next = soup.find(["a", "link"], rel=lambda v: v and "next" in v)
         if rel_next is not None:
             evidence.append(f"rel=next -> {rel_next.get('href')}")
+            if rel_next.name == "a":
+                suggestion = {"mode": "next_link", "next_selector": 'a[rel~="next"]'}
         for a in soup.find_all("a", href=True):
             text = a.get_text(strip=True)
-            if _NEXT_TEXT.match(text) or a.get("aria-label", "").lower() in ("next", "siguiente"):
+            is_next = bool(_NEXT_TEXT.match(text)) or a.get("aria-label", "").lower() in ("next", "siguiente")
+            if is_next:
                 evidence.append(f"enlace '{text or a.get('aria-label')}' -> {a['href']}")
+                if suggestion is None and a.get("class"):
+                    suggestion = {"mode": "next_link", "next_selector": _css_for(a)}
             elif _PAGE_PARAM.search(a["href"]):
                 evidence.append(f"parámetro de página -> {a['href']}")
+            if suggestion is None and (is_next or _PAGE_PARAM.search(a["href"])):
+                href = urljoin(doc.final_url, a["href"])
+                template, count = _PAGE_NUMBER.subn(lambda m: f"{m.group(1)}={{page}}", href, count=1)
+                if count and urlsplit(href).path == urlsplit(doc.final_url).path:
+                    suggestion = {"mode": "url_template", "url_template": template}
+        if suggestion:
+            out.candidates["pagination"] = suggestion
         if soup.select("nav.pagination, .pagination, .pager, [aria-label*=pagina], [aria-label*=pagination]"):
             evidence.append("contenedor de paginación")
         if evidence:
@@ -177,9 +196,14 @@ class HtmlInspector:
         f = out.findings
         files, docs = [], []
         host = urlsplit(doc.final_url).netloc
+        # Los enlaces dentro de los registros son contenido (p. ej. una charla "datos abiertos"), no navegación.
+        record_links: set[int] = set()
+        for cand in out.candidates.get("record_selectors", [])[:1]:
+            record_links = {id(a) for el in soup.select(cand["selector"]) for a in el.find_all("a")}
         for a in soup.find_all("a", href=True):
             href = urljoin(doc.final_url, a["href"])
-            if _API_DOC.search(a.get_text(" ", strip=True)) or re.search(r"openapi|swagger|/docs?/|api-docs", href, re.I):
+            text_hint = id(a) not in record_links and _API_DOC.search(a.get_text(" ", strip=True))
+            if text_hint or re.search(r"openapi|swagger|/docs?/|api-docs", href, re.I):
                 docs.append({"url": href, "text": a.get_text(strip=True)[:60]})
             elif _DATA_EXT.search(urlsplit(href).path + ("?" if "?" in href else "")):
                 files.append({"url": href, "text": a.get_text(strip=True)[:60], "same_host": urlsplit(href).netloc == host})

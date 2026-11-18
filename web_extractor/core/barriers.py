@@ -88,6 +88,8 @@ def detect_barrier(
         sample = text[:_SCAN_LIMIT]
         if match := _CAPTCHA.search(sample):
             return Barrier("captcha", "HTTP 403 con CAPTCHA", _snippet(sample, match), status)
+        if match := _BOT_CHALLENGE.search(sample):
+            return Barrier("bot_challenge", "HTTP 403 con desafío anti-bot", _snippet(sample, match), status)
         return Barrier("access_denied", "HTTP 403: acceso denegado", "", status)
 
     sample = text[:_SCAN_LIMIT] if text else ""

@@ -13,12 +13,14 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 from typing import Callable
 
-from web_extractor.config.loader import load_config
+from web_extractor.config.loader import load_config, parse_config
+from web_extractor.config.templates import default_config_dict
 from web_extractor.config.schema import ProjectConfig
 from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError
 from web_extractor.core.limits import CancelToken
 from web_extractor.devtools.fixture_server import DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
+from web_extractor.selection.suggest import suggest_extraction
 from web_extractor.utils.timeutils import utc_now_iso
 
 EXAMPLES = Path(__file__).resolve().parents[2] / "examples"
@@ -154,8 +156,50 @@ def run_matrix(output_dir: Path, include_browser: bool = True, docs_path: Path |
                         "Cambio de severidad alta, revisión humana, perfil no actualizado")
         run_case(row, cfg, {"completado"}, lambda r: r.requires_human_review)
 
+        rows.extend(_unseen_site_cases(server, output_dir))
+
     rows.extend(_config_cases())
     return _write(rows, output_dir, docs_path)
+
+
+def _unseen_site_cases(server: FixtureServer, output_dir: Path) -> list[MatrixRow]:
+    """Sitio sin YAML de ejemplo: solo plantilla desde la URL + reglas sugeridas por el diagnóstico."""
+    rows = []
+    data = default_config_dict(f"{server.base_url}/nuevo/agenda", "t17-sitio-no-visto")
+    data["output"]["directory"] = str(output_dir)
+    before = len(server.hits)
+    diagnosis = ExtractionEngine(parse_config(data)).diagnose()
+    suggestion = suggest_extraction(diagnosis) or {}
+    row = MatrixRow("T17", "Sitio no visto (sin YAML de ejemplo, ISO-8859-1): reglas 100 % sugeridas",
+                    suggestion.get("method", "—"), "fixture", ", ".join(f["name"] for f in suggestion.get("fields", [])),
+                    str(data["limits"]["max_requests"]),
+                    "Diagnóstico → sugerencia → extracción sin editar reglas; 7 eventos con acentos correctos; "
+                    "parada por max_pages=2")
+    row.extra["diagnóstico"] = (f"{diagnosis.best.method} ({diagnosis.best.confidence}, {diagnosis.best.score})"
+                                if diagnosis.best else "sin recomendación")
+    data["extraction"] = suggestion
+    data["authorization"].update(confirmed=True, authorized_by="Equipo docente (fixture local)",
+                                 purpose="Validar el flujo genérico", terms_reviewed=True)
+    result = ExtractionEngine(parse_config(data)).run(confirmed=True)
+    _row_from_run(row, result, {"completado_con_limites"},
+                  lambda r: r.quality.exported == 7 and any(x.data.get("lugar") == "Biblioteca Ñuñoa" for x in r.records))
+    row.server_hits = len(server.hits) - before
+    rows.append(row)
+
+    data = default_config_dict(f"{server.base_url}/nuevo/redirige", "t18-redireccion")
+    before = len(server.hits)
+    diagnosis = ExtractionEngine(parse_config(data)).diagnose()
+    row = MatrixRow("T18", "Sitio no visto que redirige a otro host (127.0.0.1 → localhost)", "auto", "fixture", "—",
+                    str(data["diagnosis"]["max_requests"]), "Redirección no seguida; incidencia out_of_scope con paso legítimo")
+    row.observed = f"detenido={diagnosis.stopped}; solicitudes={diagnosis.requests_used}"
+    row.errors = "; ".join(f"{i.kind}: {i.message}" for i in diagnosis.incidents)[:300] or "—"
+    row.decision = "Detenerse"
+    row.server_hits = len(server.hits) - before
+    row.passed = (diagnosis.stopped and any(i.kind == "out_of_scope" for i in diagnosis.incidents)
+                  and not any("/nuevo/agenda" in h for h in server.hits[before:]))
+    row.extra["diagnóstico"] = "detenido: " + ", ".join(i.kind for i in diagnosis.incidents)
+    rows.append(row)
+    return rows
 
 
 def _config_cases() -> list[MatrixRow]:

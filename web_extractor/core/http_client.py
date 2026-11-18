@@ -105,12 +105,22 @@ class PoliteHttpClient:
         redirects = 0
         while True:
             self.budget.check()
-            if check_robots:
-                check_in_scope(url, self.cfg.scope)
-            else:
-                validate_url(url, allowed_schemes=self.cfg.scope.allowed_schemes,
-                             allowed_domains=self.cfg.scope.allowed_domains, allowed_path_prefixes=["/robots.txt"],
-                             allow_private_network=self.cfg.scope.allow_private_network)
+            try:
+                if check_robots:
+                    check_in_scope(url, self.cfg.scope)
+                else:
+                    validate_url(url, allowed_schemes=self.cfg.scope.allowed_schemes,
+                                 allowed_domains=self.cfg.scope.allowed_domains, allowed_path_prefixes=["/robots.txt"],
+                                 allow_private_network=self.cfg.scope.allow_private_network)
+            except ScopeError as exc:
+                if not redirects:
+                    raise
+                self.actions.record("redirect_blocked", url, f"desde {original_url}", "stop")
+                raise ScopeError(
+                    f"{original_url} redirige a {url}, que está fuera del alcance autorizado ({exc}). No se siguió "
+                    "la redirección. Si el propietario autoriza ese destino (p. ej. la variante con o sin 'www', "
+                    "o https), añádalo explícitamente al alcance."
+                ) from None
             if check_robots and self.cfg.scope.respect_robots_txt:
                 self.robots.ensure_allowed(url)
             self.budget.consume_request()

@@ -33,7 +33,7 @@ from web_extractor.core.errors import (
     ScopeError,
     TransientHTTPError,
 )
-from web_extractor.core.http_client import PoliteHttpClient
+from web_extractor.core.http_client import PoliteHttpClient, detect_encoding
 from web_extractor.core.limits import Budget, CancelToken, LimitValues, RateLimiter
 from web_extractor.core.tracing import ActionEntry, ActionLog, IncidentLog
 from web_extractor.extractors.base import AcquisitionContext
@@ -200,7 +200,8 @@ class ExtractionEngine:
     def preview(self, max_records: int = 5, from_file: Path | None = None) -> PreviewResult:
         extraction = self.cfg.extraction
         if from_file is not None:
-            text = Path(from_file).read_text(encoding="utf-8")
+            raw_bytes = Path(from_file).read_bytes()
+            text = raw_bytes.decode(detect_encoding("", raw_bytes), errors="replace")
             suffix = Path(from_file).suffix.lower()
             content_type = {".json": "application/json", ".csv": "text/csv"}.get(suffix, "text/html")
             doc = FetchedDocument(self.cfg.target_url, self.cfg.target_url, 200, content_type, text, via="file")

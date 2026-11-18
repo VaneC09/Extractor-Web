@@ -77,8 +77,11 @@ SIMPLE_WIDGETS = [
     "auth.type", "auth.login_url", "auth.username_field", "auth.password_field",
     "auth.username_env", "auth.password_env", "auth.failure_text", "output.formats",
 ]
+DEFAULTS_UA = default_config_dict("https://www.example.org/")["user_agent"]
 LIST_TEXT_WIDGETS = ["scope.allowed_domains", "scope.allowed_path_prefixes"]
 NULLABLE_WIDGETS = {"authorization.valid_until", "extraction.file_format"}
+NON_NULL_TEXT = {"project.description": "", "user_agent": DEFAULTS_UA, "extraction.pagination.page_param": "page",
+                 "auth.username_field": "username", "auth.password_field": "password"}
 DEFAULTS = default_config_dict("https://www.example.org/")
 DEFAULTS["extraction"].update({
     "record_selector": None, "table_selector": None, "records_path": None, "file_format": None,
@@ -151,7 +154,7 @@ def collect() -> dict:
     for path in SIMPLE_WIDGETS:
         value = st.session_state.get(wkey(path), get_path(DEFAULTS, path))
         if isinstance(value, str):
-            value = value.strip() or None
+            value = value.strip() or NON_NULL_TEXT.get(path)
         if isinstance(value, date):
             value = value.isoformat()
         set_path(data, path, value)
@@ -167,8 +170,6 @@ def collect() -> dict:
     data["output"]["directory"] = str(ROOT / "outputs")
     if data["auth"]["type"] == "none":
         data["auth"] = {"type": "none"}
-    if not data["user_agent"]:
-        data["user_agent"] = DEFAULTS["user_agent"]
     return data
 
 
