@@ -1,6 +1,6 @@
 # Matriz de pruebas — resultados observados
 
-Generado automáticamente el 2026-11-18T04:27:48Z (UTC) con `python -m web_extractor matrix` contra los fixtures locales. Ningún sitio público fue consultado.
+Generado automáticamente el 2026-11-18T04:31:45Z (UTC) con `python -m web_extractor matrix` contra los fixtures locales. Ningún sitio público fue consultado.
 
 | ID | Escenario | Método | Entorno | Campos | Límite sol. | Esperado | Observado | Diagnóstico | Incidencias | Decisión | Solicitudes al servidor | ¿Cumple? |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -14,28 +14,28 @@ Generado automáticamente el 2026-11-18T04:27:48Z (UTC) con `python -m web_extra
 | T08 | Autenticación autorizada (credenciales ficticias por variables de entorno) | static_html | fixture | folio, titulo, estado | 8 | 5 informes tras iniciar sesión; contraseña ausente de logs | estado=completado; registros=5 (crudos 5, válidos 5, advert. 0, inválidos 0, dup. 0); solicitudes=5/8; páginas=1; clics=0; scrolls=0 | static_html (baja, 0.3) | — | Continuar | 8 | sí |
 | T09 | CAPTCHA | static_html | fixture | texto | 5 | Parada segura con incidencia 'captcha', sin reintentos | estado=detenido_barrera; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=2/5; páginas=1; clics=0; scrolls=0 | detenido: captcha | captcha: Indicios de CAPTCHA en la página — evidencia: requerida</title> </head> <body> <h1>Verifica que eres humano</h1> <p>Para continuar, completa la v | Detenerse | 4 | sí |
 | T10 | Límite de tasa (HTTP 429) | static_html | fixture | texto | 5 | Parada segura 'rate_limit', 1 sola solicitud a la ruta | estado=detenido_barrera; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=2/5; páginas=1; clics=0; scrolls=0 | detenido: rate_limit | rate_limit: HTTP 429: límite de solicitudes — evidencia: Retry-After=120 | Detenerse | 4 | sí |
-| T11 | Ruta prohibida por robots.txt | static_html | fixture | texto | 3 | Detenido por política; la ruta /privado/ nunca se solicita | estado=detenido_politica; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=1/3; páginas=1; clics=0; scrolls=0 | detenido: robots_disallow | robots_disallow: robots.txt no permite acceder a http://127.0.0.1:46447/privado/datos.html | Detenerse | 2 | sí |
+| T11 | Ruta prohibida por robots.txt | static_html | fixture | texto | 3 | Detenido por política; la ruta /privado/ nunca se solicita | estado=detenido_politica; registros=0 (crudos 0, válidos 0, advert. 0, inválidos 0, dup. 0); solicitudes=1/3; páginas=1; clics=0; scrolls=0 | detenido: robots_disallow | robots_disallow: robots.txt no permite acceder a http://127.0.0.1:36219/privado/datos.html | Detenerse | 2 | sí |
 | T12 | Cancelación durante la paginación | static_html | fixture | (F01) | 10 | Estado 'cancelado' antes de recorrer las 3 páginas | estado=cancelado; registros=4 (crudos 4, válidos 4, advert. 0, inválidos 0, dup. 0); solicitudes=3/10; páginas=2; clics=0; scrolls=0 | static_html (alta, 0.75) | cancelled: Ejecución cancelada: cancelación de prueba | Detenerse | 4 | sí |
 | T13 | Detección de cambios: selector de precio roto frente al perfil de T01 | static_html | fixture | (F01) | 10 | Cambio de severidad alta, revisión humana, perfil no actualizado | estado=completado; registros=10 (crudos 11, válidos 0, advert. 9, inválidos 1, dup. 1); solicitudes=4/10; páginas=3; clics=0; scrolls=0 | static_html (alta, 0.75) | change_detected: Cambios relevantes frente al perfil anterior; no se corrige nada automáticamente | Detenerse (revisión humana) | 6 | sí |
 | T17 | Sitio no visto (sin YAML de ejemplo, ISO-8859-1): reglas 100 % sugeridas | static_html | fixture | titulo, fecha, lugar, cupo, url | 5 | Diagnóstico → sugerencia → extracción sin editar reglas; 7 eventos con acentos correctos; parada por max_pages=2 | estado=completado_con_limites; registros=7 (crudos 7, válidos 7, advert. 0, inválidos 0, dup. 0); solicitudes=3/5; páginas=2; clics=0; scrolls=0 | static_html (alta, 0.75) | limit: Límite alcanzado: max_pages (2) | Continuar | 5 | sí |
-| T18 | Sitio no visto que redirige a otro host (127.0.0.1 → localhost) | auto | fixture | — | 3 | Redirección no seguida; incidencia out_of_scope con paso legítimo | detenido=True; solicitudes=2 | detenido: out_of_scope | out_of_scope: http://127.0.0.1:46447/nuevo/redirige redirige a http://localhost:46447/nuevo/agenda, que está fuera del alcance autorizado (Dominio fuera de alcance: 'localhost' (permitidos: 127.0.0.1)). No se siguió la redirección. Si el propietario autoriza ese destino (p. ej. la variante con o sin | Detenerse | 2 | sí |
+| T18 | Sitio no visto que redirige a otro host (127.0.0.1 → localhost) | auto | fixture | — | 3 | Redirección no seguida; incidencia out_of_scope con paso legítimo | detenido=True; solicitudes=2 | detenido: out_of_scope | out_of_scope: http://127.0.0.1:36219/nuevo/redirige redirige a http://localhost:36219/nuevo/agenda, que está fuera del alcance autorizado (Dominio fuera de alcance: 'localhost' (permitidos: 127.0.0.1)). No se siguió la redirección. Si el propietario autoriza ese destino (p. ej. la variante con o sin | Detenerse | 2 | sí |
 | T14 | Configuración inválida (ftp, secreto, campo sensible, tipos desconocidos) | — | — | — | — | Rechazo con mensajes por campo, sin solicitudes | rechazada con 7 errores: project.name: String should match pattern '^[a-z0-9][a-z0-9_-]{1,63}$' / target_url: solo se admiten URLs http(s); otros protocolos (ftp, file, data...) se rechazan / limits.max_requests: Input should be less than or equal to 500 / extraction.fields.0.name: el campo 'curp' parece un dato sensible o  | — | — | Detenerse | 0 | sí |
 | T15 | Sitio real sin autorización confirmada (plantilla) | auto | production | titulo | 5 | Extracción bloqueada; se enumera lo que falta | bloqueada; faltan 7 requisitos: Para diagnosticar un sitio no controlado indique authorization.authorized_by (quién permite la inspección) o confirme la autorización. / authorization.confirmed debe ser true (confirmación humana de permiso y alcance) / authorization.authorized_by: indique quién autoriza la extracción / authorizatio | — | — | Detenerse | 0 | sí |
 | T16 | API sin documentación verificada | api | fixture | (F06) | 8 | Marcada 'no verificado / no ejecutar'; sin solicitudes | bloqueada: API no verificada como pública y documentada (extraction.api.documented + documentation_url): no ejecutar | — | — | Detenerse | 0 | sí |
 
 Evidencias por ejecución (informe, CSV, JSON, log y acciones):
 
-- T01: `outputs/matrix/f01-catalogo-estatico/20261118T042733Z-872526/report.md`
-- T02: `outputs/matrix/f02-tabla-html/20261118T042734Z-2ffe3b/report.md`
-- T03: `outputs/matrix/f03-js-renderizado/20261118T042734Z-d6a4ac/report.md`
-- T04: `outputs/matrix/f04-cargar-mas/20261118T042736Z-3e23c7/report.md`
-- T05: `outputs/matrix/f05-scroll-infinito/20261118T042737Z-d0ff82/report.md`
-- T06: `outputs/matrix/f06-api-documentada/20261118T042739Z-8fbf15/report.md`
-- T07: `outputs/matrix/f07-archivo-csv/20261118T042740Z-3d7725/report.md`
-- T08: `outputs/matrix/f08-autenticacion/20261118T042741Z-ef5e41/report.md`
-- T09: `outputs/matrix/f09-barrera-captcha/20261118T042742Z-027946/report.md`
-- T10: `outputs/matrix/f10-limite-tasa/20261118T042742Z-743f7a/report.md`
-- T11: `outputs/matrix/f11-robots-prohibido/20261118T042742Z-6bae01/report.md`
-- T12: `outputs/matrix/t12-cancelacion/20261118T042743Z-5b1a01/report.md`
-- T13: `outputs/matrix/f01-catalogo-estatico/20261118T042745Z-25d6f1/report.md`
-- T17: `outputs/matrix/t17-sitio-no-visto/20261118T042746Z-5a7f5e/report.md`
+- T01: `outputs/matrix/f01-catalogo-estatico/20261118T043130Z-8dc4bd/report.md`
+- T02: `outputs/matrix/f02-tabla-html/20261118T043131Z-a2e997/report.md`
+- T03: `outputs/matrix/f03-js-renderizado/20261118T043131Z-092d6a/report.md`
+- T04: `outputs/matrix/f04-cargar-mas/20261118T043133Z-0846ee/report.md`
+- T05: `outputs/matrix/f05-scroll-infinito/20261118T043135Z-e6cd81/report.md`
+- T06: `outputs/matrix/f06-api-documentada/20261118T043136Z-2296fa/report.md`
+- T07: `outputs/matrix/f07-archivo-csv/20261118T043137Z-ec5e6c/report.md`
+- T08: `outputs/matrix/f08-autenticacion/20261118T043138Z-477661/report.md`
+- T09: `outputs/matrix/f09-barrera-captcha/20261118T043139Z-96a74b/report.md`
+- T10: `outputs/matrix/f10-limite-tasa/20261118T043139Z-0d7a1d/report.md`
+- T11: `outputs/matrix/f11-robots-prohibido/20261118T043139Z-e5872d/report.md`
+- T12: `outputs/matrix/t12-cancelacion/20261118T043140Z-4918a6/report.md`
+- T13: `outputs/matrix/f01-catalogo-estatico/20261118T043142Z-4d54ce/report.md`
+- T17: `outputs/matrix/t17-sitio-no-visto/20261118T043143Z-08b233/report.md`

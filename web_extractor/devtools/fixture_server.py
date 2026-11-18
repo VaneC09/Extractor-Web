@@ -7,6 +7,7 @@ Rutas dinámicas:
 - ``/api/v1/products?page=N``: API JSON documentada en ``/api/docs.html``.
 - ``/auth/login`` y ``/auth/privado``: autenticación por formulario con credenciales ficticias
   (``FIXTURE_LOGIN_USER`` / ``FIXTURE_LOGIN_PASSWORD``, con valores por defecto de prueba).
+  ``/auth/informes.csv`` es el mismo contenido como archivo descargable tras iniciar sesión.
 - ``/barrier/limite`` (429), ``/barrier/prohibido`` (403), ``/barrier/inestable`` (502 una vez).
 - ``/privado/...``: existe, pero robots.txt lo prohíbe; sirve para comprobar que no se solicita.
 - ``/nuevo/agenda?pagina=N``: sitio "no visto" sin configuración de ejemplo (ISO-8859-1, otra estructura).
@@ -174,6 +175,12 @@ class FixtureHandler(BaseHTTPRequestHandler):
             return self._send(200, f"""<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Informes</title></head>
 <body><h1>Informes del área (ficticios)</h1><table id="informes"><thead><tr><th>Folio</th><th>Título</th><th>Estado</th></tr></thead>
 <tbody>{rows}</tbody></table><a href="/auth/logout">Salir</a></body></html>""")
+        if path == "/auth/informes.csv":
+            if not self._logged_in():
+                return self._send(302, "", headers={"Location": "/auth/login"})
+            rows = "\n".join(f"INF-{i:03d},Informe interno de prueba {i},{'Publicado' if i % 2 else 'Borrador'}"
+                             for i in range(1, 6))
+            return self._send(200, f"Folio,Título,Estado\n{rows}\n", "text/csv; charset=utf-8")
         if path == "/barrier/limite":
             return self._send(429, "<h1>Demasiadas solicitudes</h1>", headers={"Retry-After": "120"})
         if path == "/barrier/prohibido":

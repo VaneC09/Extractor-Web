@@ -96,6 +96,19 @@ def test_authorized_login_without_leaking_secrets(example, hits):
         assert DEFAULT_PASSWORD not in path.read_text(encoding="utf-8", errors="ignore"), path.name
 
 
+def test_authorized_login_for_structured_file(example, hits, fixture_env):
+    file_url = f"{fixture_env.base_url}/auth/informes.csv"
+    extraction = {"method": "structured_file", "file_format": "csv", "table_selector": None,
+                  "fields": [{"name": "folio", "path": "Folio", "required": True}, {"name": "estado", "path": "Estado"}]}
+    result = run(example("f08_autenticacion_autorizada.yaml", target_url=file_url, extraction=extraction))
+    assert result.status == "completado" and result.quality.exported == 5
+    assert len(hits("POST /auth/login")) == 1
+
+    blocked = run(example("f08_autenticacion_autorizada.yaml", target_url=file_url, extraction=extraction,
+                          auth={"type": "none"}, authorization={"allow_authentication": False}))
+    assert blocked.status == "detenido_barrera" and blocked.incidents[0].kind == "auth_required"
+
+
 def test_rejected_login_stops_without_retry(example, hits, monkeypatch):
     monkeypatch.setenv("WE_FIXTURE_PASSWORD", "contraseña-equivocada")
     result = run(example("f08_autenticacion_autorizada.yaml", limits={"max_retries": 3}))
