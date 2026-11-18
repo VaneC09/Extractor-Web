@@ -38,11 +38,37 @@ Requisitos: Python 3.10+ (probado con 3.12.3). Google Chrome solo para el métod
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
-pip install -r requirements-dev.txt   # o requirements.txt sin pytest
+pip install -r requirements-dev.txt   # o requirements.txt sin pytest (incluye Streamlit para la GUI)
 ```
+
+En Debian/Ubuntu, si `venv` falla por falta de `ensurepip`: `sudo apt-get install python3-venv`.
 
 `requirements.txt` usa rangos acotados; `requirements-lock.txt` fija las versiones exactas con
 las que se ejecutaron las pruebas documentadas.
+
+## Interfaz gráfica
+
+```bash
+python -m web_extractor gui            # http://127.0.0.1:8611
+```
+
+Recorre el mismo flujo que la CLI en siete pestañas:
+
+1. Proyecto y autorización, con la lista en vivo de lo que falta.
+2. Alcance y límites.
+3. Diagnóstico, con tarjetas de métodos, puntuación, confianza e indicios.
+4. Campos y reglas, en una tabla editable, con «Aplicar sugerencia».
+5. Vista previa, en vivo (1 página) o sobre un archivo local.
+6. Extracción, con confirmación, progreso en vivo y botón **Cancelar**.
+7. Resultados: calidad, incidencias, cambios de estructura, descargas e historial.
+
+Desde la barra lateral se activa el sitio de pruebas local, se cargan los ejemplos y se
+sube o descarga la configuración YAML. Sin autorización completa, los botones que harían
+solicitudes quedan deshabilitados y la interfaz explica qué falta.
+
+Para un sitio que **no** es uno de los ejemplos, escriba su URL en la pantalla inicial. Qué pasa en
+cada caso (sin permiso, redirección a `www`, robots.txt, CAPTCHA, codificación…) se explica en
+[docs/sitios_no_incluidos.md](docs/sitios_no_incluidos.md).
 
 ## Inicio rápido con el sitio de pruebas local
 
@@ -65,7 +91,7 @@ Resultados en `outputs/<proyecto>/<run_id>/`: `data.csv`, `data.json`, `report.m
 Matriz de pruebas completa (arranca su propio servidor en un puerto libre):
 
 ```bash
-python -m web_extractor matrix        # 16 casos; escribe docs/evidencias/matriz_resultados.md
+python -m web_extractor matrix        # 18 casos; escribe docs/evidencias/matriz_resultados.md
 python -m pytest                      # pruebas unitarias e integración con fixtures
 ```
 
@@ -84,6 +110,7 @@ Las pruebas con navegador se omiten automáticamente si no hay Chrome.
 | `init --url URL --out F` | Asistente que crea una configuración con autorización pendiente | 0 |
 | `serve-fixtures` | Sitio de pruebas local | — |
 | `matrix` | Ejecuta la matriz de pruebas y guarda evidencias | solo fixtures locales |
+| `gui [--port 8611]` | Interfaz gráfica local (Streamlit) con el mismo flujo y las mismas puertas | igual que cada paso |
 
 Cancelación: `Ctrl+C` (parada tras la acción en curso) o crear el archivo `outputs/STOP`.
 Códigos de salida: 0 ok, 1 error técnico, 2 configuración inválida, 3 falta autorización o
@@ -93,8 +120,9 @@ confirmación, 4 parada por barrera/política, 5 cancelado, 6 requiere revisión
 
 ```
 web_extractor/
-  app.py              CLI con pasos guiados (interfaz mínima)
-  config/             esquema Pydantic y cargador YAML/JSON
+  app.py              CLI con pasos guiados
+  gui/                interfaz gráfica Streamlit (app.py) y extracción en segundo plano (jobs.py)
+  config/             esquema Pydantic, cargador YAML/JSON y plantilla conservadora desde una URL
   core/               motor, autorización, alcance, límites, barreras, robots, cliente HTTP, autenticación
   inspectors/         inspectores de respuesta, HTML y datos estructurados + clasificador de método
   extractors/         adaptadores: static_html, browser (Selenium), structured_file, api
@@ -122,13 +150,15 @@ interfaz de la lógica) y `devtools/` (fixtures y matriz).
 - [Informe técnico](docs/informe_tecnico.md): arquitectura, decisiones, limitaciones, riesgos y viabilidad por escenario.
 - [Plan de fases y estado](docs/plan_fases.md)
 - [Manual de usuario y solución de errores](docs/manual_usuario.md)
+- [Qué pasa con un sitio que no es de los ejemplos](docs/sitios_no_incluidos.md)
 - [Matriz de pruebas y criterios de aceptación](docs/matriz_pruebas.md) · [resultados observados](docs/evidencias/matriz_resultados.md)
 - [Esquema del dataset de demostración](docs/esquema_dataset.md) · [dataset](examples/demo_dataset/)
 - [Guion de demostración (3–5 min)](docs/guion_demo.md)
 
 ## Estado
 
-MVP funcional de las fases 1 a 4 y la mayor parte de la 5: ver [plan de fases](docs/plan_fases.md).
+MVP funcional de las fases 1 a 4 (incluida la interfaz gráfica) y la mayor parte de la 5: ver
+[plan de fases](docs/plan_fases.md).
 Todas las pruebas se han ejecutado solo contra fixtures locales; **no se ha probado ningún sitio
 real**. Para usar URLs reales hace falta la autorización descrita en
 [docs/matriz_pruebas.md](docs/matriz_pruebas.md#sustitución-por-urls-autorizadas).

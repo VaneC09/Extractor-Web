@@ -66,16 +66,22 @@ entorno de desarrollo contra fixtures locales; no implica validación en sitios 
 - **Demostración:** `python -m web_extractor run examples/f01_catalogo_estatico.yaml`.
 - **Terminado cuando:** los tres formatos contienen datos normalizados y linaje; los secretos no
   aparecen en ninguna salida; el cambio de estructura exige revisión humana sin tocar la línea base.
-- **Estado:** implementado. GUI: pendiente como extensión (ver informe técnico).
+- **Estado:** implementado, incluida la interfaz gráfica local (`web_extractor/gui/`, comando
+  `gui`). Usa las mismas funciones del motor y las mismas puertas de autorización que la CLI, y
+  ejecuta la extracción en segundo plano con progreso en vivo y cancelación. Pruebas en
+  `tests/integration/test_gui.py`.
 
 ## Fase 5 — Integración, pruebas, documentación y optimización
 
 - **Objetivo:** evidencia reproducible, documentación coherente y endurecimiento.
-- **Alcance:** matriz de 16 casos con resultados observados, manual, informe técnico, guion de demo.
+- **Alcance:**
+  - Matriz de 18 casos con resultados observados. T17 y T18 son un sitio «no visto» sin YAML
+    de ejemplo; ver [sitios_no_incluidos.md](sitios_no_incluidos.md).
+  - Manual, informe técnico y guion de demostración.
 - **Archivos:** `devtools/matrix.py`, `docs/*`, `examples/demo_dataset/`.
 - **Pruebas:** `python -m web_extractor matrix` y `python -m pytest`.
 - **Terminado cuando:** la matriz y la suite pasan localmente y la documentación refleja el código.
 - **Estado:** implementado para fixtures locales. **Pendiente:** sustituir fixtures por URLs
   autorizadas reales (requiere permisos), grabar el video de demostración, CI automatizada y
   optimizaciones opcionales (caché condicional con ETag/If-Modified-Since, exportación Excel,
-  PostgreSQL/MongoDB, GUI).
+  PostgreSQL/MongoDB).

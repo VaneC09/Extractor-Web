@@ -127,10 +127,30 @@ no es requisito porque Selenium cubre los escenarios del MVP.
 
 ## 7. Resultados
 
-Ejecución de `python -m web_extractor matrix` el 2026-11-10 (UTC): **16/16 casos cumplen lo
+Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **18/18 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest`: 149 pruebas superadas (incluye 7 con Chrome headless). Ambas ejecuciones se
-hicieron **solo contra fixtures locales**; no hay resultados de sitios reales.
+`python -m pytest`: 170 pruebas superadas. Incluye:
+
+- 7 pruebas con Chrome headless.
+- 7 pruebas de la interfaz gráfica con `streamlit.testing`.
+- 14 pruebas de sitios no incluidos, que usan el sitio local «no visto» y una sesión HTTP simulada.
+
+Todas las ejecuciones se hicieron **solo contra fixtures locales o respuestas simuladas**; no hay
+resultados de sitios reales. Qué ocurre con un sitio que no es de los ejemplos:
+[sitios_no_incluidos.md](sitios_no_incluidos.md).
+
+### Interfaz gráfica
+
+`web_extractor/gui/app.py` (Streamlit) es una capa de presentación: construye el mismo diccionario
+de configuración, lo valida con el mismo esquema y llama a `ExtractionEngine`. No hay lógica de
+extracción propia.
+
+- `gui/jobs.py` ejecuta `run()` en un hilo. Comparte un `CancelToken` con el botón Cancelar y
+  recibe cada acción mediante el gancho `on_action` del motor, para mostrar el progreso en vivo.
+- Las credenciales nunca se escriben en la interfaz: solo el nombre de la variable de entorno.
+- Limitación: la interfaz es local y para una sola persona. Las descargas y el historial leen
+  `outputs/`. Algunos textos internos de Streamlit, como los del selector de archivos, aparecen en
+  inglés.
 
 ## 8. Viabilidad legal y técnica por escenario
 
@@ -147,6 +167,6 @@ hicieron **solo contra fixtures locales**; no hay resultados de sitios reales.
 
 ## 9. Extensiones previstas
 
-GUI (p. ej. Streamlit o una app web local) sobre las mismas funciones del motor; Excel,
+Interfaz web multiusuario (la GUI actual es local); Excel,
 PostgreSQL y MongoDB como exportadores adicionales; caché condicional HTTP; adaptador Playwright;
 autenticación con navegador; CI.

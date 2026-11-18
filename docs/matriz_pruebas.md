@@ -1,8 +1,8 @@
 # Matriz de pruebas y criterios de aceptación
 
 Los **resultados observados** se generan con `python -m web_extractor matrix` y están en
-[evidencias/matriz_resultados.md](evidencias/matriz_resultados.md) (16/16 casos cumplieron lo
-esperado en la ejecución del 2026-11-10 UTC). Todos los escenarios usan fixtures locales con datos
+[evidencias/matriz_resultados.md](evidencias/matriz_resultados.md) (18/18 casos cumplieron lo
+esperado en la ejecución del 2026-11-18 UTC). Todos los escenarios usan fixtures locales con datos
 ficticios servidos por `web_extractor/devtools/fixture_server.py`; **no se probó ningún sitio real**.
 
 ## Diseño de la matriz
@@ -25,6 +25,8 @@ ficticios servidos por `web_extractor/devtools/fixture_server.py`; **no se prob�
 | T14 | Configuración inválida | — | `invalida_ejemplo` | — | — | Rechazo con errores por campo | Detenerse |
 | T15 | Sitio real sin autorización | — | plantilla | production, sin confirmar | 5 | Bloqueo y lista de requisitos | Detenerse |
 | T16 | API sin documentación | — | `f06` alterado | fixture | 8 | "No verificado / no ejecutar" | Detenerse |
+| T17 | Sitio no visto (ISO-8859-1, sin YAML de ejemplo) | Requests + BS4 | plantilla + reglas sugeridas | fixture | 5 | 7 registros con acentos correctos, `completado_con_limites` por `max_pages=2` | Continuar |
+| T18 | Sitio no visto que redirige a otro host | — | plantilla | fixture | 3 | Redirección no seguida, `out_of_scope` | Detenerse |
 
 Cobertura: 4 mecanismos de adquisición distintos (HTML estático, navegador, archivo estructurado,
 API), 11 configuraciones de sitio sobre el mismo motor, y todos los casos mínimos solicitados
@@ -48,7 +50,9 @@ fixture; sugerencias; comparación de perfiles; códigos de salida de la CLI.
 | A5 | Las barreras provocan parada segura e incidencia, sin evasión ni reintentos | T09, T10, T11; `test_barriers_stop_without_retries` |
 | A6 | CSV/JSON/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones) | `examples/demo_dataset/`; `test_static_pagination_end_to_end` |
 | A7 | Errores y logs sin credenciales ni secretos | T08; `test_authorized_login_without_leaking_secrets`, `TestRedaction` |
-| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (149 pruebas superadas el 2026-11-10) |
+| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (170 pruebas superadas el 2026-11-18 UTC) |
+| A10 | Un sitio que no es de los ejemplos sigue el mismo flujo y las mismas paradas | T17, T18; `tests/integration/test_sitio_no_incluido.py`; [sitios_no_incluidos.md](sitios_no_incluidos.md) |
+| A11 | La interfaz gráfica no permite solicitudes sin la autorización requerida y permite cancelar | `tests/integration/test_gui.py` |
 | A9 | Entregables coherentes: código, dataset, informe, matriz, manual, guion | `README.md`, `docs/` |
 
 ## Sustitución por URLs autorizadas

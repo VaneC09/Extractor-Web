@@ -33,6 +33,33 @@ indica `authorized_by`, y pruebas con archivos locales (`preview --from-file`).
 7. **Revisar resultados** en `outputs/<proyecto>/<run_id>/report.md` y los datos en CSV/JSON/SQLite.
 8. **Cancelar** en cualquier momento con `Ctrl+C` o creando `outputs/STOP` (bórrelo después).
 
+### Con la interfaz gráfica
+
+`python -m web_extractor gui` abre `http://127.0.0.1:8611`.
+
+1. Escriba la URL y pulse **Comenzar**. Para practicar, active **Sitio de pruebas local** y elija
+   un ejemplo en la barra lateral.
+2. **Proyecto y autorización**: complete los datos del permiso. Abajo se listan en vivo los
+   requisitos que faltan.
+3. **Alcance y límites**: el dominio, las rutas y los topes. «Ajustar alcance a esta URL» los
+   recalcula. Una variante `www.` es otro dominio: añádala solo si está autorizada.
+4. **Diagnóstico**: en sitios reales pide confirmar la inspección. Muestra:
+   - una tarjeta por método, con puntuación, confianza y requisitos;
+   - las paradas, con el siguiente paso legítimo;
+   - el botón **Aplicar sugerencia**, que copia las reglas propuestas, incluida la paginación.
+5. **Campos y reglas**: tabla editable con selector, tipo, normalización y validación.
+6. **Vista previa**: con un archivo local (0 solicitudes) o en vivo (1 página, solo con la
+   autorización completa).
+7. **Extracción**: marque la confirmación y pulse **Iniciar extracción**. Se ven contadores y
+   acciones en vivo, y **Cancelar** detiene tras la acción en curso. Cada ejecución exige
+   confirmar de nuevo.
+8. **Resultados**: estado, calidad por campo, incidencias, cambios de estructura, descargas
+   (CSV, JSON, informe, log) e historial del proyecto.
+9. **Descargar configuración YAML** (barra lateral) la guarda para usarla con la CLI.
+
+Qué ocurre con un sitio que no es de los ejemplos (sin permiso, redirecciones, robots.txt,
+CAPTCHA, codificación): [sitios_no_incluidos.md](sitios_no_incluidos.md).
+
 ## 3. Reglas de campos
 
 ```yaml
