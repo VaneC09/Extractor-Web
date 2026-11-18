@@ -90,6 +90,37 @@ def test_unknown_real_url_stays_locked(monkeypatch):
     assert _button(at, "Vista previa en vivo").disabled  # extraer sigue bloqueado
 
 
+def _wait_job(at):
+    job = at.session_state["job"]
+    for _ in range(200):
+        if not job.running:
+            break
+        time.sleep(0.1)
+    at.run()
+    return job
+
+
+def test_unseen_site_flow_uses_suggested_rules_and_pagination(server):
+    at = _app().run()
+    at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
+    _button(at, "Comenzar").click().run()
+    _button(at, "Ejecutar diagnóstico").click().run()
+    _button(at, "Aplicar sugerencia a «Campos y reglas»").click().run()
+    assert not at.exception
+    assert at.session_state["w:extraction.pagination.mode"] == "url_template"
+    assert at.session_state["w:extraction.record_selector"] == "div.evento"
+
+    at.text_input(key="w:authorization.authorized_by").input("Equipo docente")
+    at.text_area(key="w:authorization.purpose").input("Validar un sitio no incluido")
+    at.checkbox(key="w:authorization.terms_reviewed").check()
+    at.checkbox(key="w:authorization.confirmed").check().run()
+    at.checkbox(key="run_confirm").check().run()
+    _button(at, "Iniciar extracción").click().run()
+    assert not at.exception
+    job = _wait_job(at)
+    assert job.result.status == "completado_con_limites" and job.result.quality.exported == 7
+
+
 def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
     monkeypatch.setenv("WE_GUI_FIXTURE_PORT", str(fixture_env.base_url.rsplit(":", 1)[1]))
     at = _app().run()
@@ -107,6 +138,8 @@ def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
 
     at.checkbox(key="run_confirm").check().run()
     _button(at, "Iniciar extracción").click().run()
+    assert not at.exception
+    assert at.session_state["run_confirm"] is False  # cada ejecución exige una confirmación nueva
     job = at.session_state["job"]
     for _ in range(200):
         if not job.running:

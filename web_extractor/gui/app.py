@@ -280,6 +280,10 @@ def cb_apply_suggestion() -> None:
     for key in ("record_selector", "table_selector", "records_path", "file_format"):
         st.session_state[wkey(f"extraction.{key}")] = suggestion.get(key) or (None if key == "file_format" else "")
     st.session_state[wkey("extraction.method")] = suggestion["method"]
+    pagination = suggestion.get("pagination") or {"mode": "none"}
+    st.session_state[wkey("extraction.pagination.mode")] = pagination["mode"]
+    for key in ("next_selector", "url_template", "next_field"):
+        st.session_state[wkey(f"extraction.pagination.{key}")] = pagination.get(key) or ""
     st.session_state["fields_rows"] = fields_to_rows(suggestion["fields"])
     st.session_state["fields_version"] = st.session_state.get("fields_version", 0) + 1
     st.session_state["flash"] = ("success", "Reglas sugeridas aplicadas en «Campos y reglas». Revíselas antes de usarlas.")
@@ -287,6 +291,14 @@ def cb_apply_suggestion() -> None:
 
 def cb_use_method(method: str) -> None:
     st.session_state[wkey("extraction.method")] = method
+
+
+def cb_start_job(cfg: ProjectConfig) -> None:
+    current: ExtractionJob | None = st.session_state.get("job")
+    if current and current.running:
+        return
+    st.session_state["job"] = ExtractionJob(cfg).start()
+    st.session_state["run_confirm"] = False
 
 
 def cb_reset() -> None:
@@ -610,7 +622,7 @@ def tab_fields(data: dict, errors: list[str]) -> None:
         current = [d for d in st.session_state.get(wkey("extraction.deduplicate_on"), []) if d in names]
         st.session_state[wkey("extraction.deduplicate_on")] = current
         st.multiselect("Deduplicar por", names, key=wkey("extraction.deduplicate_on"),
-                       help="Vacío = todos los campos.")
+                       placeholder="Todos los campos", help="Vacío = todos los campos.")
         a, b = st.columns(2)
         a.checkbox("Conservar valor original (raw)", key=wkey("extraction.keep_raw"))
         b.checkbox("Descartar registros inválidos", key=wkey("extraction.drop_invalid"))
@@ -714,10 +726,7 @@ def tab_run(cfg: ProjectConfig | None) -> None:
     running = bool(job and job.running)
     confirm = st.checkbox(f"Confirmo la extracción con estos límites (hasta {lim.max_requests} solicitudes).",
                           key="run_confirm", disabled=running)
-    if st.button("Iniciar extracción", type="primary", disabled=running or not confirm):
-        st.session_state["job"] = ExtractionJob(cfg).start()
-        st.session_state["run_confirm"] = False
-        st.rerun()
+    st.button("Iniciar extracción", type="primary", disabled=running or not confirm, on_click=cb_start_job, args=(cfg,))
     if job:
         job_panel()
 
@@ -771,7 +780,7 @@ def tab_results(cfg: ProjectConfig | None) -> None:
     m[2].metric("Advertencias", q.with_warnings)
     m[3].metric("Inválidos", q.invalid)
     m[4].metric("Solicitudes", f"{b.get('requests')}/{b.get('max_requests')}")
-    data_tab, quality_tab, incidents_tab, files_tab = st.tabs(["Datos", "Calidad", "Incidencias y cambios", "Archivos"])
+    data_tab, quality_tab, incidents_tab, files_tab = st.tabs(["Datos", "Calidad", "Incidencias y cambios", "Archivos"], key="result_tabs")
     with data_tab:
         show_records(result.records, q)
     with quality_tab:
@@ -839,7 +848,7 @@ def main() -> None:
     render_sidebar(data, cfg, errors)
     missing = status_header(data, cfg, errors)
     tabs = st.tabs(["1 · Proyecto y autorización", "2 · Alcance y límites", "3 · Diagnóstico",
-                    "4 · Campos y reglas", "5 · Vista previa", "6 · Extracción", "7 · Resultados"])
+                    "4 · Campos y reglas", "5 · Vista previa", "6 · Extracción", "7 · Resultados"], key="main_tabs")
     with tabs[0]:
         tab_project(data, cfg, errors, missing)
     with tabs[1]:
