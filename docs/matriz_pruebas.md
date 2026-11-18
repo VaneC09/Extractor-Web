@@ -50,7 +50,7 @@ fixture; sugerencias; comparación de perfiles; códigos de salida de la CLI.
 | A5 | Las barreras provocan parada segura e incidencia, sin evasión ni reintentos | T09, T10, T11; `test_barriers_stop_without_retries` |
 | A6 | CSV/JSON/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones) | `examples/demo_dataset/`; `test_static_pagination_end_to_end` |
 | A7 | Errores y logs sin credenciales ni secretos | T08; `test_authorized_login_without_leaking_secrets`, `TestRedaction` |
-| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (170 pruebas superadas el 2026-11-18 UTC) |
+| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (171 pruebas superadas el 2026-11-18 UTC) |
 | A10 | Un sitio que no es de los ejemplos sigue el mismo flujo y las mismas paradas | T17, T18; `tests/integration/test_sitio_no_incluido.py`; [sitios_no_incluidos.md](sitios_no_incluidos.md) |
 | A11 | La interfaz gráfica no permite solicitudes sin la autorización requerida y permite cancelar | `tests/integration/test_gui.py` |
 | A9 | Entregables coherentes: código, dataset, informe, matriz, manual, guion | `README.md`, `docs/` |

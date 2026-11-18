@@ -129,7 +129,7 @@ no es requisito porque Selenium cubre los escenarios del MVP.
 
 Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **18/18 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest`: 170 pruebas superadas. Incluye:
+`python -m pytest`: 171 pruebas superadas. Incluye:
 
 - 7 pruebas con Chrome headless.
 - 7 pruebas de la interfaz gráfica con `streamlit.testing`.
