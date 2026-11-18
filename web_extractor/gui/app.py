@@ -192,7 +192,7 @@ def validate(data: dict) -> tuple[ProjectConfig | None, list[str]]:
 def exportable_yaml(data: dict) -> str:
     clean = copy.deepcopy(data)
     clean["output"]["directory"] = "outputs"
-    return "# Generado por la interfaz gráfica de Pulido Extractor\n" + yaml.safe_dump(clean, allow_unicode=True, sort_keys=False)
+    return "# Generado por la interfaz gráfica de Proyecto final_TAD\n" + yaml.safe_dump(clean, allow_unicode=True, sort_keys=False)
 
 
 # ------------------------------------------------------------------ servidor de fixtures
@@ -320,7 +320,7 @@ def cb_reset() -> None:
 # --------------------------------------------------------------------------------- vistas
 def render_sidebar(data: dict, cfg: ProjectConfig | None, errors: list[str]) -> None:
     with st.sidebar:
-        st.markdown("### Pulido Extractor")
+        st.markdown("### Proyecto final_TAD")
         st.caption("Diagnóstico y extracción web responsable")
         st.divider()
         st.markdown("**Cargar un escenario de prueba**")
@@ -344,7 +344,7 @@ def render_sidebar(data: dict, cfg: ProjectConfig | None, errors: list[str]) -> 
 
 
 def render_welcome() -> None:
-    st.title("Pulido Extractor")
+    st.title("Proyecto final_TAD")
     st.markdown("Herramienta para **diagnosticar** cómo un sitio entrega su información y **extraer** datos "
                 "solo dentro de un alcance autorizado, con límites, calidad y trazabilidad.")
     with st.container(border=True):
@@ -856,7 +856,7 @@ def render_history(cfg: ProjectConfig | None) -> None:
 
 
 def main() -> None:
-    st.set_page_config(page_title="Pulido Extractor", page_icon=":material/travel_explore:", layout="wide")
+    st.set_page_config(page_title="Proyecto final_TAD", page_icon=":material/travel_explore:", layout="wide")
     st.html("""<style>
       .block-container {padding-top: 2rem; max-width: 1400px;}
       [data-testid="stMetricValue"] {font-size: 1.6rem;}

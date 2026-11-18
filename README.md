@@ -1,4 +1,4 @@
-# Web Extractor Académico
+# Proyecto final_TAD
 
 Herramienta configurable de **diagnóstico y extracción web responsable**, escrita en Python 3.
 No es un scraper para una página concreta: un único motor recibe una configuración YAML/JSON
