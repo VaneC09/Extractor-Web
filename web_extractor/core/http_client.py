@@ -10,7 +10,9 @@ Orden de comprobaciones en cada solicitud:
 
 from __future__ import annotations
 
+import codecs
 import logging
+import re
 from typing import Mapping
 from urllib.parse import urljoin
 
@@ -61,7 +63,13 @@ class PoliteHttpClient:
             doc = self._request("GET", url, purpose="robots.txt", check_barriers=False,
                                 raise_for_status=False, check_robots=False)
             return doc.status, doc.text
-        except (TransientHTTPError, ScopeError, HTTPStatusError):
+        except ScopeError as exc:
+            self.robots.reasons[RobotsPolicy.origin(url)] = (
+                f"robots.txt redirige fuera del alcance ({exc}); se asume prohibición total. Si el propietario "
+                "autoriza ese dominio (p. ej. la variante con o sin 'www'), añádalo a scope.allowed_domains."
+            )
+            return None, ""
+        except (TransientHTTPError, HTTPStatusError):
             return None, ""
 
     def ensure_allowed(self, url: str) -> None:
@@ -173,7 +181,27 @@ class PoliteHttpClient:
                 break
         response.close()
         raw = b"".join(chunks)[:max_bytes]
-        encoding = response.encoding or response.apparent_encoding or "utf-8"
-        if "charset" not in response.headers.get("content-type", "").lower():
-            encoding = "utf-8"
-        return raw.decode(encoding, errors="replace"), truncated
+        return raw.decode(detect_encoding(response.headers.get("content-type", ""), raw), errors="replace"), truncated
+
+
+_META_CHARSET = re.compile(rb"""<meta[^>]+charset\s*=\s*["']?\s*([A-Za-z0-9_.:-]+)""", re.I)
+
+
+def detect_encoding(content_type: str, raw: bytes) -> str:
+    """Cabecera ``charset`` > ``<meta charset>`` del documento > UTF-8 (válido) > windows-1252."""
+    candidates = []
+    if match := re.search(r"charset\s*=\s*[\"']?([\w.:-]+)", content_type, re.I):
+        candidates.append(match.group(1))
+    if match := _META_CHARSET.search(raw[:4096]):
+        candidates.append(match.group(1).decode("ascii", "ignore"))
+    for name in candidates:
+        try:
+            codecs.lookup(name)
+            return name
+        except LookupError:
+            continue
+    try:
+        raw.decode("utf-8")
+        return "utf-8"
+    except UnicodeDecodeError:
+        return "windows-1252"

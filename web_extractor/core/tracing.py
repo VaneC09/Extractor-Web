@@ -6,6 +6,7 @@ import json
 import logging
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
+from typing import Callable
 
 from web_extractor.models.results import Incident
 from web_extractor.utils.redaction import redact, redact_url
@@ -24,15 +25,19 @@ class ActionEntry:
 class ActionLog:
     """Cada solicitud, clic, scroll o decisión de parada queda registrada (sin secretos)."""
 
-    def __init__(self, logger: logging.Logger | None = None) -> None:
+    def __init__(self, logger: logging.Logger | None = None,
+                 listener: Callable[[ActionEntry], None] | None = None) -> None:
         self.entries: list[ActionEntry] = []
         self.logger = logger
+        self.listener = listener
 
     def record(self, action: str, target: str = "", detail: str = "", outcome: str = "ok") -> None:
         entry = ActionEntry(action, redact_url(target), redact(detail), outcome)
         self.entries.append(entry)
         if self.logger:
             self.logger.info("[%s] %s %s %s", outcome, action, entry.target, entry.detail)
+        if self.listener:
+            self.listener(entry)
 
     def write_jsonl(self, path: Path) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)

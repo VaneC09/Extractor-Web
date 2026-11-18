@@ -19,6 +19,7 @@ import yaml
 from web_extractor import __version__
 from web_extractor.config.loader import load_config, parse_config
 from web_extractor.config.schema import ProjectConfig
+from web_extractor.config.templates import default_config_dict
 from web_extractor.core.authorization import missing_for_diagnosis, missing_for_extraction
 from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError
@@ -194,24 +195,9 @@ def cmd_compare(args) -> int:
 
 def cmd_init(args) -> int:
     url = args.url
-    host = urlsplit(url).hostname or "example.org"
     interactive = not args.non_interactive and sys.stdin.isatty()
-    name = args.name or (host.replace(".", "-")[:50] if host else "proyecto")
-    data = {
-        "version": 1,
-        "project": {"name": name, "description": "Describa el conjunto de datos autorizado"},
-        "target_url": url,
-        "user_agent": "WebExtractorAcademico/0.1 (+proyecto academico; contacto: configurar)",
-        "authorization": {"confirmed": False, "authorized_by": None, "purpose": None, "terms_reviewed": False,
-                          "evidence_reference": None, "environment": "production", "allow_authentication": False},
-        "scope": {"allowed_domains": [host], "allowed_path_prefixes": ["/"], "allowed_schemes": [urlsplit(url).scheme or "https"],
-                  "allow_private_network": False, "respect_robots_txt": True},
-        "limits": {"max_pages": 2, "max_records": 50, "max_requests": 5, "max_seconds": 120, "delay_seconds": 3.0,
-                   "timeout_seconds": 15, "max_retries": 1},
-        "extraction": {"method": "auto", "record_selector": "PLACEHOLDER",
-                       "fields": [{"name": "texto", "normalize": ["collapse_whitespace"]}]},
-        "output": {"directory": "outputs", "formats": ["csv", "json", "sqlite"]},
-    }
+    data = default_config_dict(url, args.name)
+    data["project"]["description"] = "Describa el conjunto de datos autorizado"
     if interactive:
         console.heading("Asistente de configuración")
         auth = data["authorization"]
@@ -229,7 +215,7 @@ def cmd_init(args) -> int:
         console.out(str(exc))
         return EXIT_CONFIG
     out_path = Path(args.out)
-    out_path.write_text("# Generado por 'init'. Complete los PLACEHOLDER tras el diagnóstico.\n"
+    out_path.write_text("# Generado por 'init'. Complete autorización y reglas tras el diagnóstico.\n"
                         + yaml.safe_dump(data, allow_unicode=True, sort_keys=False), encoding="utf-8")
     console.out(f"Configuración creada en {out_path}. Siguiente paso: python -m web_extractor diagnose {out_path}")
     return EXIT_OK
@@ -246,6 +232,21 @@ def cmd_serve(args) -> int:
     except KeyboardInterrupt:
         server.stop()
     return EXIT_OK
+
+
+def cmd_gui(args) -> int:
+    import subprocess
+
+    root = Path(__file__).resolve().parent.parent
+    script = root / "web_extractor" / "gui" / "app.py"
+    command = [sys.executable, "-m", "streamlit", "run", str(script), "--server.address", args.host,
+               "--server.port", str(args.port), "--server.headless", str(args.headless).lower(),
+               "--browser.gatherUsageStats", "false"]
+    console.out(f"Interfaz gráfica en http://{args.host}:{args.port} (Ctrl+C para detener)")
+    try:
+        return subprocess.call(command, cwd=root)
+    except KeyboardInterrupt:
+        return EXIT_OK
 
 
 def cmd_matrix(args) -> int:
@@ -310,6 +311,12 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--docs", default="docs/evidencias/matriz_resultados.md")
     p.add_argument("--skip-browser", action="store_true")
     p.set_defaults(func=cmd_matrix)
+
+    p = sub.add_parser("gui", help="Abre la interfaz gráfica local (Streamlit)")
+    p.add_argument("--host", default="127.0.0.1")
+    p.add_argument("--port", type=int, default=8611)
+    p.add_argument("--headless", action="store_true", help="No abrir el navegador automáticamente")
+    p.set_defaults(func=cmd_gui)
     return parser
 
 

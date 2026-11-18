@@ -26,6 +26,7 @@ class RobotsPolicy:
         self._on_crawl_delay = on_crawl_delay
         self._parsers: dict[str, RobotFileParser | bool] = {}
         self.notes: list[str] = []
+        self.reasons: dict[str, str] = {}
 
     @staticmethod
     def origin(url: str) -> str:
@@ -35,7 +36,11 @@ class RobotsPolicy:
     def _load(self, origin: str) -> RobotFileParser | bool:
         status, text = self._fetcher(origin + "/robots.txt")
         if status is None or status >= 500:
-            self.notes.append(f"{origin}/robots.txt no disponible (estado {status}): se asume prohibición total")
+            reason = self.reasons.get(origin) or (
+                f"{origin}/robots.txt no disponible (estado {status or 'sin respuesta'}): se asume prohibición total "
+                "(RFC 9309)")
+            self.reasons[origin] = reason
+            self.notes.append(reason)
             return False
         if 400 <= status < 500:
             self.notes.append(f"{origin}/robots.txt devolvió {status}: sin restricciones publicadas")
@@ -60,4 +65,5 @@ class RobotsPolicy:
 
     def ensure_allowed(self, url: str) -> None:
         if not self.is_allowed(url):
-            raise RobotsDisallowed(f"robots.txt no permite acceder a {url}")
+            reason = self.reasons.get(self.origin(url))
+            raise RobotsDisallowed(reason or f"robots.txt no permite acceder a {url}")

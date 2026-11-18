@@ -15,6 +15,7 @@ from __future__ import annotations
 import json
 import logging
 from pathlib import Path
+from typing import Callable
 
 from web_extractor.config.loader import config_summary
 from web_extractor.config.schema import ProjectConfig
@@ -34,7 +35,7 @@ from web_extractor.core.errors import (
 )
 from web_extractor.core.http_client import PoliteHttpClient
 from web_extractor.core.limits import Budget, CancelToken, LimitValues, RateLimiter
-from web_extractor.core.tracing import ActionLog, IncidentLog
+from web_extractor.core.tracing import ActionEntry, ActionLog, IncidentLog
 from web_extractor.extractors.base import AcquisitionContext
 from web_extractor.extractors.registry import create_adapter
 from web_extractor.inspectors.base import run_inspectors
@@ -72,11 +73,13 @@ TECHNICAL_ERRORS = (HTTPStatusError, TransientHTTPError, ExtractionError, Browse
 
 class ExtractionEngine:
     def __init__(self, cfg: ProjectConfig, *, cancel: CancelToken | None = None,
-                 logger: logging.Logger | None = None) -> None:
+                 logger: logging.Logger | None = None,
+                 on_action: Callable[[ActionEntry], None] | None = None) -> None:
         self.cfg = cfg
         self.output_dir = Path(cfg.output.directory)
         self.cancel = cancel or CancelToken(self.output_dir / cfg.output.stop_file)
         self.logger = logger or get_logger("engine")
+        self.on_action = on_action
 
     # ------------------------------------------------------------------ contexto
     def _limit_values(self, **overrides: float | int) -> LimitValues:
@@ -90,7 +93,7 @@ class ExtractionEngine:
     def _context(self, limits: LimitValues) -> AcquisitionContext:
         budget = Budget(limits, self.cancel)
         rate = RateLimiter(self.cfg.limits.delay_seconds, self.cancel)
-        actions = ActionLog(self.logger)
+        actions = ActionLog(self.logger, self.on_action)
         incidents = IncidentLog(self.logger)
         client = PoliteHttpClient(self.cfg, budget, rate, self.cancel, actions, self.logger)
         return AcquisitionContext(self.cfg, client, budget, rate, self.cancel, actions, incidents, self.logger)
