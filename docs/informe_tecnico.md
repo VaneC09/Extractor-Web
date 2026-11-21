@@ -12,11 +12,11 @@ servidor.
 
 | Dato | Estado | Supuesto mientras falta |
 |---|---|---|
-| URLs reales aprobadas | No proporcionadas | Se usan 13 escenarios de fixtures locales controlados |
-| Confirmación de autorización por URL (quién, finalidad, términos, evidencia, vigencia) | No proporcionada | La plantilla `examples/plantilla_sitio_autorizado.yaml` queda con `confirmed: false` y bloquea la extracción |
-| Límites de frecuencia aceptados por cada propietario | No proporcionados | Pausa ≥ 1 s en remoto (3 s en la plantilla), concurrencia 1, ≤ 5 solicitudes por defecto |
+| URLs reales | Cinco portales de datos abiertos indicados para el reto (INEGI, datos.gob.mx, Banco Mundial, data.gov, DOF) | Fixtures locales (13 escenarios) para lo que esos sitios no ofrecen de forma legítima |
+| Autorización por URL | Datos públicos con licencia o términos revisados (CC BY 4.0, Términos de Libre Uso de INEGI, `robots.txt`); referencia en `evidence_reference` de cada YAML de `examples/reales/` | La plantilla `examples/plantilla_sitio_autorizado.yaml` sigue con `confirmed: false` y bloquea la extracción |
+| Límites de frecuencia aceptados por cada propietario | Solo los publicados (`Crawl-delay: 10` en datos.gob.mx y catalog.data.gov) | Pausa ≥ 1 s en remoto (3 s en la plantilla), concurrencia 1, ≤ 5 solicitudes por defecto; el `Crawl-delay` eleva la pausa |
 | Credenciales o tokens autorizados | No aplican aún | Solo credenciales y un token ficticios del entorno de prueba, por variables de entorno |
-| Campos de interés reales | No proporcionados | Campos ficticios por escenario |
+| Campos de interés reales | Definidos por sitio en `examples/reales/` | Campos ficticios en los fixtures |
 
 ## 2. Arquitectura
 
@@ -25,9 +25,9 @@ servidor.
           │                                                                 │
 config/ ──► core/engine.ExtractionEngine ──► reports/ (diagnóstico, ejecución, perfiles)
           │      │        │        │                      ▲
-          │      │        │        └─► storage/ (CSV, JSON, SQLite)
+          │      │        │        └─► storage/ (CSV, JSON, Excel, SQLite)
           │      │        └─► transforms/ (normalizar → tipo → validar → deduplicar → linaje)
-          │      └─► selection/ (reglas de campos sobre HTML, tabla, JSON, CSV)
+          │      └─► selection/ (reglas de campos sobre HTML, tabla, JSON, XML, CSV)
           │
           ├─► inspectors/ (respuesta, HTML, estructurado) → classifier
           └─► extractors/ (static_html | browser | structured_file | api)
@@ -44,7 +44,7 @@ Interfaces (protocolos) principales:
 | `Adapter` (`iter_documents`, `close`) | `extractors/base.py` | `StaticHtmlAdapter`, `SeleniumBrowserAdapter`, `StructuredFileAdapter`, `DocumentedApiAdapter` |
 | Normalizador `str -> str/None` | `transforms/normalizers.py` | 12 registrados por nombre |
 | Validador declarativo | `transforms/validators.py` | regex, min/max, choices, longitudes |
-| `Exporter` (`export`) | `storage/exporters.py` | `CsvExporter`, `JsonExporter`, `SqliteExporter` |
+| `Exporter` (`export`) | `storage/exporters.py` | `CsvExporter`, `JsonExporter`, `ExcelExporter`, `SqliteExporter` |
 | Informes | `reports/*` | diagnóstico (MD/JSON), ejecución (MD/JSON), perfiles |
 
 Separación de responsabilidades: la configuración solo describe; el núcleo decide políticas; los
@@ -81,6 +81,10 @@ desde PyPI el 2026-11-10 en Python 3.12.3): requests 2.34.2, beautifulsoup4 4.15
 versiones que resolvió pip en ese momento; no se afirma que sean "las últimas" en otra fecha. El
 límite inferior de los rangos es orientativo y no se probó con versiones antiguas.
 
+Entorno Windows de las corridas reales (2026-11-21): Windows 11, Python 3.12.10, selenium 4.53.0,
+pandas 3.1.1, pydantic 2.14.4, streamlit 1.67.0, openpyxl 3.1.5 y Microsoft Edge 157 en modo headless
+(Chrome no estaba instalado). `browser.engine: auto` usa Chrome si existe y, si no, Edge.
+
 ### Playwright como alternativa
 
 Playwright ofrece esperas automáticas y control de red más fino (por ejemplo bloquear subrecursos
@@ -97,7 +101,7 @@ no es requisito porque Selenium cubre los escenarios del MVP.
 6. `preview` en vivo (1 página) y confirmación escrita (`si`) o `--yes` explícito.
 7. `run`: adaptador con topes, pausas, cancelación (`Ctrl+C` o archivo STOP).
 8. Calidad: normalización, tipos, validación, deduplicación, linaje.
-9. Exportación CSV/JSON/SQLite + `report.md`, `summary.json`, `actions.jsonl`, `run.log`.
+9. Exportación CSV/JSON/Excel/SQLite + `report.md`, `summary.json`, `actions.jsonl`, `run.log`.
 10. Estado final explícito (`completado`, `completado_con_limites`, `parcial_barrera`,
     `detenido_barrera`, `detenido_politica`, `cancelado`, `fallido`) y siguientes pasos legítimos.
 
@@ -111,6 +115,14 @@ no es requisito porque Selenium cubre los escenarios del MVP.
   scripts se reportan como indicio, pero sus endpoints **no** se infieren ni se llaman.
 - Barreras: códigos HTTP y marcadores textuales. Falsos positivos posibles (una página que habla de
   CAPTCHA) y falsos negativos (protecciones invisibles). Ante la duda se detiene.
+- Otros indicios que solo se informan (no se ejecuta nada para comprobarlos): DOM inicial mínimo con
+  varios scripts (`js.thin_dom`), uso de GraphQL, elementos que requieren interacción (pestañas,
+  `aria-expanded`, `onclick`) y contenido dependiente del tiempo (enlaces con `fecha=`, meta refresh,
+  WebSocket o cuenta regresiva).
+- Un formulario de acceso opcional en una página con mucho contenido público (≥ 40 enlaces) no se
+  trata como muro de autenticación; un CAPTCHA en esa misma página sí detiene el flujo.
+- Un certificado TLS inválido detiene el flujo (`tls_error`): nunca se desactiva la verificación.
+  La página «Just a moment...» de Cloudflare se clasifica como desafío anti-bot.
 - No se puede saber desde una inspección permitida: términos de uso aplicables, permisos reales,
   límites no publicados, variaciones por usuario/región, contenido tras autenticación no autorizada,
   ni el código HTTP de una navegación en Selenium.
@@ -147,17 +159,41 @@ comparar los dos `config_efectiva.json` muestra qué cambió.
 
 Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **20/20 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest`: 189 pruebas superadas. Incluye:
+`python -m pytest` (Windows 11, 2026-11-21): **207 pruebas superadas, ninguna omitida**. Incluye:
 
-- 10 pruebas con Chrome headless (3 de ellas con inicio de sesión en el navegador).
+- 10 pruebas con navegador headless (ejecutadas con Edge; 3 de ellas con inicio de sesión).
+- 16 pruebas de `tests/unit/test_reto_final.py`: XML, Excel, indicios de JS/GraphQL/interacción/
+  tiempo, exclusión de menús, sugerencia de campos, login opcional frente a muro, linaje por campo
+  (`field_sources`) y selección de navegador.
 - 8 pruebas de la interfaz gráfica con `streamlit.testing`.
 - 15 pruebas de `tests/integration/test_rubrica.py`. Cubren la autenticación en el navegador, el
   token por encabezado y la huella de configuración en CSV, JSON, SQLite, `summary.json` e informe.
-- 14 pruebas de sitios no incluidos, que usan el sitio local «no visto» y una sesión HTTP simulada.
+- 16 pruebas de sitios no incluidos, que usan el sitio local «no visto» y una sesión HTTP simulada
+  (incluye certificado TLS inválido y desafío de Cloudflare).
 
-Todas las ejecuciones se hicieron **solo contra fixtures locales o respuestas simuladas**; no hay
-resultados de sitios reales. Qué ocurre con un sitio que no es de los ejemplos:
-[sitios_no_incluidos.md](sitios_no_incluidos.md).
+Las pruebas automáticas usan **solo fixtures locales o respuestas simuladas**. Qué ocurre con un
+sitio que no es de los ejemplos: [sitios_no_incluidos.md](sitios_no_incluidos.md).
+
+### Corridas en sitios reales
+
+Ejecutadas una vez cada una, con bajo volumen, el 2026-11-21 (UTC). Detalle, clasificación de
+protección y viabilidad legal: [evidencias/reales](evidencias/reales/README.md).
+
+| Sitio | Mecanismo | Resultado |
+|---|---|---|
+| datos.gob.mx (`/dataset/`) | HTML estático + paginación por URL | 40 registros en 2 páginas, todos válidos |
+| api.worldbank.org (JSON) | API REST documentada y paginada | 40 registros en 2 páginas, todos válidos |
+| api.worldbank.org (XML) | Archivo estructurado XML | 30 registros, todos válidos |
+| catalog.data.gov | Carga por JavaScript, Selenium con Edge | 20 registros (19 válidos, 1 con aviso) |
+| dof.gob.mx | HTML estático, contenido dependiente de la fecha | 18 registros (16 válidos, 2 con aviso) |
+| data.worldbank.org | Desafío anti-bot de Cloudflare | Detenido, incidencia `bot_challenge` |
+| inegi.org.mx/datosabiertos | DOM mínimo + reCAPTCHA | Detenido, incidencia `captcha` |
+| www.dof.gob.mx | Certificado TLS de otro nombre | Detenido, incidencia `tls_error` |
+
+Limitaciones: la parada en INEGI es conservadora (el reCAPTCHA puede proteger solo un formulario),
+pero la regla es no continuar ante un CAPTCHA. Scroll infinito, «cargar más», tablas HTML con
+encabezados y autenticación autorizada solo se demuestran con fixtures, porque ninguno de los cinco
+sitios los ofrece de forma legítima. Los conteos pueden cambiar si los sitios cambian.
 
 ### Interfaz gráfica
 
@@ -182,13 +218,14 @@ extracción propia.
 | Renderizado JS | Media (coste mayor, frágil) | Igual | Preferir API/archivo oficial si existe |
 | «Cargar más» / scroll | Media | Igual; mayor carga por acción | Topes de clics/scrolls bajos |
 | API documentada | Alta | Alta si la documentación permite el uso | Respetar cuotas y términos de la API |
-| Archivo CSV/JSON | Alta | Alta con licencia abierta | Verificar licencia y vigencia |
+| Archivo CSV/JSON/XML | Alta | Alta con licencia abierta | Verificar licencia y vigencia |
 | Autenticación (Requests o navegador) | Media | Solo con autorización expresa y cuenta propia | Credenciales del usuario; nunca de terceros |
 | API con token | Alta | Solo si el propietario emite el token y documenta su uso | Token propio por variable de entorno; respetar cuotas |
 | CAPTCHA / 429 / 403 / robots | No aplica: se detiene | No se continúa | Vía alternativa autorizada por el propietario |
 
 ## 9. Extensiones previstas
 
-Interfaz web multiusuario (la GUI actual es local); Excel,
-PostgreSQL y MongoDB como exportadores adicionales; caché condicional HTTP; adaptador Playwright;
-CI.
+Interfaz web multiusuario (la GUI actual es local); PostgreSQL y MongoDB como exportadores
+adicionales; caché condicional HTTP; adaptador Playwright; CI. No se añadieron porque los
+entregables piden SQLite, CSV y Excel, y Selenium cubre los casos con navegador; un exportador nuevo
+solo tendría que implementar la interfaz `Exporter`.

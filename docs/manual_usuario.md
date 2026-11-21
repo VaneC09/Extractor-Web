@@ -56,7 +56,7 @@ indica `authorized_by`, y pruebas con archivos locales (`preview --from-file`).
    acciones en vivo, y **Cancelar** detiene tras la acción en curso. Cada ejecución exige
    confirmar de nuevo.
 8. **Resultados**: estado, calidad por campo, incidencias, cambios de estructura, descargas
-   (CSV, JSON, informe, log) e historial del proyecto.
+   (CSV, JSON, Excel, informe, log) e historial del proyecto.
 9. **Descargar configuración YAML** (barra lateral) la guarda para usarla con la CLI.
 
 Qué ocurre con un sitio que no es de los ejemplos (sin permiso, redirecciones, robots.txt,
@@ -69,8 +69,9 @@ extraction:
   method: static_html          # static_html | browser | structured_file | api
   record_selector: "article.producto"   # HTML: un elemento por registro
   # table_selector: "table#datos"       # alternativa para tablas (campos con column)
-  # records_path: data.items            # JSON: ruta a la lista
-  # file_format: csv                    # structured_file
+  # records_path: data.items            # JSON o XML: ruta a la lista
+  # file_format: csv                    # structured_file: csv | json | xml
+  # browser: {engine: auto}             # auto (Chrome si existe, si no Edge) | chrome | edge
   deduplicate_on: [codigo]
   drop_invalid: false
   keep_raw: true
@@ -94,6 +95,14 @@ extraction:
       pattern: "(\\d+)"         # conserva el grupo 1
       type: integer
 ```
+
+En XML, `path` usa la misma sintaxis que en JSON tras convertir el documento: se quitan los prefijos
+de espacio de nombres, los atributos se leen con `@` y el texto de un elemento con atributos con
+`text`. Ejemplo (API del Banco Mundial): `records_path: data`, campos `country.text`, `country.@id`
+y `value`. Ver `examples/reales/r03_worldbank_xml.yaml`.
+
+Salidas (`output.formats`): `csv`, `json`, `excel` (`data.xlsx` con las hojas `datos` e
+`incidencias`) y `sqlite`. Por defecto se generan las cuatro.
 
 Normalizadores: `strip`, `collapse_whitespace`, `lower`, `upper`, `title`, `strip_accents`,
 `remove_currency`, `remove_percent`, `thousands_comma`, `decimal_comma`, `digits_only`, `empty_to_none`.
@@ -165,8 +174,10 @@ ofrece las mismas tres opciones: sin autenticación, formulario y token.
 | `robots.txt no permite acceder` | Ruta prohibida por el sitio | No continuar por esa ruta |
 | Vista previa sin registros | Selector incorrecto o contenido generado con JS | Use `diagnose --render`; pruebe `method: browser` o ajuste selectores con `--from-file` |
 | Página sin registros (`empty_page`) durante `run` | Cambio de estructura | Revise selectores; compare perfiles con `compare-runs` |
-| `No se pudo iniciar Chrome/ChromeDriver` | Chrome no instalado o sin acceso para descargar el driver | Instale Chrome; Selenium Manager necesita red la primera vez |
+| `No se encontró Chrome ni Edge instalados` / `No se pudo iniciar el navegador` | Sin navegador compatible o sin acceso para descargar el driver | Instale Chrome o Edge; Selenium Manager necesita red la primera vez |
+| `tls_error`: certificado TLS inválido | El certificado no corresponde a ese nombre (p. ej. `www.`) | Use la dirección oficial con certificado válido; la verificación no se desactiva |
+| `bot_challenge` («Just a moment...») | Desafío anti-bot del sitio | No continuar; usar la API o descarga oficial |
 | `Faltan credenciales en las variables de entorno` | Variables no exportadas | `export MI_USUARIO=...` en la misma terminal |
 | `El inicio de sesión autorizado fue rechazado` | Credenciales incorrectas o caducadas | Verifíquelas con el propietario; no se reintenta automáticamente |
 | La ejecución se cancela sola | Existe `outputs/STOP` | Borre el archivo |
-| `Se esperaba csv pero se recibió text/html` | La URL no apunta al archivo | Use el enlace directo al archivo autorizado |
+| `Se esperaba csv pero se recibió text/html` (o json/xml) | La URL no apunta al archivo | Use el enlace directo al archivo autorizado |

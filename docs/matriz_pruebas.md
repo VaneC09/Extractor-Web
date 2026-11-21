@@ -57,24 +57,34 @@ fixture; sugerencias; comparación de perfiles; códigos de salida de la CLI.
 | A3 | El usuario revisa campos y vista previa antes de extraer; sin confirmación no hay solicitudes de extracción | `run` muestra vista previa y pide `si`; `test_run_requires_confirmation_when_not_interactive`, `test_requires_confirmation` |
 | A4 | Se aplican límites de páginas, registros, tiempo, solicitudes, clics y scrolls; la cancelación funciona | T04, T05, T12; `test_limits_are_enforced`, `test_stop_file_cancels` |
 | A5 | Las barreras provocan parada segura e incidencia, sin evasión ni reintentos | T09, T10, T11; `test_barriers_stop_without_retries` |
-| A6 | CSV/JSON/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones, huella de configuración, versión) | `examples/demo_dataset/`; `test_static_pagination_end_to_end`, `test_every_output_carries_provenance` |
+| A6 | CSV/JSON/Excel/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones, huella de configuración, versión) | `examples/demo_dataset/`; `test_static_pagination_end_to_end`, `test_every_output_carries_provenance` |
 | A7 | Errores y logs sin credenciales ni secretos | T08, T19, T20; `test_authorized_login_without_leaking_secrets`, `test_api_with_token_header`, `TestRedaction` |
-| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (189 pruebas superadas el 2026-11-18 UTC) |
+| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (207 pruebas superadas, ninguna omitida, el 2026-11-21 UTC en Windows 11) |
 | A10 | Un sitio que no es de los ejemplos sigue el mismo flujo y las mismas paradas | T17, T18; `tests/integration/test_sitio_no_incluido.py`; [sitios_no_incluidos.md](sitios_no_incluidos.md) |
 | A11 | La interfaz gráfica no permite solicitudes sin la autorización requerida y permite cancelar | `tests/integration/test_gui.py` |
 | A12 | La autenticación autorizada funciona igual con Requests, navegador y API con token, y se detiene sin reintentar si falla | T08, T19, T20; `tests/integration/test_rubrica.py` |
 | A13 | Cada ejecución es reproducible: misma configuración ⇒ misma huella SHA-256, guardada con la versión | `test_fingerprint_changes_only_with_configuration`, `test_sqlite_created_by_previous_version_is_migrated` |
 | A9 | Entregables coherentes: código, dataset, informe, matriz, manual, guion | `README.md`, `docs/` |
+| A14 | Al menos 5 sitios reales y 4 mecanismos con evidencia de diagnóstico, extracción e informe de restricciones | R01–R08; [evidencias/reales](evidencias/reales/README.md) |
 
 ## Sustitución por URLs autorizadas
 
-Rellene una fila por sitio real **solo** cuando tenga el permiso. Copie la plantilla
-`examples/plantilla_sitio_autorizado.yaml`, complete `authorization` y ejecute primero `diagnose`.
+Para un sitio nuevo: copie `examples/plantilla_sitio_autorizado.yaml` (o use la GUI), complete
+`authorization` y ejecute primero `diagnose`.
 
-| ID real | Reemplaza a | URL autorizada | Propietario que autoriza | Referencia del permiso | Vigencia | Límite acordado (sol/min) | Campos autorizados | Resultado observado |
-|---|---|---|---|---|---|---|---|---|
-| R01 | T01 | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _no ejecutado_ |
-| R02 | T02 | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _no ejecutado_ |
-| R03 | T03/T04/T05 | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _no ejecutado_ |
-| R04 | T06 | _pendiente (API con documentación pública)_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _no ejecutado_ |
-| R05 | T07 | _pendiente (archivo con licencia)_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _pendiente_ | _no ejecutado_ |
+Corridas reales ejecutadas el 2026-11-21 (UTC), una vez cada una y con bajo volumen. Configuración
+en `examples/reales/`; evidencia completa en [evidencias/reales](evidencias/reales/README.md).
+
+| ID real | Equivale a | URL | Base de uso (referencia) | Pausa usada | Campos | Resultado observado |
+|---|---|---|---|---|---|---|
+| R01 | T01 (HTML + paginación) | https://www.datos.gob.mx/dataset/?page=1 | Datos abiertos; `robots.txt` (Crawl-delay 10, `/api/` excluida) | 10 s | título, url, institución, actualización | completado_con_limites: 40 registros, 2 páginas, 3 solicitudes |
+| R02 | T06 (API documentada) | https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json | Documentación pública de la API; CC BY 4.0 | 2 s | país, código, año, población | completado_con_limites: 40 registros, 2 páginas, 3 solicitudes |
+| R03 | T07 (archivo estructurado) | https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD (XML) | Igual que R02 | 2 s | país, código, año, PIB | completado: 30 registros, 2 solicitudes |
+| R04 | T03 (render JS) | https://catalog.data.gov/ | Datos abiertos; `robots.txt` (Crawl-delay 10) | 10 s | título, url, organización, actualizado, formatos | completado: 20 registros (19 válidos), Edge headless |
+| R05 | Contenido dependiente del tiempo | https://dof.gob.mx/index.php | Publicación oficial; `robots.txt` (excluye `/nota_detalle.php?`) | 3 s | título, url, fecha de publicación | completado: 18 registros (16 válidos); indicio `time.dependent` |
+| R06 | Barrera anti-bot (como T09/T10) | https://data.worldbank.org/ | — | — | — | detenido: `bot_challenge` (403 Cloudflare), código de salida 4 |
+| R07 | T09 (CAPTCHA) | https://www.inegi.org.mx/datosabiertos/ | Términos de Libre Uso de INEGI | — | — | detenido: `captcha` (reCAPTCHA tras render), código de salida 4 |
+| R08 | Certificado inválido | https://www.dof.gob.mx/ | — | — | — | detenido: `tls_error`, código de salida 4 |
+
+No hay corrida real para «cargar más», scroll infinito, tabla HTML ni autenticación: ninguno de los
+cinco sitios los ofrece de forma legítima, así que solo se demuestran con T04, T05, T02, T08, T19 y T20.

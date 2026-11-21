@@ -1,4 +1,10 @@
-# Esquema del dataset de demostración
+# Esquema del dataset
+
+Hay dos conjuntos con el mismo esquema:
+
+- **Datos reales:** `docs/evidencias/reales/dataset_reales.sqlite` y `dataset_reales.xlsx` (5 sitios de
+  datos abiertos, 148 registros); se describen en [evidencias/reales](evidencias/reales/README.md).
+- **Demostración con fixtures:** `examples/demo_dataset/`, descrita abajo.
 
 `examples/demo_dataset/` contiene la salida real de la ejecución T01 (catálogo ficticio de
 papelería, 3 páginas) generada con `python -m web_extractor matrix`. Todos los valores son ficticios.
@@ -8,6 +14,7 @@ papelería, 3 páginas) generada con `python -m web_extractor matrix`. Todos los
 | Archivo | Contenido |
 |---|---|
 | `data.csv` | Una fila por registro exportado: campos procesados + columnas de linaje con prefijo `_` |
+| `data.xlsx` | Hoja `datos` (igual que el CSV) y hoja `incidencias` (fecha, tipo, severidad, URL, mensaje, siguiente paso) |
 | `data.json` | Metadatos de la ejecución y, por registro, `data` (procesado), `raw` (original) y `lineage` |
 | `summary.json` | Resumen: estado, consumo frente a límites, calidad, incidencias, cambios, salidas |
 | `report.md` | Informe legible de la ejecución |
@@ -37,6 +44,7 @@ papelería, 3 páginas) generada con `python -m web_extractor matrix`. Todos los
 | `_validation_status` / `validation_status` | `valido`, `advertencia` o `invalido` |
 | `_validation_errors` / `validation_errors` | Errores por campo |
 | — / `transformations` | Pasos aplicados por campo, p. ej. `["remove_currency", "thousands_comma", "empty_to_none", "cast:float"]` |
+| — / `field_sources` | Campo de origen de cada columna, p. ej. `{"precio": "selector '.price'"}`, `"ruta 'country.@id'"` o `"columna 'Nombre'"` |
 | — / `position` | Posición del registro crudo antes de deduplicar |
 | `_config_sha256` / `config_sha256` | Huella SHA-256 de la configuración efectiva (copia en `config_efectiva.json` de la ejecución) |
 | — / `tool_version` | Versión de la herramienta que produjo el registro |

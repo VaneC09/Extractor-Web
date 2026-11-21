@@ -11,8 +11,8 @@ Funciona con cuatro mecanismos de adquisición intercambiables:
 | Método | Tecnología | Cuándo |
 |---|---|---|
 | `static_html` | Requests + BeautifulSoup | El contenido llega en el HTML inicial (listas, tablas, paginación por enlaces) |
-| `browser` | Selenium + Chrome headless | El contenido se genera con JavaScript, botón «cargar más», scroll infinito |
-| `structured_file` | Requests + Pandas | CSV/JSON descargable, público y autorizado |
+| `browser` | Selenium + Chrome o Edge headless | El contenido se genera con JavaScript, botón «cargar más», scroll infinito |
+| `structured_file` | Requests + Pandas | CSV/JSON/XML descargable, público y autorizado |
 | `api` | Requests | API **pública y documentada**; nunca se infieren endpoints |
 
 ## Límites de uso (obligatorios)
@@ -33,13 +33,24 @@ Funciona con cuatro mecanismos de adquisición intercambiables:
 
 ## Instalación
 
-Requisitos: Python 3.10+ (probado con 3.12.3). Google Chrome solo para el método `browser`
-(Selenium Manager descarga el ChromeDriver compatible la primera vez).
+Requisitos: Python 3.10+ (probado con 3.12.3 en Linux y 3.12.10 en Windows 11). Para el método
+`browser` hace falta Google Chrome o Microsoft Edge (Edge viene con Windows); Selenium Manager
+descarga el driver compatible la primera vez.
 
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate          # Windows: .venv\Scripts\activate
 pip install -r requirements-dev.txt   # o requirements.txt sin pytest (incluye Streamlit para la GUI)
+```
+
+En Windows (PowerShell):
+
+```powershell
+py install 3.12                      # solo si `py -3.12` responde "No runtime installed"
+py -3.12 -m venv .venv
+Set-ExecutionPolicy -Scope Process Bypass   # permite activar el entorno en esta ventana
+.\.venv\Scripts\Activate.ps1
+pip install -r requirements-dev.txt
 ```
 
 En Debian/Ubuntu, si `venv` falla por falta de `ensurepip`: `sudo apt-get install python3-venv`.
@@ -85,7 +96,7 @@ python -m web_extractor preview  examples/f01_catalogo_estatico.yaml
 python -m web_extractor run      examples/f01_catalogo_estatico.yaml   # pide confirmación escrita
 ```
 
-Resultados en `outputs/<proyecto>/<run_id>/`: `data.csv`, `data.json`, `report.md`,
+Resultados en `outputs/<proyecto>/<run_id>/`: `data.csv`, `data.json`, `data.xlsx`, `report.md`,
 `summary.json`, `actions.jsonl`, `run.log`, `profile.json`, `config_efectiva.json`, y la base
 acumulativa `outputs/web_extractor.sqlite`.
 
@@ -102,7 +113,7 @@ python -m web_extractor matrix        # 20 casos; escribe docs/evidencias/matriz
 python -m pytest                      # pruebas unitarias e integración con fixtures
 ```
 
-Las pruebas con navegador se omiten automáticamente si no hay Chrome.
+Las pruebas con navegador se omiten automáticamente si no hay Chrome ni Edge.
 
 ## Comandos
 
@@ -135,7 +146,7 @@ web_extractor/
   extractors/         adaptadores: static_html, browser (Selenium), structured_file, api
   selection/          aplicación de reglas de campos (CSS, columnas, rutas JSON) y sugerencias
   transforms/         normalizadores, tipos, validadores, canalización de calidad y linaje
-  storage/            exportadores CSV, JSON y SQLite
+  storage/            exportadores CSV, JSON, Excel y SQLite
   reports/            informes de diagnóstico y ejecución, perfiles y detección de cambios
   models/             dataclasses compartidas
   interface/          presentación en consola
@@ -143,6 +154,7 @@ web_extractor/
   devtools/           servidor de fixtures y ejecutor de la matriz
 fixtures/site/        sitio de pruebas (HTML, JS, CSV, OpenAPI) con datos ficticios
 examples/             una configuración por escenario + plantilla para sitio real + dataset demo
+  reales/             configuraciones de los sitios reales de datos abiertos (r01–r08)
 tests/                unitarias (sin red) e integración (servidor local, Selenium, CLI)
 docs/                 informe técnico, plan de fases, manual, matriz, esquema, guion, evidencias
 outputs/              resultados de ejecución (no versionados)
@@ -162,10 +174,25 @@ interfaz de la lógica) y `devtools/` (fixtures y matriz).
 - [Esquema del dataset de demostración](docs/esquema_dataset.md) · [dataset](examples/demo_dataset/)
 - [Guion de demostración (3–5 min)](docs/guion_demo.md)
 
+## Sitios reales
+
+`examples/reales/` contiene configuraciones para cinco portales de datos abiertos: datos.gob.mx,
+la API del Banco Mundial (JSON y XML), catalog.data.gov, el DOF e INEGI. Se ejecutaron con bajo
+volumen, respetando `robots.txt` y `Crawl-delay`:
+
+```bash
+python -m web_extractor run examples/reales/r02_worldbank_api_json.yaml
+python -m web_extractor diagnose --yes examples/reales/r07_inegi_js_captcha.yaml   # se detiene: CAPTCHA
+```
+
+Resultados, clasificación de protección y viabilidad legal por sitio, y el dataset consolidado
+(SQLite y Excel): [docs/evidencias/reales/](docs/evidencias/reales/README.md).
+
+Una URL nueva no necesita cambios de código: en la GUI se escribe la URL, se completa la
+autorización y se siguen las pestañas (diagnóstico, sugerencia de campos, vista previa, extracción).
+
 ## Estado
 
-MVP funcional de las fases 1 a 4 (incluida la interfaz gráfica) y la mayor parte de la 5: ver
-[plan de fases](docs/plan_fases.md).
-Todas las pruebas se han ejecutado solo contra fixtures locales; **no se ha probado ningún sitio
-real**. Para usar URLs reales hace falta la autorización descrita en
-[docs/matriz_pruebas.md](docs/matriz_pruebas.md#sustitución-por-urls-autorizadas).
+MVP funcional de las fases 1 a 5: ver [plan de fases](docs/plan_fases.md). Las pruebas automáticas
+(`pytest` y `matrix`) usan fixtures locales; las corridas reales están documentadas por separado
+en [docs/evidencias/reales/](docs/evidencias/reales/README.md).

@@ -58,14 +58,14 @@ entorno de desarrollo contra fixtures locales; no implica validación en sitios 
 ## Fase 4 — Persistencia, exportación e interfaz mínima
 
 - **Objetivo:** salidas reutilizables y una interfaz guiada suficiente para el usuario final.
-- **Alcance:** CSV, JSON, SQLite acumulativo; informe Markdown + resumen JSON; acciones JSONL; log
+- **Alcance:** CSV, JSON, Excel (`data.xlsx`, hojas de datos e incidencias), SQLite acumulativo; informe Markdown + resumen JSON; acciones JSONL; log
   redactado; perfiles por sitio y comparación; CLI guiada con confirmación escrita.
 - **Archivos:** `storage/exporters.py`, `reports/run_report.py`, `reports/profiles.py`,
   `interface/console.py`, `app.py`.
 - **Pruebas:** `test_engine_http.py::test_static_pagination_end_to_end`,
   `test_change_detection_requires_review`, `tests/integration/test_cli.py`.
 - **Demostración:** `python -m web_extractor run examples/f01_catalogo_estatico.yaml`.
-- **Terminado cuando:** los tres formatos contienen datos normalizados y linaje; los secretos no
+- **Terminado cuando:** los cuatro formatos contienen datos normalizados y linaje; los secretos no
   aparecen en ninguna salida; el cambio de estructura exige revisión humana sin tocar la línea base.
 - **Estado:** implementado, incluida la interfaz gráfica local (`web_extractor/gui/`, comando
   `gui`). Usa las mismas funciones del motor y las mismas puertas de autorización que la CLI, y
@@ -78,11 +78,14 @@ entorno de desarrollo contra fixtures locales; no implica validación en sitios 
 - **Alcance:**
   - Matriz de 20 casos con resultados observados. T17 y T18 son un sitio «no visto» sin YAML
     de ejemplo; ver [sitios_no_incluidos.md](sitios_no_incluidos.md).
+  - Corridas reales de bajo volumen en cinco portales de datos abiertos (`examples/reales/`), con
+    evidencia, clasificación de protección y viabilidad legal por sitio.
   - Manual, informe técnico y guion de demostración.
-- **Archivos:** `devtools/matrix.py`, `docs/*`, `examples/demo_dataset/`.
+- **Archivos:** `devtools/matrix.py`, `docs/*`, `examples/demo_dataset/`, `examples/reales/`,
+  `docs/evidencias/reales/`.
 - **Pruebas:** `python -m web_extractor matrix` y `python -m pytest`.
 - **Terminado cuando:** la matriz y la suite pasan localmente y la documentación refleja el código.
-- **Estado:** implementado para fixtures locales. **Pendiente:** sustituir fixtures por URLs
-  autorizadas reales (requiere permisos), grabar el video de demostración, CI automatizada y
-  optimizaciones opcionales (caché condicional con ETag/If-Modified-Since, exportación Excel,
-  PostgreSQL/MongoDB).
+- **Estado:** implementado. La matriz y `pytest` pasan con fixtures; las corridas reales están en
+  [evidencias/reales](evidencias/reales/README.md). **Pendiente:** grabar el video de demostración
+  (lo hace el equipo; guion en [guion_demo.md](guion_demo.md)). Fuera de alcance por no ser
+  necesarios para los entregables: CI automatizada, caché condicional y PostgreSQL/MongoDB.
