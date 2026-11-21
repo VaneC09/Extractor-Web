@@ -19,7 +19,7 @@ from urllib.parse import urljoin
 import requests
 
 from web_extractor.config.schema import ProjectConfig
-from web_extractor.core.barriers import detect_barrier
+from web_extractor.core.barriers import Barrier, detect_barrier
 from web_extractor.core.errors import BarrierDetected, HTTPStatusError, ScopeError, TransientHTTPError
 from web_extractor.core.limits import Budget, CancelToken, RateLimiter
 from web_extractor.core.robots import RobotsPolicy
@@ -31,7 +31,7 @@ from web_extractor.utils.timeutils import utc_now_iso
 TRANSIENT_STATUS = {502, 504}
 MAX_REDIRECTS = 5
 _SAFE_HEADERS = ("content-type", "content-length", "last-modified", "etag", "link", "retry-after",
-                 "x-ratelimit-limit", "x-ratelimit-remaining", "cache-control", "x-robots-tag")
+                 "x-ratelimit-limit", "x-ratelimit-remaining", "cache-control", "expires", "x-robots-tag")
 
 
 class PoliteHttpClient:
@@ -134,6 +134,11 @@ class PoliteHttpClient:
                     allow_redirects=False, stream=True,
                 )
                 text, truncated = self._read_limited(response)
+            except requests.exceptions.SSLError as exc:
+                self.actions.record(f"http_{method.lower()}", url, f"{purpose}: certificado TLS inválido", "stop")
+                detail = str(exc).split("certificate verify failed:", 1)[-1].split("(_ssl", 1)[0].strip(" .\"'")[:160]
+                raise BarrierDetected(Barrier("tls_error", "Certificado TLS inválido; no se desactiva la verificación",
+                                              detail, None, url)) from None
             except (requests.ConnectionError, requests.Timeout) as exc:
                 self.actions.record(f"http_{method.lower()}", url, f"{purpose}: {type(exc).__name__}", "error")
                 if attempts < limits.max_retries:

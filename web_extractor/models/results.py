@@ -32,8 +32,12 @@ class FetchedDocument:
         return "csv" in self.content_type
 
     @property
+    def is_xml(self) -> bool:
+        return "xml" in self.content_type and "html" not in self.content_type
+
+    @property
     def is_html(self) -> bool:
-        return "html" in self.content_type or (not self.is_json and not self.is_csv)
+        return "html" in self.content_type or (not self.is_json and not self.is_csv and not self.is_xml)
 
 
 @dataclass

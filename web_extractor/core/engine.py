@@ -174,6 +174,8 @@ class ExtractionEngine:
             rendered = session.snapshot(0)
         except (BarrierDetected, *POLICY_ERRORS, BrowserUnavailable, LimitReached, Cancelled) as exc:
             diagnosis.incidents.append(self._incident_from(exc, ctx, self.cfg.target_url))
+            if isinstance(exc, (BarrierDetected, *POLICY_ERRORS)):
+                diagnosis.stopped = True
             return
         except Exception as exc:  # errores de WebDriver
             diagnosis.limitations.append(f"Render con navegador no disponible: {type(exc).__name__}")
@@ -204,7 +206,7 @@ class ExtractionEngine:
             raw_bytes = Path(from_file).read_bytes()
             text = raw_bytes.decode(detect_encoding("", raw_bytes), errors="replace")
             suffix = Path(from_file).suffix.lower()
-            content_type = {".json": "application/json", ".csv": "text/csv"}.get(suffix, "text/html")
+            content_type = {".json": "application/json", ".csv": "text/csv", ".xml": "application/xml"}.get(suffix, "text/html")
             doc = FetchedDocument(self.cfg.target_url, self.cfg.target_url, 200, content_type, text, via="file")
             items = parse_document(doc, extraction).items[:max_records]
             raw = [RawRecord(i, f"file://{Path(from_file).resolve()}", doc.fetched_at, "local_file") for i in items]

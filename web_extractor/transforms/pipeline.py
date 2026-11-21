@@ -6,7 +6,8 @@ Estados de validación por registro:
 - ``invalido``: falta un campo obligatorio o no supera su validación.
 
 Se conserva el valor crudo (``raw``) junto al procesado si ``extraction.keep_raw`` es true, y el
-linaje registra URL de origen, fecha, ejecución, método, estado y pasos aplicados por campo.
+linaje registra URL de origen, fecha, ejecución, método, procedencia de cada campo (selector,
+columna o ruta), estado y pasos aplicados por campo.
 """
 
 from __future__ import annotations
@@ -61,6 +62,16 @@ def process_field(rule: FieldRule, raw: Any) -> tuple[Any, list[str], list[str]]
     return value, steps, errors
 
 
+def field_source(rule: FieldRule) -> str:
+    if rule.column:
+        origin = f"columna '{rule.column}'" + (f" > {rule.selector}" if rule.selector else "")
+    elif rule.path:
+        origin = f"ruta '{rule.path}'"
+    else:
+        origin = f"selector '{rule.selector or '(registro)'}'"
+    return origin if rule.attribute == "text" or rule.path else f"{origin} @{rule.attribute}"
+
+
 def _record_id(data: dict[str, Any], keys: list[str]) -> str:
     payload = json.dumps({k: data.get(k) for k in keys}, sort_keys=True, ensure_ascii=False, default=str)
     return hashlib.sha256(payload.encode()).hexdigest()[:16]
@@ -70,6 +81,7 @@ class TransformPipeline:
     def __init__(self, extraction: ExtractionConfig) -> None:
         self.extraction = extraction
         self.dedup_keys = extraction.deduplicate_on or [f.name for f in extraction.fields]
+        self.field_sources = {f.name: field_source(f) for f in extraction.fields}
 
     def process(self, raw_records: list[RawRecord], run_id: str,
                 provenance: dict[str, Any] | None = None) -> tuple[list[ProcessedRecord], QualityReport]:
@@ -108,6 +120,7 @@ class TransformPipeline:
                 "retrieved_at": raw.retrieved_at,
                 "method": raw.method,
                 "page_index": raw.page_index,
+                "field_sources": self.field_sources,
                 "validation_status": status,
                 "validation_errors": errors,
                 "transformations": transformations,

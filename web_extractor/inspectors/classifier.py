@@ -32,7 +32,9 @@ def _selenium_available() -> bool:
         import selenium  # noqa: F401
     except ImportError:
         return False
-    return True
+    from web_extractor.extractors.browser_selenium import available_browsers
+
+    return bool(available_browsers())
 
 
 def classify(findings: list[Finding], cfg: ProjectConfig) -> list[MethodRecommendation]:
@@ -60,10 +62,10 @@ def classify(findings: list[Finding], cfg: ProjectConfig) -> list[MethodRecommen
         if method == "structured_file":
             requirements.append("Confirmar que el archivo es público, autorizado y su licencia permite el uso")
         if method == "browser":
-            requirements.append("Requiere Chrome + Selenium; mayor coste por página: usar topes bajos")
+            requirements.append("Requiere Selenium con Chrome o Edge; mayor coste por página: usar topes bajos")
             if not _selenium_available():
                 executable = False
-                requirements.append("Selenium no está instalado en este entorno")
+                requirements.append("Selenium o un navegador compatible (Chrome/Edge) no están disponibles en este entorno")
         if cfg.authorization.environment != "fixture" and not cfg.authorization.confirmed:
             requirements.append("Falta confirmar autorización antes de extraer")
         score = round(min(0.95, max(0.0, score)), 2)

@@ -1,4 +1,4 @@
-"""Integración con Selenium (Chrome headless) contra fixtures locales. Se omite sin navegador."""
+"""Integración con Selenium (Chrome o Edge headless) contra fixtures locales. Se omite sin navegador."""
 
 import pytest
 

@@ -37,10 +37,11 @@ def suggest_extraction(diagnosis: Diagnosis) -> dict[str, Any] | None:
         fields = [{"name": _field_name(p, used), "path": p, "type": "string"}
                   for p in cand.get("json_fields", [])[:10]]
         if fields:
-            method = "api" if best == "api" else "structured_file"
+            fmt = cand.get("data_format", "json")
+            method = "api" if best == "api" and fmt == "json" else "structured_file"
             block: dict[str, Any] = {"method": method, "records_path": None if path == "." else path, "fields": fields}
             if method == "structured_file":
-                block["file_format"] = "json"
+                block["file_format"] = fmt
             return block
     if cand.get("csv_columns"):
         fields = [{"name": _field_name(c, used), "path": c, "type": "string"} for c in cand["csv_columns"][:15]]
@@ -64,7 +65,7 @@ def suggest_extraction(diagnosis: Diagnosis) -> dict[str, Any] | None:
                                "type": "string", "normalize": ["collapse_whitespace"]})
                 continue
             cls = child.split(".", 1)[1] if "." in child else child
-            fields.append({"name": _field_name(cls.split(".")[0], used), "selector": "." + cls,
+            fields.append({"name": _field_name(cls.split(".")[0], used), "selector": child,
                            "type": "string", "normalize": ["collapse_whitespace"]})
         if top.get("has_link"):
             fields.append({"name": _field_name("url", used), "selector": "a[href]", "attribute": "href", "type": "url"})
@@ -79,4 +80,4 @@ def suggest_extraction(diagnosis: Diagnosis) -> dict[str, Any] | None:
     return None
 
 
-_HEADING = re.compile(r"^h[1-6]$")
+_HEADING = re.compile(r"^h[1-6](\.|$)")

@@ -53,7 +53,7 @@ def default_config_dict(url: str, name: str | None = None) -> dict[str, Any]:
         "diagnosis": {"max_requests": 3, "render_with_browser": False},
         "extraction": {"method": "auto", "fields": [{"name": "texto", "normalize": ["collapse_whitespace"]}]},
         "auth": {"type": "none"},
-        "output": {"directory": "outputs", "formats": ["csv", "json", "sqlite"]},
+        "output": {"directory": "outputs", "formats": ["csv", "json", "excel", "sqlite"]},
     }
 
 

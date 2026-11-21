@@ -25,7 +25,11 @@ NEXT_STEPS = {
     "expresa y credenciales proporcionadas por el usuario (auth.type=form).",
     "paywall": "Detener: contenido de pago o suscripción. No eludir; obtener licencia o acceso "
     "autorizado.",
-    "bot_challenge": "Detener: desafío anti-bot detectado. No evadir; solicitar acceso autorizado.",
+    "bot_challenge": "Detener: desafío anti-bot detectado. No evadir; usar una API o descarga oficial "
+    "documentada por el propietario, o solicitar acceso autorizado.",
+    "tls_error": "Detener: el certificado TLS no es válido para este dominio. No se desactiva la verificación; "
+    "usar la dirección oficial con certificado válido (p. ej. la variante con o sin 'www', si el propietario "
+    "la publica) o avisar al propietario.",
 }
 
 _CAPTCHA = re.compile(
@@ -35,7 +39,8 @@ _CAPTCHA = re.compile(
     re.I,
 )
 _BOT_CHALLENGE = re.compile(
-    r"cf-browser-verification|cf-chl-|checking your browser|attention required!|"
+    r"cf-browser-verification|cf-chl-|_cf_chl_opt|/cdn-cgi/challenge-platform/|<title>just a moment\.\.\.</title>|"
+    r"checking your browser|attention required!|"
     r"unusual traffic from your computer|tráfico inusual|access to this page has been denied",
     re.I,
 )
@@ -65,6 +70,19 @@ class Barrier:
 def _snippet(text: str, match: re.Match[str]) -> str:
     start = max(0, match.start() - 40)
     return " ".join(text[start : match.end() + 40].split())
+
+
+_LINK = re.compile(r"<a\s[^>]*href", re.I)
+OPTIONAL_LOGIN_MIN_LINKS = 40
+
+
+def _content_beyond_login(html: str) -> bool:
+    """Un recuadro de acceso opcional en una página con mucho contenido no es un muro de acceso.
+
+    Un muro de acceso deja poco más que el formulario; una portada pública con un acceso para
+    suscriptores conserva su navegación y su contenido (decenas de enlaces).
+    """
+    return len(_LINK.findall(html)) >= OPTIONAL_LOGIN_MIN_LINKS
 
 
 def detect_barrier(
@@ -99,7 +117,7 @@ def detect_barrier(
         return Barrier("bot_challenge", "Indicios de desafío anti-bot", _snippet(sample, match), status)
     if match := _PAYWALL.search(sample):
         return Barrier("paywall", "Indicios de muro de pago", _snippet(sample, match), status)
-    if not auth_expected and (match := _PASSWORD_INPUT.search(sample)):
+    if not auth_expected and (match := _PASSWORD_INPUT.search(sample)) and not _content_beyond_login(sample):
         return Barrier(
             "auth_required",
             "Formulario de acceso con contraseña en una página que debía ser pública",

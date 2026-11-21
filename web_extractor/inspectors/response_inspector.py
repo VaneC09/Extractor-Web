@@ -26,6 +26,9 @@ class ResponseInspector:
         if doc.is_json:
             out.findings.append(Finding("response.json", "estructurado", "La URL entrega JSON directamente",
                                         ct, {"structured_file": 0.55, "api": 0.25, "static_html": -0.35, "browser": -0.15}))
+        elif doc.is_xml:
+            out.findings.append(Finding("response.xml", "estructurado", "La URL entrega XML directamente",
+                                        ct, {"structured_file": 0.7, "static_html": -0.35, "browser": -0.15}))
         elif doc.is_csv:
             out.findings.append(Finding("response.csv", "estructurado", "La URL entrega CSV directamente",
                                         ct, {"structured_file": 0.8, "static_html": -0.35, "browser": -0.15}))

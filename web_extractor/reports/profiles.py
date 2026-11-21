@@ -30,6 +30,7 @@ def build_profile(cfg: ProjectConfig, run_id: str, quality: QualityReport, struc
         "record_selector": cfg.extraction.record_selector,
         "table_selector": cfg.extraction.table_selector,
         "records_path": cfg.extraction.records_path,
+        "api_documentation_url": cfg.extraction.api.documentation_url,
         "record_count": total,
         "max_records": cfg.limits.max_records,
         "fields": {
@@ -49,7 +50,7 @@ def compare_profiles(previous: dict[str, Any], current: dict[str, Any]) -> list[
     def add(kind: str, severity: str, message: str) -> None:
         changes.append({"kind": kind, "severity": severity, "message": message})
 
-    for key in ("target_url", "method", "record_selector", "table_selector", "records_path"):
+    for key in ("target_url", "method", "record_selector", "table_selector", "records_path", "api_documentation_url"):
         if previous.get(key) != current.get(key):
             add("config", "media", f"{key} cambió: {previous.get(key)!r} -> {current.get(key)!r}")
 

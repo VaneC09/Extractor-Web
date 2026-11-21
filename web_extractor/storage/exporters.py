@@ -2,6 +2,7 @@
 
 - CSV: columnas de datos + columnas de linaje con prefijo ``_``.
 - JSON: documento con metadatos de la ejecución y, por registro, ``data``/``raw``/``lineage``.
+- Excel: hoja ``datos`` (igual que el CSV) y hoja ``incidencias``.
 - SQLite: base local acumulativa con tablas ``runs``, ``records`` e ``incidents``.
 """
 
@@ -55,6 +56,19 @@ class CsvExporter:
     def export(self, bundle: ExportBundle, run_dir: Path) -> Path:
         path = run_dir / "data.csv"
         to_dataframe(bundle).to_csv(path, index=False, encoding="utf-8")
+        return path
+
+
+class ExcelExporter:
+    name = "excel"
+
+    def export(self, bundle: ExportBundle, run_dir: Path) -> Path:
+        path = run_dir / "data.xlsx"
+        incidents = pd.DataFrame([i.to_dict() for i in bundle.incidents],
+                                 columns=["timestamp", "kind", "severity", "url", "message", "next_step"])
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            to_dataframe(bundle).to_excel(writer, sheet_name="datos", index=False)
+            incidents.to_excel(writer, sheet_name="incidencias", index=False)
         return path
 
 
@@ -134,10 +148,11 @@ class SqliteExporter:
         return self.db_path
 
 
-EXPORTERS = ("csv", "json", "sqlite")
+EXPORTERS = ("csv", "json", "excel", "sqlite")
 
 
 def export_all(bundle: ExportBundle, run_dir: Path, formats: list[str], sqlite_path: Path) -> dict[str, str]:
     run_dir.mkdir(parents=True, exist_ok=True)
-    exporters: dict[str, Exporter] = {"csv": CsvExporter(), "json": JsonExporter(), "sqlite": SqliteExporter(sqlite_path)}
+    exporters: dict[str, Exporter] = {"csv": CsvExporter(), "json": JsonExporter(), "excel": ExcelExporter(),
+                                      "sqlite": SqliteExporter(sqlite_path)}
     return {fmt: str(exporters[fmt].export(bundle, run_dir)) for fmt in formats}

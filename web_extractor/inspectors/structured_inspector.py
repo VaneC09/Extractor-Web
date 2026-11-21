@@ -1,9 +1,10 @@
-"""Inspección de respuestas JSON/CSV: forma de los datos y rutas candidatas a lista de registros."""
+"""Inspección de respuestas JSON/XML/CSV: forma de los datos y rutas candidatas a lista de registros."""
 
 from __future__ import annotations
 
 import io
 import json
+import xml.etree.ElementTree as ET
 from typing import Any
 
 import pandas as pd
@@ -11,6 +12,7 @@ import pandas as pd
 from web_extractor.inspectors.base import InspectionOutput
 from web_extractor.models.results import FetchedDocument, Finding
 from web_extractor.selection.paths import get_path, key_paths
+from web_extractor.selection.xml_data import xml_to_data
 
 
 def _list_paths(data: Any, prefix: str = "", depth: int = 3) -> list[tuple[str, int]]:
@@ -27,16 +29,18 @@ class StructuredInspector:
     name = "structured"
 
     def applies_to(self, doc: FetchedDocument) -> bool:
-        return doc.is_json or doc.is_csv
+        return doc.is_json or doc.is_csv or doc.is_xml
 
     def inspect(self, doc: FetchedDocument) -> InspectionOutput:
         out = InspectionOutput()
-        if doc.is_json:
+        if doc.is_json or doc.is_xml:
+            label = "XML" if doc.is_xml else "JSON"
             try:
-                data = json.loads(doc.text)
-            except json.JSONDecodeError as exc:
-                out.findings.append(Finding("json.invalid", "estructurado", "El JSON no se puede interpretar", str(exc)))
+                data = xml_to_data(doc.text) if doc.is_xml else json.loads(doc.text)
+            except (json.JSONDecodeError, ET.ParseError) as exc:
+                out.findings.append(Finding("json.invalid", "estructurado", f"El {label} no se puede interpretar", str(exc)))
                 return out
+            out.candidates["data_format"] = "xml" if doc.is_xml else "json"
             lists = _list_paths(data)
             out.candidates["records_paths"] = [{"path": p, "count": n} for p, n in lists]
             if lists:
@@ -45,7 +49,7 @@ class StructuredInspector:
                 fields = key_paths(sample[0]) if sample else []
                 out.candidates["json_fields"] = fields
                 out.findings.append(Finding("json.records", "estructurado",
-                                            f"Lista de {count} objetos en '{path}'", ", ".join(fields[:12])))
+                                            f"{label}: lista de {count} registros en '{path}'", ", ".join(fields[:12])))
             if isinstance(data, dict):
                 nexts = [k for k in key_paths(data, depth=2) if k.split(".")[-1] in ("next", "next_page", "nextPage")]
                 if nexts:

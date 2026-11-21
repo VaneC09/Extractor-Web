@@ -33,11 +33,34 @@ _API_DOC = re.compile(r"\b(api|openapi|swagger|developers?|desarrolladores|datos
 _PAGE_PARAM = re.compile(r"[?&](page|p|pagina|offset|start)=\d+", re.I)
 _HEADINGS = ["h1", "h2", "h3", "h4", "h5", "h6"]
 _PAGE_NUMBER = re.compile(r"(?<=[?&])(page|p|pg|pagina|página)=\d+", re.I)
+_GRAPHQL = re.compile(r"/graphql\b|__APOLLO_STATE__|apollo-client|urql|relay-runtime|\bgql`", re.I)
+_TIMED = re.compile(r"countdown|cuenta regresiva|new EventSource\(|new WebSocket\(", re.I)
+_DATE_PARAM = re.compile(r"[?&](fecha|date|dia|day|year|anio|año)=[^&#]+", re.I)
+_CHROME = ("nav", "header", "footer")
+_CHROME_CLASS = re.compile(r"(^|[-_])(nav|navbar|menu|footer|header|breadcrumb|identifier|social|skip)([-_]|$)", re.I)
 
 
 def _css_for(tag: Tag) -> str:
     classes = [c for c in tag.get("class", []) if re.fullmatch(r"[A-Za-z_][\w-]*", c)]
     return tag.name + "".join(f".{c}" for c in classes[:3])
+
+
+_BLOCKS = ("div", "section", "article", "ul", "ol", "li", "table", "form", "header", "footer", "nav")
+
+
+def _is_value_tag(tag: Tag) -> bool:
+    """Elemento que contiene un valor (texto propio), no un contenedor de maquetación."""
+    return bool(tag.get_text(strip=True)) and tag.find(_BLOCKS) is None
+
+
+def _is_site_chrome(tag: Tag) -> bool:
+    """Menús, cabeceras y pies de página: se repiten en cada página pero no son registros de datos."""
+    for node in [tag, *tag.parents]:
+        if getattr(node, "name", None) in _CHROME:
+            return True
+        if any(_CHROME_CLASS.search(c) for c in node.get("class", []) if isinstance(node, Tag)):
+            return True
+    return False
 
 
 class HtmlInspector:
@@ -65,19 +88,21 @@ class HtmlInspector:
                          f"{len(visible_text):,} caracteres de texto visible; {len(scripts)} scripts",
                          visible_text[:160]))
 
-        self._render_hints(doc, soup, visible_text, scripts, script_chars, noscript_text, f)
+        self._render_hints(doc, soup, visible_text, scripts, script_chars, noscript_text, elements, f)
         self._tables(soup, out)
         self._repeated(body, out)
         self._pagination(doc, soup, out)
         self._on_demand(doc, soup, f)
         self._structured(doc, soup, out)
         self._forms(soup, f)
+        self._interaction(soup, f)
+        self._timing(doc, soup, f)
         meta = soup.find("meta", attrs={"name": re.compile("^robots$", re.I)})
         if meta and meta.get("content"):
             f.append(Finding("html.meta_robots", "política", "Meta robots declarado", meta["content"]))
         return out
 
-    def _render_hints(self, doc, soup, visible_text, scripts, script_chars, noscript_text, f) -> None:
+    def _render_hints(self, doc, soup, visible_text, scripts, script_chars, noscript_text, elements, f) -> None:
         raw = doc.text
         for root_id in _ROOT_IDS:
             root = soup.find(id=root_id)
@@ -97,6 +122,11 @@ class HtmlInspector:
             f.append(Finding("js.low_text", "renderizado",
                              "Poco texto visible frente al volumen de scripts",
                              f"texto={len(visible_text)} scripts={script_chars}", {"browser": 0.2, "static_html": -0.15}))
+        elif elements < 80 and len(scripts) >= 3:
+            f.append(Finding("js.thin_dom", "renderizado",
+                             "HTML inicial casi vacío con varios scripts: el contenido probablemente se carga con "
+                             "JavaScript/AJAX. Confírmelo con el render del navegador",
+                             f"{elements} elementos, {len(scripts)} scripts", {"browser": 0.35, "static_html": -0.2}))
         elif len(visible_text) >= 300:
             f.append(Finding("html.text_present", "dom", "Hay texto sustancial en el HTML inicial",
                              f"{len(visible_text)} caracteres", {"static_html": 0.2}))
@@ -104,6 +134,10 @@ class HtmlInspector:
             f.append(Finding("js.async_load", "renderizado",
                              "Los scripts cargan datos de forma asíncrona (fetch/XHR). No se infieren ni se "
                              "llaman sus endpoints: no están documentados", "", {"browser": 0.1}))
+        if m := _GRAPHQL.search(raw):
+            f.append(Finding("api.graphql", "api",
+                             "Indicios de una API GraphQL usada por la página. No se consulta: solo se usaría con "
+                             "documentación pública del propietario", m.group(0)[:80], {"browser": 0.05}))
 
     def _tables(self, soup, out: InspectionOutput) -> None:
         tables = []
@@ -122,7 +156,9 @@ class HtmlInspector:
     def _repeated(self, body, out: InspectionOutput) -> None:
         groups: dict[tuple, list[Tag]] = defaultdict(list)
         for tag in body.find_all(True):
-            if tag.get("class") and tag.parent is not None and tag.name not in ("span", "a", "i", "b", "strong", "img", "option", "td", "th", "tr"):
+            if (tag.get("class") and tag.parent is not None
+                    and tag.name not in ("span", "a", "i", "b", "strong", "img", "option", "td", "th", "tr")
+                    and not _is_site_chrome(tag)):
                 groups[(id(tag.parent), _css_for(tag))].append(tag)
         candidates = []
         for (_, selector), tags in groups.items():
@@ -130,7 +166,8 @@ class HtmlInspector:
                 avg_text = sum(len(t.get_text(strip=True)) for t in tags) / len(tags)
                 if avg_text >= 10:
                     sample = tags[0]
-                    children = Counter(_css_for(c) for c in sample.find_all(True) if c.get("class"))
+                    children = Counter(_css_for(c) for c in sample.find_all(True)
+                                       if c.get("class") and _is_value_tag(c))
                     for heading in sample.find_all(_HEADINGS):
                         if not heading.get("class"):
                             children[heading.name] += 1
@@ -223,6 +260,36 @@ class HtmlInspector:
         if ld:
             f.append(Finding("html.json_ld", "estructurado", f"{len(ld)} bloque(s) JSON-LD (schema.org) embebidos",
                              ld[0].get_text()[:120], {"static_html": 0.05}))
+
+    def _interaction(self, soup, f) -> None:
+        controls = soup.select("[onclick], [aria-expanded], [role=tab], details, [data-toggle], [data-bs-toggle], "
+                               "select[onchange]")
+        if controls:
+            sample = ", ".join(dict.fromkeys(_css_for(c) for c in controls[:6]))
+            f.append(Finding("dom.interaction", "interacción",
+                             f"{len(controls)} elemento(s) que muestran contenido al interactuar (pestañas, "
+                             "desplegables, clics): ese contenido puede no estar en el HTML inicial", sample,
+                             {"browser": 0.1}))
+
+    def _timing(self, doc, soup, f) -> None:
+        evidence = []
+        if refresh := soup.find("meta", attrs={"http-equiv": re.compile("^refresh$", re.I)}):
+            evidence.append(f"meta refresh {refresh.get('content', '')}")
+        if m := _TIMED.search(doc.text):
+            evidence.append(m.group(0))
+        if soup.find("input", attrs={"type": re.compile("^(date|datetime-local|month)$", re.I)}):
+            evidence.append("selector de fecha")
+        dated = [a["href"] for a in soup.find_all("a", href=True) if _DATE_PARAM.search(a["href"])]
+        if len(dated) >= 3:
+            evidence.append(f"{len(dated)} enlaces parametrizados por fecha, p. ej. {dated[0][:80]}")
+        if evidence:
+            for header in ("last-modified", "expires"):
+                if value := next((v for k, v in doc.headers.items() if k.lower() == header), None):
+                    evidence.append(f"{header}: {value}")
+            f.append(Finding("time.dependent", "tiempo",
+                             "El contenido depende del momento de la consulta (actualización, caducidad o fecha). "
+                             "Cada registro guarda su fecha de adquisición; repetir la extracción puede dar otros datos",
+                             "; ".join(evidence)[:240]))
 
     def _forms(self, soup, f) -> None:
         if soup.find("input", attrs={"type": re.compile("^password$", re.I)}):

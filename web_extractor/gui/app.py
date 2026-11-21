@@ -454,7 +454,7 @@ def tab_scope(data: dict, errors: list[str]) -> None:
         st.checkbox("Respetar robots.txt", key=wkey("scope.respect_robots_txt"),
                     help="Recomendado siempre. Desactivarlo solo si el propietario lo indica por escrito.")
         st.checkbox("Permitir red local (solo fixtures)", key=wkey("scope.allow_private_network"))
-        st.multiselect("Formatos de salida", ["csv", "json", "sqlite"], key=wkey("output.formats"))
+        st.multiselect("Formatos de salida", ["csv", "json", "excel", "sqlite"], key=wkey("output.formats"))
         if not st.session_state.get(wkey("scope.respect_robots_txt"), True):
             st.warning("Ha desactivado robots.txt. Documente la autorización expresa del propietario.")
     with c2:
@@ -485,7 +485,7 @@ def tab_diagnosis(data: dict, cfg: ProjectConfig | None) -> None:
     n = cfg.diagnosis.max_requests + (1 if st.session_state.get(wkey("diagnosis.render_with_browser")) else 0)
     st.markdown(f"Inspección pasiva de **{urlsplit(cfg.target_url).netloc}**: hasta **{n} solicitudes** "
                 "(robots.txt, el documento y una redirección). No se ejecutan formularios ni se prueban rutas no enlazadas.")
-    st.checkbox("Comparar con render del navegador (+1 solicitud, requiere Chrome)", key=wkey("diagnosis.render_with_browser"))
+    st.checkbox("Comparar con render del navegador (+1 solicitud, requiere Chrome o Edge)", key=wkey("diagnosis.render_with_browser"))
     consent = True
     if cfg.authorization.environment != "fixture":
         consent = st.checkbox(f"Confirmo que tengo permiso para esta inspección de hasta {n} solicitudes", key="diag_consent")
@@ -560,7 +560,7 @@ def tab_fields(data: dict, errors: list[str]) -> None:
         if method in ("api", "structured_file", "auto"):
             st.text_input("Ruta a la lista de registros (JSON)", key=wkey("extraction.records_path"), placeholder="data.items")
         if method == "structured_file":
-            st.selectbox("Formato del archivo", [None, "csv", "json"], key=wkey("extraction.file_format"),
+            st.selectbox("Formato del archivo", [None, "csv", "json", "xml"], key=wkey("extraction.file_format"),
                          format_func=lambda v: "—" if v is None else v.upper())
         modes = {"static_html": ["none", "next_link", "url_template"], "browser": ["none", "next_link"],
                  "api": ["none", "next_field", "page_param"]}.get(method, ["none"])
@@ -679,8 +679,8 @@ def tab_preview(cfg: ProjectConfig | None) -> None:
     c1, c2 = st.columns(2, gap="large")
     with c1.container(border=True):
         st.markdown("**Probar con un archivo local** (0 solicitudes)")
-        st.caption("Guarde una página permitida (HTML, JSON o CSV) y pruebe sus reglas sin tocar el sitio.")
-        upload = st.file_uploader("Archivo", type=["html", "htm", "json", "csv"], key="preview_file",
+        st.caption("Guarde una página permitida (HTML, JSON, XML o CSV) y pruebe sus reglas sin tocar el sitio.")
+        upload = st.file_uploader("Archivo", type=["html", "htm", "json", "xml", "csv"], key="preview_file",
                                   label_visibility="collapsed")
         if st.button("Vista previa del archivo", disabled=upload is None or cfg.extraction.method == "auto"):
             target = ROOT / "outputs" / "_gui_preview" / upload.name
@@ -824,6 +824,7 @@ def tab_results(cfg: ProjectConfig | None) -> None:
     with files_tab:
         cols = st.columns(3)
         downloads = [("csv", "Datos CSV", "text/csv"), ("json", "Datos JSON", "application/json"),
+                     ("excel", "Datos Excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
                      ("report", "Informe (Markdown)", "text/markdown"), ("summary", "Resumen JSON", "application/json"),
                      ("actions", "Acciones (JSONL)", "application/json"), ("log", "Log sin secretos", "text/plain"),
                      ("config", "Configuración efectiva", "application/json")]

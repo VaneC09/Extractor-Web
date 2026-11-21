@@ -173,6 +173,7 @@ class PaginationConfig(StrictModel):
 
 
 class BrowserConfig(StrictModel):
+    engine: Literal["auto", "chrome", "edge"] = Field("auto", description="auto: Chrome si existe, si no Edge")
     headless: bool = True
     wait_selector: str | None = None
     wait_timeout_seconds: float = Field(10, gt=0, le=60)
@@ -195,7 +196,7 @@ class ExtractionConfig(StrictModel):
     record_selector: str | None = None
     table_selector: str | None = None
     records_path: str | None = None
-    file_format: Literal["json", "csv"] | None = None
+    file_format: Literal["json", "csv", "xml"] | None = None
     fields: list[FieldRule] = Field(min_length=1)
     pagination: PaginationConfig = Field(default_factory=PaginationConfig)
     browser: BrowserConfig = Field(default_factory=BrowserConfig)
@@ -218,7 +219,7 @@ class ExtractionConfig(StrictModel):
         if self.method in html_methods and not (self.record_selector or self.table_selector):
             raise ValueError(f"method={self.method} requiere record_selector o table_selector")
         if self.method == "structured_file" and not self.file_format:
-            raise ValueError("method=structured_file requiere file_format (json o csv)")
+            raise ValueError("method=structured_file requiere file_format (json, csv o xml)")
         if self.method in ("api", "structured_file"):
             no_path = [f.name for f in self.fields if not f.path]
             if no_path:
@@ -269,7 +270,7 @@ class AuthConfig(StrictModel):
 
 class OutputConfig(StrictModel):
     directory: str = "outputs"
-    formats: list[Literal["csv", "json", "sqlite"]] = Field(default_factory=lambda: ["csv", "json", "sqlite"])
+    formats: list[Literal["csv", "json", "excel", "sqlite"]] = Field(default_factory=lambda: ["csv", "json", "excel", "sqlite"])
     sqlite_path: str | None = None
     stop_file: str = "STOP"
     profile_name: str | None = Field(None, pattern=r"^[a-z0-9][a-z0-9_-]{1,63}$")

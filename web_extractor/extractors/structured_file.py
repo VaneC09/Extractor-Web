@@ -1,4 +1,4 @@
-"""Archivo estructurado descargable y autorizado (CSV o JSON) en una única solicitud."""
+"""Archivo estructurado descargable y autorizado (CSV, JSON o XML) en una única solicitud."""
 
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ class StructuredFileAdapter(BaseAdapter):
         fmt = ctx.cfg.extraction.file_format
         prepare_auth(ctx.client, ctx.cfg.auth)
         ctx.budget.consume_page()
-        accept = "text/csv" if fmt == "csv" else "application/json"
+        accept = {"csv": "text/csv", "xml": "application/xml, text/xml"}.get(fmt, "application/json")
         doc = ctx.client.get(ctx.cfg.target_url, purpose=f"descarga de archivo {fmt}", accept=accept)
         if doc.truncated:
             raise ExtractionError("El archivo supera limits.max_response_bytes; no se procesa parcialmente")

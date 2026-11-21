@@ -1,4 +1,4 @@
-"""Contenido renderizado con JavaScript mediante Selenium (Chrome headless).
+"""Contenido renderizado con JavaScript mediante Selenium (Chrome o Edge headless).
 
 Acciones acotadas por ``limits``: navegación (cuenta como solicitud), clics en "cargar más"
 (``max_clicks``), scroll (``max_scrolls``) y paginación por enlace (``max_pages``). Cada acción se
@@ -27,6 +27,31 @@ from web_extractor.models.results import FetchedDocument
 from web_extractor.utils.timeutils import utc_now_iso
 
 
+BROWSER_LABELS = {"chrome": "Chrome", "edge": "Edge"}
+_BROWSER_BINARIES = {
+    "chrome": ("google-chrome", "chromium", "chromium-browser", "chrome",
+               r"%ProgramFiles%\Google\Chrome\Application\chrome.exe",
+               r"%ProgramFiles(x86)%\Google\Chrome\Application\chrome.exe",
+               r"%LocalAppData%\Google\Chrome\Application\chrome.exe"),
+    "edge": ("microsoft-edge", "msedge",
+             r"%ProgramFiles(x86)%\Microsoft\Edge\Application\msedge.exe",
+             r"%ProgramFiles%\Microsoft\Edge\Application\msedge.exe"),
+}
+
+
+def available_browsers() -> list[str]:
+    """Navegadores instalados que Selenium puede controlar, por orden de preferencia."""
+    import os
+    import shutil
+
+    def present(candidate: str) -> bool:
+        if "%" in candidate:
+            return os.path.isfile(os.path.expandvars(candidate))
+        return shutil.which(candidate) is not None
+
+    return [name for name, candidates in _BROWSER_BINARIES.items() if any(present(c) for c in candidates)]
+
+
 class SeleniumSession:
     """Envoltura mínima de WebDriver con las políticas de la herramienta."""
 
@@ -41,20 +66,29 @@ class SeleniumSession:
         except ImportError as exc:
             raise BrowserUnavailable("Selenium no está instalado (pip install selenium)") from exc
         browser = self.ctx.cfg.extraction.browser
-        options = webdriver.ChromeOptions()
-        if browser.headless:
-            options.add_argument("--headless=new")
-        # Necesario para ejecutar Chrome dentro de contenedores/VM sin espacio de nombres de usuario.
-        options.add_argument("--no-sandbox")
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--window-size=1280,900")
-        options.add_argument(f"--user-agent={self.ctx.cfg.user_agent}")
-        try:
-            self.driver = webdriver.Chrome(options=options)
-        except WebDriverException as exc:
-            raise BrowserUnavailable(f"No se pudo iniciar Chrome/ChromeDriver: {exc.msg}") from None
+        engines = available_browsers() if browser.engine == "auto" else [browser.engine]
+        if not engines:
+            raise BrowserUnavailable("No se encontró Chrome ni Edge instalados")
+        errors = []
+        for engine in engines:
+            options = webdriver.EdgeOptions() if engine == "edge" else webdriver.ChromeOptions()
+            if browser.headless:
+                options.add_argument("--headless=new")
+            # Necesario para ejecutar el navegador dentro de contenedores/VM sin espacio de nombres de usuario.
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--window-size=1280,900")
+            options.add_argument(f"--user-agent={self.ctx.cfg.user_agent}")
+            try:
+                self.driver = webdriver.Edge(options=options) if engine == "edge" else webdriver.Chrome(options=options)
+                break
+            except WebDriverException as exc:
+                errors.append(f"{engine}: {exc.msg}")
+        else:
+            raise BrowserUnavailable("No se pudo iniciar el navegador: " + " | ".join(errors))
         self.driver.set_page_load_timeout(browser.page_load_timeout_seconds)
-        self.ctx.actions.record("browser_start", "", "Chrome headless" if browser.headless else "Chrome")
+        label = BROWSER_LABELS[engine]
+        self.ctx.actions.record("browser_start", "", f"{label} headless" if browser.headless else label)
 
     def close(self) -> None:
         if self.driver is not None:

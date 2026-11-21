@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import io
 import json
+import xml.etree.ElementTree as ET
 from typing import Any
 from urllib.parse import urljoin
 
@@ -19,6 +20,7 @@ from web_extractor.config.schema import ExtractionConfig, FieldRule
 from web_extractor.core.errors import ExtractionError
 from web_extractor.models.results import FetchedDocument, ParseResult
 from web_extractor.selection.paths import get_path, key_paths
+from web_extractor.selection.xml_data import xml_to_data
 
 _URL_ATTRIBUTES = {"href", "src", "action", "data-href", "data-src", "poster"}
 
@@ -99,6 +101,18 @@ def parse_json_records(text: str, extraction: ExtractionConfig) -> ParseResult:
         data = json.loads(text)
     except json.JSONDecodeError as exc:
         raise ExtractionError(f"JSON inválido: {exc}") from None
+    return records_from_data(data, extraction)
+
+
+def parse_xml_records(text: str, extraction: ExtractionConfig) -> ParseResult:
+    try:
+        data = xml_to_data(text)
+    except ET.ParseError as exc:
+        raise ExtractionError(f"XML inválido: {exc}") from None
+    return records_from_data(data, extraction)
+
+
+def records_from_data(data: Any, extraction: ExtractionConfig) -> ParseResult:
     records = get_path(data, extraction.records_path)
     if records is None:
         raise ExtractionError(f"records_path '{extraction.records_path}' no existe en la respuesta")
@@ -131,6 +145,8 @@ def detect_format(doc: FetchedDocument, extraction: ExtractionConfig) -> str:
         return "json"
     if doc.is_csv:
         return "csv"
+    if doc.is_xml:
+        return "xml"
     return "html"
 
 
@@ -140,6 +156,8 @@ def parse_document(doc: FetchedDocument, extraction: ExtractionConfig) -> ParseR
         return parse_json_records(doc.text, extraction)
     if fmt == "csv":
         return parse_csv_records(doc.text, extraction)
+    if fmt == "xml":
+        return parse_xml_records(doc.text, extraction)
     if not (extraction.record_selector or extraction.table_selector):
         raise ExtractionError("Para HTML se requiere record_selector o table_selector")
     return parse_html_records(doc.text, doc.final_url, extraction)

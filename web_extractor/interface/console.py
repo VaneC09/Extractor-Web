@@ -26,7 +26,11 @@ def ask_yes_no(question: str) -> bool:
     if not sys.stdin.isatty():
         out(f"{question} [no interactivo: se asume NO]")
         return False
-    answer = input(f"{question} Escriba 'si' para confirmar: ").strip().lower()
+    try:
+        answer = input(f"{question} Escriba 'si' para confirmar: ").strip().lower()
+    except EOFError:
+        out(" [sin respuesta: se asume NO]")
+        return False
     return answer in ("si", "sí", "s", "yes", "y")
 
 

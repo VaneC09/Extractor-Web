@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import copy
-import shutil
 from pathlib import Path
 
 import pytest
@@ -22,10 +21,12 @@ def browser_available() -> bool:
         import selenium  # noqa: F401
     except ImportError:
         return False
-    return any(shutil.which(b) for b in ("google-chrome", "chromium", "chromium-browser", "chrome"))
+    from web_extractor.extractors.browser_selenium import available_browsers
+
+    return bool(available_browsers())
 
 
-requires_browser = pytest.mark.skipif(not browser_available(), reason="Chrome/Selenium no disponibles")
+requires_browser = pytest.mark.skipif(not browser_available(), reason="Selenium con Chrome/Edge no disponible")
 
 
 def deep_update(base: dict, updates: dict) -> dict:

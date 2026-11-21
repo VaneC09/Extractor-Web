@@ -106,9 +106,12 @@ class FakeResponse:
 
 
 class FakeSite:
-    """Sesión ``requests`` simulada: responde por URL exacta y anota cada solicitud."""
+    """Sesión ``requests`` simulada: responde por URL exacta y anota cada solicitud.
 
-    def __init__(self, routes: dict[str, FakeResponse]) -> None:
+    Si la ruta es una excepción (p. ej. ``requests.exceptions.SSLError``), se lanza al solicitarla.
+    """
+
+    def __init__(self, routes: dict[str, FakeResponse | Exception]) -> None:
         self.routes = routes
         self.calls: list[str] = []
 
@@ -120,7 +123,10 @@ class FakeSite:
 
             def request(self, method, url, **kwargs):
                 site.calls.append(f"{method} {url}")
-                return site.routes.get(url, FakeResponse(404, b"<h1>404</h1>", {"Content-Type": "text/html"}))
+                response = site.routes.get(url, FakeResponse(404, b"<h1>404</h1>", {"Content-Type": "text/html"}))
+                if isinstance(response, Exception):
+                    raise response
+                return response
 
             def close(self):
                 pass
@@ -233,3 +239,30 @@ def test_detect_encoding_rules():
     assert detect_encoding("", "ñandú".encode()) == "utf-8"
     assert detect_encoding("", "ñandú".encode("latin-1")) == "windows-1252"
     assert detect_encoding("text/html; charset=inventado", b"abc") == "utf-8"
+
+
+def _diagnose_only(url: str):
+    data = default_config_dict(url)
+    data["authorization"]["authorized_by"] = "URL de ejemplo del docente"
+    return ExtractionEngine(parse_config(data)).diagnose()
+
+
+def test_invalid_tls_certificate_stops_without_retry(fake_site):
+    error = requests.exceptions.SSLError("[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: Hostname mismatch, "
+                                         "certificate is not valid for 'www.example.org'. (_ssl.c:1010)")
+    site = fake_site({"https://www.example.org/robots.txt": error})
+    diagnosis = _diagnose_only("https://www.example.org/")
+    assert diagnosis.stopped and diagnosis.incidents[0].kind == "tls_error"
+    assert "Hostname mismatch" in diagnosis.incidents[0].message and "www" in diagnosis.incidents[0].next_step
+    assert site.calls == ["GET https://www.example.org/robots.txt"]
+
+
+def test_cloudflare_challenge_page_is_a_bot_challenge(fake_site):
+    page = (b'<!DOCTYPE html><html><head><title>Just a moment...</title></head><body>'
+            b'<script>window._cf_chl_opt={cRay: "x"};</script></body></html>')
+    site = fake_site({"https://datos.example.org/robots.txt": ROBOTS_OK,
+                      "https://datos.example.org/": FakeResponse(403, page, {"Content-Type": "text/html"})})
+    diagnosis = _diagnose_only("https://datos.example.org/")
+    assert diagnosis.stopped and diagnosis.incidents[0].kind == "bot_challenge"
+    assert "API" in diagnosis.incidents[0].next_step
+    assert site.calls.count("GET https://datos.example.org/") == 1
