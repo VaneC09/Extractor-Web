@@ -1,0 +1,44 @@
+# Sitio real 5 — Diario Oficial de la Federación: «Ejemplar de hoy» (contenido que depende de la fecha).
+# https://www.dof.gob.mx presenta un certificado TLS que no corresponde al nombre (ver r08); el sitio
+# oficial con certificado válido es https://dof.gob.mx. robots.txt prohíbe /nota_detalle.php?, por
+# lo que solo se leen título y enlace desde la portada; las notas individuales no se visitan.
+version: 1
+project:
+  name: r05-dof-ejemplar-hoy
+  description: Títulos de las publicaciones del ejemplar del día del DOF.
+target_url: "https://dof.gob.mx/index.php"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Diario Oficial de la Federación — publicación oficial de acceso público"
+  purpose: "Reto final académico: índice diario de publicaciones oficiales"
+  terms_reviewed: true
+  evidence_reference: "https://dof.gob.mx/robots.txt"
+  environment: production
+
+scope:
+  allowed_domains: ["dof.gob.mx"]
+  allowed_path_prefixes: ["/index.php"]
+  allowed_schemes: ["https"]
+
+limits:
+  max_pages: 1
+  max_records: 60
+  max_requests: 3
+  max_seconds: 60
+  delay_seconds: 3
+  timeout_seconds: 20
+
+extraction:
+  method: static_html
+  record_selector: "a.enlaces"
+  deduplicate_on: [url]
+  fields:
+    - {name: titulo, required: true, normalize: [collapse_whitespace]}
+    - {name: url, attribute: href, type: url, required: true}
+    - {name: fecha_publicacion, attribute: href, pattern: "fecha=(\\d{2}/\\d{2}/\\d{4})", type: date, date_format: "%d/%m/%Y"}
+
+output:
+  directory: outputs
+  formats: [csv, json, excel, sqlite]

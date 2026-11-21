@@ -1,0 +1,51 @@
+# Sitio real 2 — Banco Mundial: API pública documentada (JSON) con paginación por parámetro.
+# data.worldbank.org responde con un desafío anti-bot (ver r06); la vía oficial es esta API,
+# documentada en datahelpdesk.worldbank.org. Licencia de los datos: CC BY 4.0.
+version: 1
+project:
+  name: r02-worldbank-api-json
+  description: Población total de México por año (indicador SP.POP.TOTL).
+target_url: "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)"
+  purpose: "Reto final académico: serie histórica de población"
+  terms_reviewed: true
+  evidence_reference: "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures"
+  environment: production
+
+scope:
+  allowed_domains: ["api.worldbank.org"]
+  allowed_path_prefixes: ["/v2/"]
+  allowed_schemes: ["https"]
+
+limits:
+  max_pages: 2
+  max_records: 40
+  max_requests: 4
+  max_seconds: 60
+  delay_seconds: 2
+  timeout_seconds: 20
+
+extraction:
+  method: api
+  records_path: "1"          # la respuesta es [metadatos, registros]
+  api:
+    documented: true
+    documentation_url: "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures"
+  pagination:
+    mode: page_param
+    page_param: page
+    start_page: 1
+  deduplicate_on: [anio]
+  fields:
+    - {name: pais, path: country.value, required: true}
+    - {name: codigo_pais, path: countryiso3code, validate: {regex: "^[A-Z]{3}$"}}
+    - {name: anio, path: date, type: integer, required: true, validate: {min: 1960, max: 2100}}
+    - {name: poblacion, path: value, type: float, validate: {min: 0}}
+
+output:
+  directory: outputs
+  formats: [csv, json, excel, sqlite]

@@ -1,0 +1,184 @@
+{
+  "auth": {
+    "failure_text": null,
+    "header_name": "Authorization",
+    "header_prefix": "Bearer ",
+    "login_url": null,
+    "password_env": null,
+    "password_field": "password",
+    "token_env": null,
+    "type": "none",
+    "username_env": null,
+    "username_field": "username"
+  },
+  "authorization": {
+    "allow_authentication": false,
+    "authorized_by": "Data.gov — catálogo público del Gobierno de EE. UU.",
+    "confirmed": true,
+    "environment": "production",
+    "evidence_reference": "https://catalog.data.gov/robots.txt",
+    "personal_data": "none",
+    "purpose": "Reto final académico: inventario de conjuntos de datos y formatos publicados",
+    "terms_reviewed": true,
+    "valid_until": null
+  },
+  "diagnosis": {
+    "max_requests": 3,
+    "render_with_browser": false
+  },
+  "extraction": {
+    "api": {
+      "accept": "application/json",
+      "documentation_url": null,
+      "documented": false
+    },
+    "browser": {
+      "engine": "auto",
+      "headless": true,
+      "infinite_scroll": false,
+      "load_more_selector": null,
+      "page_load_timeout_seconds": 45.0,
+      "scroll_pause_seconds": 1.0,
+      "wait_selector": "li.usa-collection__item h2 a",
+      "wait_timeout_seconds": 20.0
+    },
+    "deduplicate_on": [
+      "url"
+    ],
+    "drop_invalid": false,
+    "fields": [
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "titulo",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": null,
+        "required": true,
+        "selector": "h2 a",
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "href",
+        "column": null,
+        "date_format": null,
+        "name": "url",
+        "normalize": [],
+        "path": null,
+        "pattern": null,
+        "required": true,
+        "selector": "h2 a",
+        "type": "url",
+        "validate": null
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "organizacion",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": null,
+        "required": false,
+        "selector": ".usa-collection__meta-item a",
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "actualizado",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": "Updated:\\s*(.+)",
+        "required": false,
+        "selector": ".usa-collection__meta-item:nth-of-type(2)",
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "formatos",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": null,
+        "required": false,
+        "selector": "ul.dataset-resources",
+        "type": "string",
+        "validate": null
+      }
+    ],
+    "file_format": null,
+    "keep_raw": true,
+    "method": "browser",
+    "pagination": {
+      "mode": "none",
+      "next_field": null,
+      "next_selector": null,
+      "page_param": "page",
+      "start_page": 1,
+      "url_template": null
+    },
+    "record_selector": "li.usa-collection__item",
+    "records_path": null,
+    "table_selector": null
+  },
+  "limits": {
+    "concurrency": 1,
+    "delay_seconds": 10.0,
+    "max_clicks": 3,
+    "max_pages": 1,
+    "max_records": 30,
+    "max_requests": 3,
+    "max_response_bytes": 5000000,
+    "max_retries": 1,
+    "max_scrolls": 3,
+    "max_seconds": 90.0,
+    "timeout_seconds": 30.0
+  },
+  "output": {
+    "directory": "outputs",
+    "formats": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ],
+    "profile_name": null,
+    "sqlite_path": null,
+    "stop_file": "STOP"
+  },
+  "project": {
+    "description": "Conjuntos de datos destacados del catálogo de Data.gov.",
+    "name": "r04-data-gov-navegador"
+  },
+  "scope": {
+    "allow_private_network": false,
+    "allowed_domains": [
+      "catalog.data.gov"
+    ],
+    "allowed_path_prefixes": [
+      "/"
+    ],
+    "allowed_schemes": [
+      "https"
+    ],
+    "respect_robots_txt": true
+  },
+  "target_url": "https://catalog.data.gov/",
+  "user_agent": "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)",
+  "version": 1
+}

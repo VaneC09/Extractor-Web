@@ -1,0 +1,37 @@
+# Sitio real 7 — INEGI Datos abiertos: el listado lo genera JavaScript y, al renderizar, la página
+# carga Google reCAPTCHA. Solo diagnóstico (con render): la herramienta se detiene ante el CAPTCHA,
+# no interactúa con él y registra la incidencia. Los datos son de libre uso (Términos de Libre Uso
+# del INEGI); la vía legítima es la descarga manual desde el portal o la API del INEGI con token propio.
+version: 1
+project:
+  name: r07-inegi-js-captcha
+  description: Diagnóstico de la sección de datos abiertos del INEGI.
+target_url: "https://www.inegi.org.mx/datosabiertos/"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  authorized_by: "INEGI — Términos de Libre Uso de la Información; URL de ejemplo del docente"
+  purpose: "Reto final académico: identificar renderizado con JavaScript y protecciones"
+  evidence_reference: "https://www.inegi.org.mx/contenidos/inegi/doc/terminos_info.pdf"
+  environment: production
+
+scope:
+  allowed_domains: ["www.inegi.org.mx"]
+  allowed_path_prefixes: ["/"]
+  allowed_schemes: ["https"]
+
+limits:
+  delay_seconds: 3
+  timeout_seconds: 20
+
+diagnosis:
+  max_requests: 3
+  render_with_browser: true
+
+extraction:
+  method: auto
+  fields:
+    - {name: texto, normalize: [collapse_whitespace]}
+
+output:
+  directory: outputs

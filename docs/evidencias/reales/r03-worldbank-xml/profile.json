@@ -1,0 +1,61 @@
+{
+  "profile_name": "r03-worldbank-xml",
+  "saved_at": "2026-11-21T20:32:41Z",
+  "run_id": "20261121T203238Z-0d985b",
+  "target_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+  "method": "structured_file",
+  "record_selector": null,
+  "table_selector": null,
+  "records_path": "data",
+  "api_documentation_url": null,
+  "record_count": 30,
+  "max_records": 50,
+  "fields": {
+    "pais": {
+      "selector": null,
+      "path": "country.text",
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "codigo_pais": {
+      "selector": null,
+      "path": "country.@id",
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "anio": {
+      "selector": null,
+      "path": "date",
+      "column": null,
+      "attribute": "text",
+      "type": "integer",
+      "fill_rate": 1.0
+    },
+    "pib_usd": {
+      "selector": null,
+      "path": "value",
+      "column": null,
+      "attribute": "text",
+      "type": "float",
+      "fill_rate": 1.0
+    }
+  },
+  "structure": [
+    "country",
+    "country.@id",
+    "country.text",
+    "countryiso3code",
+    "date",
+    "decimal",
+    "indicator",
+    "indicator.@id",
+    "indicator.text",
+    "obs_status",
+    "unit",
+    "value"
+  ]
+}

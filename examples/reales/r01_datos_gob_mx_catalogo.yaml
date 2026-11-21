@@ -1,0 +1,47 @@
+# Sitio real 1 — datos.gob.mx: catálogo HTML estático con paginación (?page=N).
+# robots.txt: Crawl-Delay 10 y Disallow /api/ (por eso NO se usa su API CKAN).
+version: 1
+project:
+  name: r01-datos-gob-mx-catalogo
+  description: Fichas del catálogo nacional de datos abiertos (título, institución, actualización).
+target_url: "https://www.datos.gob.mx/dataset/?page=1"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Plataforma Nacional de Datos Abiertos (datos públicos de libre uso); URL indicada por el docente"
+  purpose: "Reto final académico: catálogo de conjuntos de datos abiertos, sin datos personales"
+  terms_reviewed: true
+  evidence_reference: "https://www.datos.gob.mx/ (datos abiertos) y https://www.datos.gob.mx/robots.txt"
+  environment: production
+
+scope:
+  allowed_domains: ["www.datos.gob.mx"]
+  allowed_path_prefixes: ["/dataset/"]
+  allowed_schemes: ["https"]
+
+limits:
+  max_pages: 2
+  max_records: 40
+  max_requests: 4
+  max_seconds: 120
+  delay_seconds: 10      # Crawl-Delay publicado en robots.txt
+  timeout_seconds: 20
+
+extraction:
+  method: static_html
+  record_selector: "li.resource-item.card"
+  pagination:
+    mode: url_template
+    url_template: "https://www.datos.gob.mx/dataset/?page={page}"
+    start_page: 1
+  deduplicate_on: [url]
+  fields:
+    - {name: titulo, selector: "h3 a", required: true, normalize: [collapse_whitespace]}
+    - {name: url, selector: "h3 a", attribute: href, type: url, required: true}
+    - {name: institucion, selector: "a.link-pink", normalize: [collapse_whitespace]}
+    - {name: actualizacion, selector: "p.mb-2", pattern: "Actualizaci[oó]n:\\s*(.+)", normalize: [collapse_whitespace]}
+
+output:
+  directory: outputs
+  formats: [csv, json, excel, sqlite]

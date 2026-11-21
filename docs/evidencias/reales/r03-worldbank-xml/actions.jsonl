@@ -1,0 +1,3 @@
+{"action": "http_get", "target": "https://api.worldbank.org/robots.txt", "detail": "robots.txt -> 404", "outcome": "error", "timestamp": "2026-11-21T20:32:39Z"}
+{"action": "http_get", "target": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015%3A2024&per_page=50", "detail": "descarga de archivo xml -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:32:41Z"}
+{"action": "parse", "target": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015%3A2024&per_page=50", "detail": "30 registros en página 1", "outcome": "ok", "timestamp": "2026-11-21T20:32:41Z"}

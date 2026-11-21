@@ -1,0 +1,58 @@
+{
+  "profile_name": "r01-datos-gob-mx-catalogo",
+  "saved_at": "2026-11-21T20:37:59Z",
+  "run_id": "20261121T203738Z-989d99",
+  "target_url": "https://www.datos.gob.mx/dataset/?page=1",
+  "method": "static_html",
+  "record_selector": "li.resource-item.card",
+  "table_selector": null,
+  "records_path": null,
+  "api_documentation_url": null,
+  "record_count": 40,
+  "max_records": 40,
+  "fields": {
+    "titulo": {
+      "selector": "h3 a",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "url": {
+      "selector": "h3 a",
+      "path": null,
+      "column": null,
+      "attribute": "href",
+      "type": "url",
+      "fill_rate": 1.0
+    },
+    "institucion": {
+      "selector": "a.link-pink",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "actualizacion": {
+      "selector": "p.mb-2",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    }
+  },
+  "structure": [
+    "a.link-pink",
+    "a.ms-1",
+    "a.text-black",
+    "div.col.p-3",
+    "div.g-0.row",
+    "h3.mb-2",
+    "p.mb-0",
+    "p.mb-2",
+    "strong"
+  ]
+}

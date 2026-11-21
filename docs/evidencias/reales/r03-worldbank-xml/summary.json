@@ -1,0 +1,153 @@
+{
+  "run_id": "20261121T203238Z-0d985b",
+  "project": "r03-worldbank-xml",
+  "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+  "tool_version": "0.1.0",
+  "target_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+  "method": "structured_file",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-21T20:32:38Z",
+  "finished_at": "2026-11-21T20:32:41Z",
+  "budget": {
+    "requests": 2,
+    "pages": 1,
+    "records": 30,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 2.11,
+    "max_requests": 3,
+    "max_pages": 1,
+    "max_records": 50,
+    "max_seconds": 60.0
+  },
+  "quality": {
+    "total_raw": 30,
+    "valid": 30,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 30,
+    "fields": {
+      "pais": {
+        "filled": 30,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "codigo_pais": {
+        "filled": 30,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "anio": {
+        "filled": 30,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "pib_usd": {
+        "filled": 30,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\data.csv",
+    "json": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\data.json",
+    "excel": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\data.xlsx",
+    "sqlite": "outputs\\web_extractor.sqlite",
+    "actions": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\actions.jsonl",
+    "log": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\run.log",
+    "profile": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\profile.json",
+    "config": "outputs\\r03-worldbank-xml\\20261121T203238Z-0d985b\\config_efectiva.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Validar muestras manualmente y documentar el resultado en la matriz de pruebas."
+  ],
+  "structure": [
+    "country",
+    "country.@id",
+    "country.text",
+    "countryiso3code",
+    "date",
+    "decimal",
+    "indicator",
+    "indicator.@id",
+    "indicator.text",
+    "obs_status",
+    "unit",
+    "value"
+  ],
+  "config": {
+    "project": "r03-worldbank-xml",
+    "target_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+    "method": "structured_file",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)",
+      "purpose": "Reto final académico: comparación del PIB en Norteamérica",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "api.worldbank.org"
+      ],
+      "allowed_path_prefixes": [
+        "/v2/"
+      ],
+      "allowed_schemes": [
+        "https"
+      ],
+      "allow_private_network": false,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 50,
+      "max_requests": 3,
+      "max_seconds": 60.0,
+      "delay_seconds": 2.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "pais",
+      "codigo_pais",
+      "anio",
+      "pib_usd"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'r03-worldbank-xml' actualizado como línea base."
+  ]
+}

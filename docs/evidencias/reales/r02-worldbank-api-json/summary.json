@@ -1,0 +1,163 @@
+{
+  "run_id": "20261121T203225Z-f50691",
+  "project": "r02-worldbank-api-json",
+  "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+  "tool_version": "0.1.0",
+  "target_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20",
+  "method": "api",
+  "status": "completado_con_limites",
+  "status_message": "Límite alcanzado: max_records (40)",
+  "started_at": "2026-11-21T20:32:25Z",
+  "finished_at": "2026-11-21T20:32:29Z",
+  "budget": {
+    "requests": 3,
+    "pages": 2,
+    "records": 40,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 4.38,
+    "max_requests": 4,
+    "max_pages": 2,
+    "max_records": 40,
+    "max_seconds": 60.0
+  },
+  "quality": {
+    "total_raw": 40,
+    "valid": 40,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 40,
+    "fields": {
+      "pais": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "codigo_pais": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "anio": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "poblacion": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [
+    {
+      "kind": "limit",
+      "message": "Límite alcanzado: max_records (40)",
+      "url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20",
+      "next_step": "Ampliar límites solo dentro de lo autorizado.",
+      "severity": "baja",
+      "timestamp": "2026-11-21T20:32:29Z"
+    }
+  ],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\data.csv",
+    "json": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\data.json",
+    "excel": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\data.xlsx",
+    "sqlite": "outputs\\web_extractor.sqlite",
+    "actions": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\actions.jsonl",
+    "log": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\run.log",
+    "profile": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\profile.json",
+    "config": "outputs\\r02-worldbank-api-json\\20261121T203225Z-f50691\\config_efectiva.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Ampliar límites solo dentro de lo autorizado.",
+    "Si necesita más datos, amplíe límites solo dentro de lo autorizado y con pausas adecuadas."
+  ],
+  "structure": [
+    "country",
+    "country.id",
+    "country.value",
+    "countryiso3code",
+    "date",
+    "decimal",
+    "indicator",
+    "indicator.id",
+    "indicator.value",
+    "obs_status",
+    "unit",
+    "value"
+  ],
+  "config": {
+    "project": "r02-worldbank-api-json",
+    "target_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20",
+    "method": "api",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)",
+      "purpose": "Reto final académico: serie histórica de población",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "api.worldbank.org"
+      ],
+      "allowed_path_prefixes": [
+        "/v2/"
+      ],
+      "allowed_schemes": [
+        "https"
+      ],
+      "allow_private_network": false,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 2,
+      "max_records": 40,
+      "max_requests": 4,
+      "max_seconds": 60.0,
+      "delay_seconds": 2.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "pais",
+      "codigo_pais",
+      "anio",
+      "poblacion"
+    ],
+    "pagination": "page_param",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'r02-worldbank-api-json' actualizado como línea base."
+  ]
+}

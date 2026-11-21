@@ -1,0 +1,169 @@
+{
+  "run_id": "20261121T203842Z-f28df9",
+  "project": "r04-data-gov-navegador",
+  "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+  "tool_version": "0.1.0",
+  "target_url": "https://catalog.data.gov/",
+  "method": "browser",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-21T20:38:42Z",
+  "finished_at": "2026-11-21T20:38:58Z",
+  "budget": {
+    "requests": 2,
+    "pages": 1,
+    "records": 20,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 15.72,
+    "max_requests": 3,
+    "max_pages": 1,
+    "max_records": 30,
+    "max_seconds": 90.0
+  },
+  "quality": {
+    "total_raw": 20,
+    "valid": 19,
+    "with_warnings": 1,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 20,
+    "fields": {
+      "titulo": {
+        "filled": 20,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "url": {
+        "filled": 20,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "organizacion": {
+        "filled": 20,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "actualizado": {
+        "filled": 19,
+        "empty": 1,
+        "invalid": 0,
+        "fill_rate": 0.95
+      },
+      "formatos": {
+        "filled": 20,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\data.csv",
+    "json": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\data.json",
+    "excel": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\data.xlsx",
+    "sqlite": "outputs\\web_extractor.sqlite",
+    "actions": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\actions.jsonl",
+    "log": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\run.log",
+    "profile": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\profile.json",
+    "config": "outputs\\r04-data-gov-navegador\\20261121T203842Z-f28df9\\config_efectiva.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Validar muestras manualmente y documentar el resultado en la matriz de pruebas."
+  ],
+  "structure": [
+    "a.badge-color-856a00.label.label-default.text-uppercase",
+    "a.badge-color-8b008b.label.label-default.text-uppercase",
+    "a.badge-color-d63b00.label.label-default.text-uppercase",
+    "a.usa-link",
+    "div.dataset-content",
+    "div.dataset-org-banner.organization-datasets__body--state",
+    "div.display-flex.flex-align-center.flex-wrap.margin-bottom-05.organization-datasets__heading",
+    "div.margin-top-1",
+    "div.organization-datasets__body",
+    "h2.margin-0.usa-collection__heading",
+    "i.fa-arrow-trend-up.fa-solid",
+    "li",
+    "li.usa-collection__meta-item",
+    "p.usa-collection__description",
+    "small.text-base-dark",
+    "span.dataset-org-banner__rank",
+    "span.dataset-org-banner__type",
+    "span.usa-sr-only",
+    "strong",
+    "ul.dataset-resources.unstyled",
+    "ul.usa-collection__meta"
+  ],
+  "config": {
+    "project": "r04-data-gov-navegador",
+    "target_url": "https://catalog.data.gov/",
+    "method": "browser",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Data.gov — catálogo público del Gobierno de EE. UU.",
+      "purpose": "Reto final académico: inventario de conjuntos de datos y formatos publicados",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://catalog.data.gov/robots.txt",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "catalog.data.gov"
+      ],
+      "allowed_path_prefixes": [
+        "/"
+      ],
+      "allowed_schemes": [
+        "https"
+      ],
+      "allow_private_network": false,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 30,
+      "max_requests": 3,
+      "max_seconds": 90.0,
+      "delay_seconds": 10.0,
+      "timeout_seconds": 30.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "titulo",
+      "url",
+      "organizacion",
+      "actualizado",
+      "formatos"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'r04-data-gov-navegador' actualizado como línea base."
+  ]
+}

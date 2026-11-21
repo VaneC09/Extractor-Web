@@ -1,0 +1,852 @@
+{
+  "run_id": "20261121T204050Z-63d9e2",
+  "project": "r05-dof-ejemplar-hoy",
+  "metadata": {
+    "target_url": "https://dof.gob.mx/index.php",
+    "method": "static_html",
+    "status": "completado",
+    "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+    "tool_version": "0.1.0",
+    "started_at": "2026-11-21T20:40:50Z",
+    "finished_at": "2026-11-21T20:40:54Z",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Diario Oficial de la Federación — publicación oficial de acceso público",
+      "purpose": "Reto final académico: índice diario de publicaciones oficiales",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://dof.gob.mx/robots.txt",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 60,
+      "max_requests": 3,
+      "max_seconds": 60.0,
+      "delay_seconds": 3.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "quality": {
+      "total_raw": 18,
+      "valid": 16,
+      "with_warnings": 2,
+      "invalid": 0,
+      "duplicates_removed": 0,
+      "dropped_invalid": 0,
+      "exported": 18,
+      "fields": {
+        "titulo": {
+          "filled": 18,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "url": {
+          "filled": 18,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "fecha_publicacion": {
+          "filled": 16,
+          "empty": 2,
+          "invalid": 2,
+          "fill_rate": 0.8889
+        }
+      },
+      "error_samples": [
+        "#16 (https://dof.gob.mx/index.php): fecha_publicacion: patrón 'fecha=(\\\\d{2}/\\\\d{2}/\\\\d{4})' no coincide con 'https://dof.gob.mx/busqueda_avanzada.php?cod_orga=AV&busqueda_cuerpo=C'",
+        "#17 (https://dof.gob.mx/index.php): fecha_publicacion: patrón 'fecha=(\\\\d{2}/\\\\d{2}/\\\\d{4})' no coincide con 'https://dof.gob.mx/indicadores.php'"
+      ]
+    }
+  },
+  "fields": [
+    "titulo",
+    "url",
+    "fecha_publicacion"
+  ],
+  "records": [
+    {
+      "data": {
+        "titulo": "Decreto por el que se expide el Reglamento de la Ley Federal de Armas de Fuego y Explosivos.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804497&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Decreto por el que se expide el Reglamento de la Ley Federal de Armas de Fuego y Explosivos.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804497&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804497&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "6e343638a6ada2b4",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 0,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acuerdo por el que se da a conocer el cierre definitivo de la Oficina Municipal de Enlace con la Secretaría de Relaciones Exteriores en el Municipio de Progreso de Obregón, Estado de Hidalgo.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804499&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Acuerdo por el que se da a conocer el cierre definitivo de la Oficina Municipal de Enlace con la Secretaría de Relaciones Exteriores en el Municipio de Progreso de Obregón, Estado de Hidalgo.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804499&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804499&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "762a9b3fb7830c7e",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 1,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acuerdo por el que se da a conocer el cierre definitivo de la Segunda Oficina Municipal de Enlace con la Secretaría de Relaciones Exteriores en el Municipio de San Pedro Tlaquepaque, Estado de Jalisco.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804500&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Acuerdo por el que se da a conocer el cierre definitivo de la Segunda Oficina Municipal de Enlace con la Secretaría de Relaciones Exteriores en el Municipio de San Pedro Tlaquepaque, Estado de Jalisco.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804500&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804500&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "40975dcb80160c7b",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 2,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Oficio 700 04 00 00 00 2026-117 mediante el cual se da a conocer el listado de Prestadores de Servicios Digitales Inscritos en el Registro Federal de Contribuyentes, en términos del artículo 18-D, primer párrafo, fracción I, de la Ley del Impuesto al Valor Agregado vigente.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804502&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Oficio 700 04 00 00 00 2026-117 mediante el cual se da a conocer el listado de Prestadores de Servicios Digitales Inscritos en el Registro Federal de Contribuyentes, en términos del artículo 18-D, primer párrafo, fracción I, de la Ley del Impuesto al Valor Agregado vigente.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804502&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804502&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "f8adba764cbbb919",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 3,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Oficio 500-05-00-00-00-2026-30520 mediante el cual se comunica listado global de presunción de contribuyentes que se ubicaron en el supuesto previsto en el artículo 69-B, párrafo primero del Código Fiscal de la Federación.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804503&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Oficio 500-05-00-00-00-2026-30520 mediante el cual se comunica listado global de presunción de contribuyentes que se ubicaron en el supuesto previsto en el artículo 69-B, párrafo primero del Código Fiscal de la Federación.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804503&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804503&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "9ebd54da9ac11045",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 4,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Oficio 500-05-00-00-00-2026-30657 mediante el cual se comunica listado global definitivo en términos del artículo 69-B, párrafo cuarto del Código Fiscal de la Federación.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804504&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Oficio 500-05-00-00-00-2026-30657 mediante el cual se comunica listado global definitivo en términos del artículo 69-B, párrafo cuarto del Código Fiscal de la Federación.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804504&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804504&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "67c9838b51d83607",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 5,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Oficio 500-05-00-00-00-2026-30811 mediante el cual se comunica el nombre y la clave en el Registro Federal de Contribuyentes a que se refiere la fracción X del artículo 49 Bis del Código Fiscal de la Federación.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804505&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Oficio 500-05-00-00-00-2026-30811 mediante el cual se comunica el nombre y la clave en el Registro Federal de Contribuyentes a que se refiere la fracción X del artículo 49 Bis del Código Fiscal de la Federación.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804505&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804505&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "e0c72f247a116828",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 6,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acuerdo por el que se establecen acciones de simplificación y mejora administrativa para trámites que se realizan ante la Secretaría de Economía en materia de denominaciones o razones sociales.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804507&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Acuerdo por el que se establecen acciones de simplificación y mejora administrativa para trámites que se realizan ante la Secretaría de Economía en materia de denominaciones o razones sociales.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804507&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804507&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "8baa22d756904ab6",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 7,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acuerdo por el que se da a conocer la Decisión No. 11 de la Comisión de Libre Comercio del Tratado de Libre Comercio entre la República de Chile y los Estados Unidos Mexicanos, adoptada el 20 de agosto de 2026.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804508&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Acuerdo por el que se da a conocer la Decisión No. 11 de la Comisión de Libre Comercio del Tratado de Libre Comercio entre la República de Chile y los Estados Unidos Mexicanos, adoptada el 20 de agosto de 2026.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804508&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804508&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "8b7d9b183bf0a29d",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 8,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Decreto por el que se inscribe con letras doradas el nombre del \"Ing. Cuauhtémoc Cárdenas Solórzano\" en el Muro de Honor del Salón de Sesiones de la Cámara de Senadores.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804510&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Decreto por el que se inscribe con letras doradas el nombre del \"Ing. Cuauhtémoc Cárdenas Solórzano\" en el Muro de Honor del Salón de Sesiones de la Cámara de Senadores.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804510&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804510&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "b1dd34b706a511ef",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 9,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Tipo de cambio para solventar obligaciones denominadas en moneda extranjera pagaderas en la República Mexicana.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804512&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Tipo de cambio para solventar obligaciones denominadas en moneda extranjera pagaderas en la República Mexicana.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804512&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804512&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "dbdcff7821ebe58a",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 10,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Tasas de interés interbancarias de equilibrio.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804513&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Tasas de interés interbancarias de equilibrio.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804513&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804513&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "77e06e3c01459fc0",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 11,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Tasa de interés interbancaria de equilibrio de fondeo a un día hábil bancario.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804514&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Tasa de interés interbancaria de equilibrio de fondeo a un día hábil bancario.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804514&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804514&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "8e1ed271d7f71a6f",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 12,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Índice nacional de precios al consumidor.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804516&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Índice nacional de precios al consumidor.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804516&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804516&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "66700ae3c6dc2b11",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 13,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acuerdo del Consejo General del Instituto Nacional Electoral, por el que se aprueba la creación e integración del Comité Técnico de Evaluación del Padrón Electoral 2026-2027.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804518&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Acuerdo del Consejo General del Instituto Nacional Electoral, por el que se aprueba la creación e integración del Comité Técnico de Evaluación del Padrón Electoral 2026-2027.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804518&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804518&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "42f4f2ff109a4122",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 14,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acuerdo del Consejo General del Instituto Nacional Electoral, por el que se determina la realización del conteo rápido para la elección ordinaria de diputaciones federales, a fin de conocer las tendencias de los resultados de la votación el día de la Jornada Electoral, y se aprueba la creación e integración del Comité Técnico Asesor de los Conteos Rápidos para dicha elección y las elecciones locales ordinarias de Aguascalientes, Baja California, Baja California Sur, Campeche, Chihuahua, Colima, Guerrero, Michoacán, Nayarit, Nuevo León, Querétaro, Quintana Roo, San Luis Potosí, Sinaloa, Sonora, Tlaxcala y Zacatecas, en el marco de los Procesos Electorales Federal y Locales 2026- 2027.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804519&fecha=20/11/2026",
+        "fecha_publicacion": "2026-11-20"
+      },
+      "raw": {
+        "titulo": "Acuerdo del Consejo General del Instituto Nacional Electoral, por el que se determina la realización del conteo rápido para la elección ordinaria de diputaciones federales, a fin de conocer las tendencias de los resultados de la votación el día de la Jornada Electoral, y se aprueba la creación e integración del Comité Técnico Asesor de los Conteos Rápidos para dicha elección y las elecciones locales ordinarias de Aguascalientes, Baja California, Baja California Sur, Campeche, Chihuahua, Colima, Guerrero, Michoacán, Nayarit, Nuevo León, Querétaro, Quintana Roo, San Luis Potosí, Sinaloa, Sonora, Tlaxcala y Zacatecas, en el marco de los Procesos Electorales Federal y Locales 2026- 2027.",
+        "url": "https://dof.gob.mx/nota_detalle.php?codigo=5804519&fecha=20/11/2026",
+        "fecha_publicacion": "https://dof.gob.mx/nota_detalle.php?codigo=5804519&fecha=20/11/2026"
+      },
+      "lineage": {
+        "record_id": "7fe1357452995137",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 15,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern",
+            "cast:date"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Acceso por búsqueda avanzada",
+        "url": "https://dof.gob.mx/busqueda_avanzada.php?cod_orga=AV&busqueda_cuerpo=C",
+        "fecha_publicacion": null
+      },
+      "raw": {
+        "titulo": "Acceso por búsqueda avanzada",
+        "url": "https://dof.gob.mx/busqueda_avanzada.php?cod_orga=AV&busqueda_cuerpo=C",
+        "fecha_publicacion": "https://dof.gob.mx/busqueda_avanzada.php?cod_orga=AV&busqueda_cuerpo=C"
+      },
+      "lineage": {
+        "record_id": "b2d4d82e21577a16",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 16,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "advertencia",
+        "validation_errors": [
+          "fecha_publicacion: patrón 'fecha=(\\\\d{2}/\\\\d{2}/\\\\d{4})' no coincide con 'https://dof.gob.mx/busqueda_avanzada.php?cod_orga=AV&busqueda_cuerpo=C'"
+        ],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Ver más",
+        "url": "https://dof.gob.mx/indicadores.php",
+        "fecha_publicacion": null
+      },
+      "raw": {
+        "titulo": "Ver más",
+        "url": "https://dof.gob.mx/indicadores.php",
+        "fecha_publicacion": "https://dof.gob.mx/indicadores.php"
+      },
+      "lineage": {
+        "record_id": "c5a289462afd5856",
+        "run_id": "20261121T204050Z-63d9e2",
+        "position": 17,
+        "source_url": "https://dof.gob.mx/index.php",
+        "retrieved_at": "2026-11-21T20:40:54Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector '(registro)'",
+          "url": "selector '(registro)' @href",
+          "fecha_publicacion": "selector '(registro)' @href"
+        },
+        "validation_status": "advertencia",
+        "validation_errors": [
+          "fecha_publicacion: patrón 'fecha=(\\\\d{2}/\\\\d{2}/\\\\d{4})' no coincide con 'https://dof.gob.mx/indicadores.php'"
+        ],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "fecha_publicacion": [
+            "pattern"
+          ]
+        },
+        "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+        "tool_version": "0.1.0"
+      }
+    }
+  ]
+}

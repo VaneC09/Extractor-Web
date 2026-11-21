@@ -1,0 +1,78 @@
+{
+  "profile_name": "r04-data-gov-navegador",
+  "saved_at": "2026-11-21T20:38:58Z",
+  "run_id": "20261121T203842Z-f28df9",
+  "target_url": "https://catalog.data.gov/",
+  "method": "browser",
+  "record_selector": "li.usa-collection__item",
+  "table_selector": null,
+  "records_path": null,
+  "api_documentation_url": null,
+  "record_count": 20,
+  "max_records": 30,
+  "fields": {
+    "titulo": {
+      "selector": "h2 a",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "url": {
+      "selector": "h2 a",
+      "path": null,
+      "column": null,
+      "attribute": "href",
+      "type": "url",
+      "fill_rate": 1.0
+    },
+    "organizacion": {
+      "selector": ".usa-collection__meta-item a",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "actualizado": {
+      "selector": ".usa-collection__meta-item:nth-of-type(2)",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 0.95
+    },
+    "formatos": {
+      "selector": "ul.dataset-resources",
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    }
+  },
+  "structure": [
+    "a.badge-color-856a00.label.label-default.text-uppercase",
+    "a.badge-color-8b008b.label.label-default.text-uppercase",
+    "a.badge-color-d63b00.label.label-default.text-uppercase",
+    "a.usa-link",
+    "div.dataset-content",
+    "div.dataset-org-banner.organization-datasets__body--state",
+    "div.display-flex.flex-align-center.flex-wrap.margin-bottom-05.organization-datasets__heading",
+    "div.margin-top-1",
+    "div.organization-datasets__body",
+    "h2.margin-0.usa-collection__heading",
+    "i.fa-arrow-trend-up.fa-solid",
+    "li",
+    "li.usa-collection__meta-item",
+    "p.usa-collection__description",
+    "small.text-base-dark",
+    "span.dataset-org-banner__rank",
+    "span.dataset-org-banner__type",
+    "span.usa-sr-only",
+    "strong",
+    "ul.dataset-resources.unstyled",
+    "ul.usa-collection__meta"
+  ]
+}

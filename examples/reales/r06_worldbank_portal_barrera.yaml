@@ -1,0 +1,34 @@
+# Sitio real 6 — data.worldbank.org: el portal responde HTTP 403 con un desafío anti-bot.
+# Solo diagnóstico: la herramienta se detiene, registra la incidencia y no lo evade. Vía legítima:
+# la API documentada del Banco Mundial (r02 y r03).
+version: 1
+project:
+  name: r06-worldbank-portal-barrera
+  description: Diagnóstico del portal web del Banco Mundial.
+target_url: "https://data.worldbank.org/"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  authorized_by: "URL de ejemplo del docente; portal público del Banco Mundial (solo diagnóstico)"
+  purpose: "Reto final académico: identificar protecciones"
+  environment: production
+
+scope:
+  allowed_domains: ["data.worldbank.org"]
+  allowed_path_prefixes: ["/"]
+  allowed_schemes: ["https"]
+
+limits:
+  delay_seconds: 3
+  timeout_seconds: 20
+
+diagnosis:
+  max_requests: 3
+
+extraction:
+  method: auto
+  fields:
+    - {name: texto, normalize: [collapse_whitespace]}
+
+output:
+  directory: outputs

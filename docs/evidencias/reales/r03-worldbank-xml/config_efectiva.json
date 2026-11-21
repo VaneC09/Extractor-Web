@@ -1,0 +1,185 @@
+{
+  "auth": {
+    "failure_text": null,
+    "header_name": "Authorization",
+    "header_prefix": "Bearer ",
+    "login_url": null,
+    "password_env": null,
+    "password_field": "password",
+    "token_env": null,
+    "type": "none",
+    "username_env": null,
+    "username_field": "username"
+  },
+  "authorization": {
+    "allow_authentication": false,
+    "authorized_by": "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)",
+    "confirmed": true,
+    "environment": "production",
+    "evidence_reference": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+    "personal_data": "none",
+    "purpose": "Reto final académico: comparación del PIB en Norteamérica",
+    "terms_reviewed": true,
+    "valid_until": null
+  },
+  "diagnosis": {
+    "max_requests": 3,
+    "render_with_browser": false
+  },
+  "extraction": {
+    "api": {
+      "accept": "application/json",
+      "documentation_url": null,
+      "documented": false
+    },
+    "browser": {
+      "engine": "auto",
+      "headless": true,
+      "infinite_scroll": false,
+      "load_more_selector": null,
+      "page_load_timeout_seconds": 20.0,
+      "scroll_pause_seconds": 1.0,
+      "wait_selector": null,
+      "wait_timeout_seconds": 10.0
+    },
+    "deduplicate_on": [
+      "codigo_pais",
+      "anio"
+    ],
+    "drop_invalid": false,
+    "fields": [
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "pais",
+        "normalize": [],
+        "path": "country.text",
+        "pattern": null,
+        "required": true,
+        "selector": null,
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "codigo_pais",
+        "normalize": [],
+        "path": "country.@id",
+        "pattern": null,
+        "required": true,
+        "selector": null,
+        "type": "string",
+        "validate": {
+          "choices": null,
+          "max": null,
+          "max_length": null,
+          "min": null,
+          "min_length": null,
+          "regex": "^[A-Z]{2}$"
+        }
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "anio",
+        "normalize": [],
+        "path": "date",
+        "pattern": null,
+        "required": true,
+        "selector": null,
+        "type": "integer",
+        "validate": {
+          "choices": null,
+          "max": 2024.0,
+          "max_length": null,
+          "min": 2015.0,
+          "min_length": null,
+          "regex": null
+        }
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "pib_usd",
+        "normalize": [],
+        "path": "value",
+        "pattern": null,
+        "required": false,
+        "selector": null,
+        "type": "float",
+        "validate": {
+          "choices": null,
+          "max": null,
+          "max_length": null,
+          "min": 0.0,
+          "min_length": null,
+          "regex": null
+        }
+      }
+    ],
+    "file_format": "xml",
+    "keep_raw": true,
+    "method": "structured_file",
+    "pagination": {
+      "mode": "none",
+      "next_field": null,
+      "next_selector": null,
+      "page_param": "page",
+      "start_page": 1,
+      "url_template": null
+    },
+    "record_selector": null,
+    "records_path": "data",
+    "table_selector": null
+  },
+  "limits": {
+    "concurrency": 1,
+    "delay_seconds": 2.0,
+    "max_clicks": 3,
+    "max_pages": 1,
+    "max_records": 50,
+    "max_requests": 3,
+    "max_response_bytes": 5000000,
+    "max_retries": 1,
+    "max_scrolls": 3,
+    "max_seconds": 60.0,
+    "timeout_seconds": 20.0
+  },
+  "output": {
+    "directory": "outputs",
+    "formats": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ],
+    "profile_name": null,
+    "sqlite_path": null,
+    "stop_file": "STOP"
+  },
+  "project": {
+    "description": "PIB (US$ corrientes) de México, Estados Unidos y Canadá, 2015-2024, desde XML.",
+    "name": "r03-worldbank-xml"
+  },
+  "scope": {
+    "allow_private_network": false,
+    "allowed_domains": [
+      "api.worldbank.org"
+    ],
+    "allowed_path_prefixes": [
+      "/v2/"
+    ],
+    "allowed_schemes": [
+      "https"
+    ],
+    "respect_robots_txt": true
+  },
+  "target_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+  "user_agent": "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)",
+  "version": 1
+}

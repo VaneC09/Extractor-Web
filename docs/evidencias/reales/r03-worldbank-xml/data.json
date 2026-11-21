@@ -1,0 +1,1490 @@
+{
+  "run_id": "20261121T203238Z-0d985b",
+  "project": "r03-worldbank-xml",
+  "metadata": {
+    "target_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+    "method": "structured_file",
+    "status": "completado",
+    "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+    "tool_version": "0.1.0",
+    "started_at": "2026-11-21T20:32:38Z",
+    "finished_at": "2026-11-21T20:32:41Z",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)",
+      "purpose": "Reto final académico: comparación del PIB en Norteamérica",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 50,
+      "max_requests": 3,
+      "max_seconds": 60.0,
+      "delay_seconds": 2.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "quality": {
+      "total_raw": 30,
+      "valid": 30,
+      "with_warnings": 0,
+      "invalid": 0,
+      "duplicates_removed": 0,
+      "dropped_invalid": 0,
+      "exported": 30,
+      "fields": {
+        "pais": {
+          "filled": 30,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "codigo_pais": {
+          "filled": 30,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "anio": {
+          "filled": 30,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "pib_usd": {
+          "filled": 30,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        }
+      },
+      "error_samples": []
+    }
+  },
+  "fields": [
+    "pais",
+    "codigo_pais",
+    "anio",
+    "pib_usd"
+  ],
+  "records": [
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2024,
+        "pib_usd": 2270076189683.46
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2024",
+        "pib_usd": "2270076189683.46"
+      },
+      "lineage": {
+        "record_id": "2ae24ed9e3b23f0b",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 0,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2023,
+        "pib_usd": 2196593836347.42
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2023",
+        "pib_usd": "2196593836347.42"
+      },
+      "lineage": {
+        "record_id": "776867a500cf8b9e",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 1,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2022,
+        "pib_usd": 2200562785046.32
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2022",
+        "pib_usd": "2200562785046.32"
+      },
+      "lineage": {
+        "record_id": "21f843fdb13eb85e",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 2,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2021,
+        "pib_usd": 2022377950896.78
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2021",
+        "pib_usd": "2022377950896.78"
+      },
+      "lineage": {
+        "record_id": "385108b485d9a215",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 3,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2020,
+        "pib_usd": 1655686966881.99
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2020",
+        "pib_usd": "1655686966881.99"
+      },
+      "lineage": {
+        "record_id": "9088904f607ec33f",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 4,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2019,
+        "pib_usd": 1743728952156.85
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2019",
+        "pib_usd": "1743728952156.85"
+      },
+      "lineage": {
+        "record_id": "2c6f92bae9783e53",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 5,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2018,
+        "pib_usd": 1725330736237.69
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2018",
+        "pib_usd": "1725330736237.69"
+      },
+      "lineage": {
+        "record_id": "8aba0b32116e5f50",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 6,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2017,
+        "pib_usd": 1649269496514.62
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2017",
+        "pib_usd": "1649269496514.62"
+      },
+      "lineage": {
+        "record_id": "9a25355d570f3fa3",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 7,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2016,
+        "pib_usd": 1527996250640.92
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2016",
+        "pib_usd": "1527996250640.92"
+      },
+      "lineage": {
+        "record_id": "63f7e2139cd5a310",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 8,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": 2015,
+        "pib_usd": 1556510380200.23
+      },
+      "raw": {
+        "pais": "Canada",
+        "codigo_pais": "CA",
+        "anio": "2015",
+        "pib_usd": "1556510380200.23"
+      },
+      "lineage": {
+        "record_id": "a40a54f6f0b3dff9",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 9,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2024,
+        "pib_usd": 1830489311088.89
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2024",
+        "pib_usd": "1830489311088.89"
+      },
+      "lineage": {
+        "record_id": "214967ead62d8710",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 10,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2023,
+        "pib_usd": 1794410347718.25
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2023",
+        "pib_usd": "1794410347718.25"
+      },
+      "lineage": {
+        "record_id": "64055ce72d2921b6",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 11,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2022,
+        "pib_usd": 1466934724243.38
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2022",
+        "pib_usd": "1466934724243.38"
+      },
+      "lineage": {
+        "record_id": "ba1c30a8f7179cfa",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 12,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2021,
+        "pib_usd": 1316569466833.94
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2021",
+        "pib_usd": "1316569466833.94"
+      },
+      "lineage": {
+        "record_id": "835be5e167d3212d",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 13,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2020,
+        "pib_usd": 1121064767168.8
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2020",
+        "pib_usd": "1121064767168.8"
+      },
+      "lineage": {
+        "record_id": "5d8f3ac9bcbcb74f",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 14,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2019,
+        "pib_usd": 1304106204006.27
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2019",
+        "pib_usd": "1304106204006.27"
+      },
+      "lineage": {
+        "record_id": "b060782c7cf2f282",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 15,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2018,
+        "pib_usd": 1256300182983.65
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2018",
+        "pib_usd": "1256300182983.65"
+      },
+      "lineage": {
+        "record_id": "dda87fcc3e00de02",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 16,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2017,
+        "pib_usd": 1190721475853.16
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2017",
+        "pib_usd": "1190721475853.16"
+      },
+      "lineage": {
+        "record_id": "740fc8d6a1113aa7",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 17,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2016,
+        "pib_usd": 1112233497452.7
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2016",
+        "pib_usd": "1112233497452.7"
+      },
+      "lineage": {
+        "record_id": "acc97977cb5df1d0",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 18,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": 2015,
+        "pib_usd": 1213294467653.78
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MX",
+        "anio": "2015",
+        "pib_usd": "1213294467653.78"
+      },
+      "lineage": {
+        "record_id": "3dd4516bfa097cd3",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 19,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2024,
+        "pib_usd": 29298013000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2024",
+        "pib_usd": "29298013000000"
+      },
+      "lineage": {
+        "record_id": "8e3ddf32a47b79f4",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 20,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2023,
+        "pib_usd": 27811517000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2023",
+        "pib_usd": "27811517000000"
+      },
+      "lineage": {
+        "record_id": "320f4a5a6f1e6f53",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 21,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2022,
+        "pib_usd": 26054614000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2022",
+        "pib_usd": "26054614000000"
+      },
+      "lineage": {
+        "record_id": "9b5d2622fda06044",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 22,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2021,
+        "pib_usd": 23725645000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2021",
+        "pib_usd": "23725645000000"
+      },
+      "lineage": {
+        "record_id": "7e1efd47db761351",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 23,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2020,
+        "pib_usd": 21375281000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2020",
+        "pib_usd": "21375281000000"
+      },
+      "lineage": {
+        "record_id": "a292c95bf6399c50",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 24,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2019,
+        "pib_usd": 21539982000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2019",
+        "pib_usd": "21539982000000"
+      },
+      "lineage": {
+        "record_id": "2d2222a1c8e56732",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 25,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2018,
+        "pib_usd": 20656516000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2018",
+        "pib_usd": "20656516000000"
+      },
+      "lineage": {
+        "record_id": "29db5538f7cddfeb",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 26,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2017,
+        "pib_usd": 19612102000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2017",
+        "pib_usd": "19612102000000"
+      },
+      "lineage": {
+        "record_id": "48e6c204bea066ec",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 27,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2016,
+        "pib_usd": 18804913000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2016",
+        "pib_usd": "18804913000000"
+      },
+      "lineage": {
+        "record_id": "259f4357d22222dd",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 28,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": 2015,
+        "pib_usd": 18295019000000.0
+      },
+      "raw": {
+        "pais": "United States",
+        "codigo_pais": "US",
+        "anio": "2015",
+        "pib_usd": "18295019000000"
+      },
+      "lineage": {
+        "record_id": "982fd704dce77da2",
+        "run_id": "20261121T203238Z-0d985b",
+        "position": 29,
+        "source_url": "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50",
+        "retrieved_at": "2026-11-21T20:32:41Z",
+        "method": "structured_file",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.text'",
+          "codigo_pais": "ruta 'country.@id'",
+          "anio": "ruta 'date'",
+          "pib_usd": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "pib_usd": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "f5a022adae19701062fea1e6db7c4fd0dbc4d6c0b6edd08aa63fb1ab77415fd2",
+        "tool_version": "0.1.0"
+      }
+    }
+  ]
+}

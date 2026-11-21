@@ -1,0 +1,40 @@
+{
+  "profile_name": "r05-dof-ejemplar-hoy",
+  "saved_at": "2026-11-21T20:40:54Z",
+  "run_id": "20261121T204050Z-63d9e2",
+  "target_url": "https://dof.gob.mx/index.php",
+  "method": "static_html",
+  "record_selector": "a.enlaces",
+  "table_selector": null,
+  "records_path": null,
+  "api_documentation_url": null,
+  "record_count": 18,
+  "max_records": 60,
+  "fields": {
+    "titulo": {
+      "selector": null,
+      "path": null,
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "url": {
+      "selector": null,
+      "path": null,
+      "column": null,
+      "attribute": "href",
+      "type": "url",
+      "fill_rate": 1.0
+    },
+    "fecha_publicacion": {
+      "selector": null,
+      "path": null,
+      "column": null,
+      "attribute": "href",
+      "type": "date",
+      "fill_rate": 0.8889
+    }
+  },
+  "structure": []
+}

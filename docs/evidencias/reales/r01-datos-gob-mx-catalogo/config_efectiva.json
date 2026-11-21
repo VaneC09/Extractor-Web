@@ -1,0 +1,169 @@
+{
+  "auth": {
+    "failure_text": null,
+    "header_name": "Authorization",
+    "header_prefix": "Bearer ",
+    "login_url": null,
+    "password_env": null,
+    "password_field": "password",
+    "token_env": null,
+    "type": "none",
+    "username_env": null,
+    "username_field": "username"
+  },
+  "authorization": {
+    "allow_authentication": false,
+    "authorized_by": "Plataforma Nacional de Datos Abiertos (datos públicos de libre uso); URL indicada por el docente",
+    "confirmed": true,
+    "environment": "production",
+    "evidence_reference": "https://www.datos.gob.mx/ (datos abiertos) y https://www.datos.gob.mx/robots.txt",
+    "personal_data": "none",
+    "purpose": "Reto final académico: catálogo de conjuntos de datos abiertos, sin datos personales",
+    "terms_reviewed": true,
+    "valid_until": null
+  },
+  "diagnosis": {
+    "max_requests": 3,
+    "render_with_browser": false
+  },
+  "extraction": {
+    "api": {
+      "accept": "application/json",
+      "documentation_url": null,
+      "documented": false
+    },
+    "browser": {
+      "engine": "auto",
+      "headless": true,
+      "infinite_scroll": false,
+      "load_more_selector": null,
+      "page_load_timeout_seconds": 20.0,
+      "scroll_pause_seconds": 1.0,
+      "wait_selector": null,
+      "wait_timeout_seconds": 10.0
+    },
+    "deduplicate_on": [
+      "url"
+    ],
+    "drop_invalid": false,
+    "fields": [
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "titulo",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": null,
+        "required": true,
+        "selector": "h3 a",
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "href",
+        "column": null,
+        "date_format": null,
+        "name": "url",
+        "normalize": [],
+        "path": null,
+        "pattern": null,
+        "required": true,
+        "selector": "h3 a",
+        "type": "url",
+        "validate": null
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "institucion",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": null,
+        "required": false,
+        "selector": "a.link-pink",
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "actualizacion",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": "Actualizaci[oó]n:\\s*(.+)",
+        "required": false,
+        "selector": "p.mb-2",
+        "type": "string",
+        "validate": null
+      }
+    ],
+    "file_format": null,
+    "keep_raw": true,
+    "method": "static_html",
+    "pagination": {
+      "mode": "url_template",
+      "next_field": null,
+      "next_selector": null,
+      "page_param": "page",
+      "start_page": 1,
+      "url_template": "https://www.datos.gob.mx/dataset/?page={page}"
+    },
+    "record_selector": "li.resource-item.card",
+    "records_path": null,
+    "table_selector": null
+  },
+  "limits": {
+    "concurrency": 1,
+    "delay_seconds": 10.0,
+    "max_clicks": 3,
+    "max_pages": 2,
+    "max_records": 40,
+    "max_requests": 4,
+    "max_response_bytes": 5000000,
+    "max_retries": 1,
+    "max_scrolls": 3,
+    "max_seconds": 120.0,
+    "timeout_seconds": 20.0
+  },
+  "output": {
+    "directory": "outputs",
+    "formats": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ],
+    "profile_name": null,
+    "sqlite_path": null,
+    "stop_file": "STOP"
+  },
+  "project": {
+    "description": "Fichas del catálogo nacional de datos abiertos (título, institución, actualización).",
+    "name": "r01-datos-gob-mx-catalogo"
+  },
+  "scope": {
+    "allow_private_network": false,
+    "allowed_domains": [
+      "www.datos.gob.mx"
+    ],
+    "allowed_path_prefixes": [
+      "/dataset/"
+    ],
+    "allowed_schemes": [
+      "https"
+    ],
+    "respect_robots_txt": true
+  },
+  "target_url": "https://www.datos.gob.mx/dataset/?page=1",
+  "user_agent": "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)",
+  "version": 1
+}

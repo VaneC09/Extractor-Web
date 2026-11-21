@@ -1,0 +1,5 @@
+{"action": "http_get", "target": "https://api.worldbank.org/robots.txt", "detail": "robots.txt -> 404", "outcome": "error", "timestamp": "2026-11-21T20:32:26Z"}
+{"action": "http_get", "target": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1", "detail": "API página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:32:27Z"}
+{"action": "parse", "target": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1", "detail": "20 registros en página 1", "outcome": "ok", "timestamp": "2026-11-21T20:32:27Z"}
+{"action": "http_get", "target": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2", "detail": "API página 2 -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:32:29Z"}
+{"action": "parse", "target": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2", "detail": "20 registros en página 2", "outcome": "ok", "timestamp": "2026-11-21T20:32:29Z"}

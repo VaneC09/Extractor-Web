@@ -1,0 +1,4 @@
+{"action": "http_get", "target": "https://dof.gob.mx/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:40:51Z"}
+{"action": "http_get", "target": "https://dof.gob.mx/index.php", "detail": "página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:40:54Z"}
+{"action": "parse", "target": "https://dof.gob.mx/index.php", "detail": "18 registros en página 1", "outcome": "ok", "timestamp": "2026-11-21T20:40:54Z"}
+{"action": "pagination_end", "target": "https://dof.gob.mx/index.php", "detail": "1 página(s) recorridas", "outcome": "ok", "timestamp": "2026-11-21T20:40:54Z"}

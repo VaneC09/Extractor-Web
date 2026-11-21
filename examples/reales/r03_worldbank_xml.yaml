@@ -1,0 +1,44 @@
+# Sitio real 3 — Banco Mundial: misma API documentada, respuesta XML (formato por defecto),
+# tratada como archivo estructurado. Licencia CC BY 4.0.
+version: 1
+project:
+  name: r03-worldbank-xml
+  description: PIB (US$ corrientes) de México, Estados Unidos y Canadá, 2015-2024, desde XML.
+target_url: "https://api.worldbank.org/v2/country/MX;US;CA/indicator/NY.GDP.MKTP.CD?date=2015:2024&per_page=50"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)"
+  purpose: "Reto final académico: comparación del PIB en Norteamérica"
+  terms_reviewed: true
+  evidence_reference: "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures"
+  environment: production
+
+scope:
+  allowed_domains: ["api.worldbank.org"]
+  allowed_path_prefixes: ["/v2/"]
+  allowed_schemes: ["https"]
+
+limits:
+  max_pages: 1
+  max_records: 50
+  max_requests: 3
+  max_seconds: 60
+  delay_seconds: 2
+  timeout_seconds: 20
+
+extraction:
+  method: structured_file
+  file_format: xml
+  records_path: data         # <wb:data> raíz -> lista de <wb:data>
+  deduplicate_on: [codigo_pais, anio]
+  fields:
+    - {name: pais, path: country.text, required: true}
+    - {name: codigo_pais, path: country.@id, required: true, validate: {regex: "^[A-Z]{2}$"}}
+    - {name: anio, path: date, type: integer, required: true, validate: {min: 2015, max: 2024}}
+    - {name: pib_usd, path: value, type: float, validate: {min: 0}}
+
+output:
+  directory: outputs
+  formats: [csv, json, excel, sqlite]

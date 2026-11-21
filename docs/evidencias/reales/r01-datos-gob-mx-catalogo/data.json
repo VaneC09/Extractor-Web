@@ -1,0 +1,2120 @@
+{
+  "run_id": "20261121T203738Z-989d99",
+  "project": "r01-datos-gob-mx-catalogo",
+  "metadata": {
+    "target_url": "https://www.datos.gob.mx/dataset/?page=1",
+    "method": "static_html",
+    "status": "completado_con_limites",
+    "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+    "tool_version": "0.1.0",
+    "started_at": "2026-11-21T20:37:38Z",
+    "finished_at": "2026-11-21T20:37:59Z",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Plataforma Nacional de Datos Abiertos (datos públicos de libre uso); URL indicada por el docente",
+      "purpose": "Reto final académico: catálogo de conjuntos de datos abiertos, sin datos personales",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://www.datos.gob.mx/ (datos abiertos) y https://www.datos.gob.mx/robots.txt",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "limits": {
+      "max_pages": 2,
+      "max_records": 40,
+      "max_requests": 4,
+      "max_seconds": 120.0,
+      "delay_seconds": 10.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "quality": {
+      "total_raw": 40,
+      "valid": 40,
+      "with_warnings": 0,
+      "invalid": 0,
+      "duplicates_removed": 0,
+      "dropped_invalid": 0,
+      "exported": 40,
+      "fields": {
+        "titulo": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "url": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "institucion": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "actualizacion": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        }
+      },
+      "error_samples": []
+    }
+  },
+  "fields": [
+    "titulo",
+    "url",
+    "institucion",
+    "actualizacion"
+  ],
+  "records": [
+    {
+      "data": {
+        "titulo": "Registro Federal de las Organizaciones de la Sociedad Civil",
+        "url": "https://www.datos.gob.mx/dataset/registro_federal_osc",
+        "institucion": "Instituto Nacional de Desarrollo Social (INDESOL)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Registro Federal de las Organizaciones de la Sociedad Civil",
+        "url": "https://www.datos.gob.mx/dataset/registro_federal_osc",
+        "institucion": "Instituto Nacional de Desarrollo Social (INDESOL)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "ca72cf7b589f256a",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 0,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Localidades incluidas en el Programa de Conectividad de S...",
+        "url": "https://www.datos.gob.mx/dataset/localidades_incluidas_programa_conectividad_sitios_publicos",
+        "institucion": "Agencia de Transformación Digital y Telecomunicaciones (ATDT)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Localidades incluidas en el Programa de Conectividad de S...",
+        "url": "https://www.datos.gob.mx/dataset/localidades_incluidas_programa_conectividad_sitios_publicos",
+        "institucion": "Agencia de Transformación Digital y Telecomunicaciones (ATDT)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "85dde8a7d1a540b8",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 1,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Plan de capacitación anual",
+        "url": "https://www.datos.gob.mx/dataset/plan_capacitacion_anual",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Plan de capacitación anual",
+        "url": "https://www.datos.gob.mx/dataset/plan_capacitacion_anual",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "80ec7c48d22fcc13",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 2,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Correspondencia y envíos",
+        "url": "https://www.datos.gob.mx/dataset/correspondencia_envios",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Correspondencia y envíos",
+        "url": "https://www.datos.gob.mx/dataset/correspondencia_envios",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "5ffe253690d0726f",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 3,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Cobertura de servicios postales",
+        "url": "https://www.datos.gob.mx/dataset/cobertura_servicios_postales",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Cobertura de servicios postales",
+        "url": "https://www.datos.gob.mx/dataset/cobertura_servicios_postales",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "1f5b9870cf556d38",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 4,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Centros de trabajo",
+        "url": "https://www.datos.gob.mx/dataset/centros_trabajo",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Centros de trabajo",
+        "url": "https://www.datos.gob.mx/dataset/centros_trabajo",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "9598a55e46f23d72",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 5,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Reclamaciones de envíos",
+        "url": "https://www.datos.gob.mx/dataset/reclamaciones_envios",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Reclamaciones de envíos",
+        "url": "https://www.datos.gob.mx/dataset/reclamaciones_envios",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "1b80e6ed4871cf29",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 6,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Centro de atención al cliente",
+        "url": "https://www.datos.gob.mx/dataset/centro_atencion_cliente",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Centro de atención al cliente",
+        "url": "https://www.datos.gob.mx/dataset/centro_atencion_cliente",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "35764edfc646fe7d",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 7,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Recursos Humanos",
+        "url": "https://www.datos.gob.mx/dataset/recursos_humanos",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Recursos Humanos",
+        "url": "https://www.datos.gob.mx/dataset/recursos_humanos",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "25b9fac85fbbf38b",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 8,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Padrón Inmobiliario del Servicio Postal Mexicano",
+        "url": "https://www.datos.gob.mx/dataset/padron_inmobiliario_servicio_postal_mexicano",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Padrón Inmobiliario del Servicio Postal Mexicano",
+        "url": "https://www.datos.gob.mx/dataset/padron_inmobiliario_servicio_postal_mexicano",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "354f373174f78ab1",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 9,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Ingresos por línea de negocio",
+        "url": "https://www.datos.gob.mx/dataset/ingresos_linea_negocio",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Ingresos por línea de negocio",
+        "url": "https://www.datos.gob.mx/dataset/ingresos_linea_negocio",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "f5a02962bb2e0406",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 10,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Bono de productividad",
+        "url": "https://www.datos.gob.mx/dataset/bono_productividad",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Bono de productividad",
+        "url": "https://www.datos.gob.mx/dataset/bono_productividad",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "e7ac2c5d18edc5d9",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 11,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Antigüedad mensual de los empleados",
+        "url": "https://www.datos.gob.mx/dataset/antiguedad_mensual_empleados",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Antigüedad mensual de los empleados",
+        "url": "https://www.datos.gob.mx/dataset/antiguedad_mensual_empleados",
+        "institucion": "Servicio Postal Mexicano (SEPOMEX)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "ebe9a17c4e938dff",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 12,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Catálogo de producciones cinematográficas",
+        "url": "https://www.datos.gob.mx/dataset/historico_catalogo_producciones_cinematograficas",
+        "institucion": "Centro de Capacitación Cinematográfica, A.C. (CCC)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Catálogo de producciones cinematográficas",
+        "url": "https://www.datos.gob.mx/dataset/historico_catalogo_producciones_cinematograficas",
+        "institucion": "Centro de Capacitación Cinematográfica, A.C. (CCC)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "a095406a7bbca7ab",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 13,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Asesoría Apoyo y Acompañamiento",
+        "url": "https://www.datos.gob.mx/dataset/asesoria_apoyo_acompanamiento",
+        "institucion": "Unidad del Sistema para la Carrera de las Maestras y los Maestros (USICAMM)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Asesoría Apoyo y Acompañamiento",
+        "url": "https://www.datos.gob.mx/dataset/asesoria_apoyo_acompanamiento",
+        "institucion": "Unidad del Sistema para la Carrera de las Maestras y los Maestros (USICAMM)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "376a7d2f483e21ec",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 14,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Localidades incluidas en el Programa de Cobertura Social",
+        "url": "https://www.datos.gob.mx/dataset/localidades_incluidas_programa_cobertura_social",
+        "institucion": "Agencia de Transformación Digital y Telecomunicaciones (ATDT)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Localidades incluidas en el Programa de Cobertura Social",
+        "url": "https://www.datos.gob.mx/dataset/localidades_incluidas_programa_cobertura_social",
+        "institucion": "Agencia de Transformación Digital y Telecomunicaciones (ATDT)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "50b8c5ad7abc7ecc",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 15,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Directorio de las Coordinaciones Estatales de Protección ...",
+        "url": "https://www.datos.gob.mx/dataset/directorio_coordinaciones_estatales_proteccion_civil",
+        "institucion": "Secretaría de Seguridad y Protección Ciudadana (SSPC)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Directorio de las Coordinaciones Estatales de Protección ...",
+        "url": "https://www.datos.gob.mx/dataset/directorio_coordinaciones_estatales_proteccion_civil",
+        "institucion": "Secretaría de Seguridad y Protección Ciudadana (SSPC)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "23b96a7f351a64e1",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 16,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Directorio de los Titulares de las Secretarías de Segurid...",
+        "url": "https://www.datos.gob.mx/dataset/directorio_titulares_secretarias_seguridad_publica_estatales",
+        "institucion": "Secretaría de Seguridad y Protección Ciudadana (SSPC)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Directorio de los Titulares de las Secretarías de Segurid...",
+        "url": "https://www.datos.gob.mx/dataset/directorio_titulares_secretarias_seguridad_publica_estatales",
+        "institucion": "Secretaría de Seguridad y Protección Ciudadana (SSPC)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "fd8b9f336f9d8529",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 17,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Alertamiento sobre fenómenos naturales (2026)",
+        "url": "https://www.datos.gob.mx/dataset/alertamiento_fenomenos_naturales_2026",
+        "institucion": "Secretaría de Seguridad y Protección Ciudadana (SSPC)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Alertamiento sobre fenómenos naturales (2026)",
+        "url": "https://www.datos.gob.mx/dataset/alertamiento_fenomenos_naturales_2026",
+        "institucion": "Secretaría de Seguridad y Protección Ciudadana (SSPC)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "dcdfe8dc9b5084bf",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 18,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Avisos de funcionamiento y responsables sanitarios",
+        "url": "https://www.datos.gob.mx/dataset/avisos_funcionamiento_responsables_sanitarios",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Avisos de funcionamiento y responsables sanitarios",
+        "url": "https://www.datos.gob.mx/dataset/avisos_funcionamiento_responsables_sanitarios",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "2eccbad9cd81eaa7",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 19,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=1",
+        "retrieved_at": "2026-11-21T20:37:49Z",
+        "method": "static_html",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Vigilancia de la calidad microbiológica del agua para uso...",
+        "url": "https://www.datos.gob.mx/dataset/vigilancia_microbiologica_agua_consumo_humano",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Vigilancia de la calidad microbiológica del agua para uso...",
+        "url": "https://www.datos.gob.mx/dataset/vigilancia_microbiologica_agua_consumo_humano",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "68d16a9cabf8cb33",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 20,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Solicitudes de registros sanitarios",
+        "url": "https://www.datos.gob.mx/dataset/solicitudes_registros_sanitarios",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "20 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Solicitudes de registros sanitarios",
+        "url": "https://www.datos.gob.mx/dataset/solicitudes_registros_sanitarios",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "Última Actualización: 20 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "c460650fa7a0ca7b",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 21,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Indicadores del Protocolo de San Salvador de la Secretarí...",
+        "url": "https://www.datos.gob.mx/dataset/indicadores_protocolo_san_salvador_secretaria_salud",
+        "institucion": "Secretaría de Salud",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Indicadores del Protocolo de San Salvador de la Secretarí...",
+        "url": "https://www.datos.gob.mx/dataset/indicadores_protocolo_san_salvador_secretaria_salud",
+        "institucion": "Secretaría de Salud",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "9d3ff0edab92168b",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 22,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Permisos de liberación de productos biológicos y otros in...",
+        "url": "https://www.datos.gob.mx/dataset/permisos_liberacion_biologicos_insumos_salud",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Permisos de liberación de productos biológicos y otros in...",
+        "url": "https://www.datos.gob.mx/dataset/permisos_liberacion_biologicos_insumos_salud",
+        "institucion": "Comisión Federal para la Protección contra Riesgos Sanitarios (COFEPRIS)",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "5b2a102326e85176",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 23,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Adolescentes beneficiados por los Centros de Atención Pri...",
+        "url": "https://www.datos.gob.mx/dataset/adolescentes_beneficiados_capa",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Adolescentes beneficiados por los Centros de Atención Pri...",
+        "url": "https://www.datos.gob.mx/dataset/adolescentes_beneficiados_capa",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "bb3a2821a931ad92",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 24,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Presupuesto CONADIC",
+        "url": "https://www.datos.gob.mx/dataset/presupuesto_conadic",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Presupuesto CONADIC",
+        "url": "https://www.datos.gob.mx/dataset/presupuesto_conadic",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "2e5752dd9759b46e",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 25,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Registro del censo de promotores",
+        "url": "https://www.datos.gob.mx/dataset/registro_censo_promotores",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Registro del censo de promotores",
+        "url": "https://www.datos.gob.mx/dataset/registro_censo_promotores",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "29e2eb1712896ae9",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 26,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Advertencias sanitarias",
+        "url": "https://www.datos.gob.mx/dataset/advertencias_sanitarias",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Advertencias sanitarias",
+        "url": "https://www.datos.gob.mx/dataset/advertencias_sanitarias",
+        "institucion": "Comisión Nacional contra las Adicciones (CONADIC)",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "0c28bf0f2782cf21",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 27,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Catálogo de centros de trabajo SEP",
+        "url": "https://www.datos.gob.mx/dataset/catalogo_centros_trabajo_sep",
+        "institucion": "Secretaría de Educación Pública (SEP)",
+        "actualizacion": "19 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Catálogo de centros de trabajo SEP",
+        "url": "https://www.datos.gob.mx/dataset/catalogo_centros_trabajo_sep",
+        "institucion": "Secretaría de Educación Pública (SEP)",
+        "actualizacion": "Última Actualización: 19 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "98214a7b19cc91dd",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 28,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Migrantes atendidos por el CIJ",
+        "url": "https://www.datos.gob.mx/dataset/migrantes_atendidos_por_cij",
+        "institucion": "Centros de Integración Juvenil, A.C (CIJ)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Migrantes atendidos por el CIJ",
+        "url": "https://www.datos.gob.mx/dataset/migrantes_atendidos_por_cij",
+        "institucion": "Centros de Integración Juvenil, A.C (CIJ)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "db907014da991b1f",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 29,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Producción de Hidrocarburos (2026)",
+        "url": "https://www.datos.gob.mx/dataset/produccion_hidrocarburos_2026",
+        "institucion": "Secretaría de Energía (SENER)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Producción de Hidrocarburos (2026)",
+        "url": "https://www.datos.gob.mx/dataset/produccion_hidrocarburos_2026",
+        "institucion": "Secretaría de Energía (SENER)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "994a383b5185c3e3",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 30,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Usuarios sistema Llave Mx",
+        "url": "https://www.datos.gob.mx/dataset/usuarios_sistema_llave_mx",
+        "institucion": "Agencia de Transformación Digital y Telecomunicaciones (ATDT)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Usuarios sistema Llave Mx",
+        "url": "https://www.datos.gob.mx/dataset/usuarios_sistema_llave_mx",
+        "institucion": "Agencia de Transformación Digital y Telecomunicaciones (ATDT)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "aaac979bfcc688e5",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 31,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Inversión extranjera directa",
+        "url": "https://www.datos.gob.mx/dataset/inversion_extranjera_directa",
+        "institucion": "Secretaría de Economía (SE)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Inversión extranjera directa",
+        "url": "https://www.datos.gob.mx/dataset/inversion_extranjera_directa",
+        "institucion": "Secretaría de Economía (SE)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "2dcdcd40984f5280",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 32,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Incidencia delictiva (2026 a la fecha)",
+        "url": "https://www.datos.gob.mx/dataset/incidencia_delictiva_2026",
+        "institucion": "Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Incidencia delictiva (2026 a la fecha)",
+        "url": "https://www.datos.gob.mx/dataset/incidencia_delictiva_2026",
+        "institucion": "Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "6b6f2db96a4d3096",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 33,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Cuaderno Mensual Estadístico Penitenciario (septiembre, 2...",
+        "url": "https://www.datos.gob.mx/dataset/cuaderno_mensual_estadistico_penitenciario_septiembre_2026",
+        "institucion": "Prevención y Reinserción Social (PRS)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Cuaderno Mensual Estadístico Penitenciario (septiembre, 2...",
+        "url": "https://www.datos.gob.mx/dataset/cuaderno_mensual_estadistico_penitenciario_septiembre_2026",
+        "institucion": "Prevención y Reinserción Social (PRS)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "46325d057f3fd885",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 34,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Padrón de Derechohabientes Activos",
+        "url": "https://www.datos.gob.mx/dataset/padron_derechohabientes_activos",
+        "institucion": "Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado (ISSSTE)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Padrón de Derechohabientes Activos",
+        "url": "https://www.datos.gob.mx/dataset/padron_derechohabientes_activos",
+        "institucion": "Instituto de Seguridad y Servicios Sociales de los Trabajadores del Estado (ISSSTE)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "6c78665c3192ca84",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 35,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Liderazgo político de las mujeres en México",
+        "url": "https://www.datos.gob.mx/dataset/liderazgo_politico_mujeres_mexico",
+        "institucion": "Secretaría de las Mujeres",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Liderazgo político de las mujeres en México",
+        "url": "https://www.datos.gob.mx/dataset/liderazgo_politico_mujeres_mexico",
+        "institucion": "Secretaría de las Mujeres",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "56756bc4841ca41b",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 36,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Incidencia delictiva (2015 a 2025)",
+        "url": "https://www.datos.gob.mx/dataset/incidencia_delictiva",
+        "institucion": "Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Incidencia delictiva (2015 a 2025)",
+        "url": "https://www.datos.gob.mx/dataset/incidencia_delictiva",
+        "institucion": "Secretariado Ejecutivo del Sistema Nacional de Seguridad Pública (SESNSP)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "056ce33222bcf44d",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 37,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Eventos de Búsqueda y Rescate Marítimo",
+        "url": "https://www.datos.gob.mx/dataset/eventos_busqueda_rescate_maritimo",
+        "institucion": "Secretaría de Marina (SEMAR)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Eventos de Búsqueda y Rescate Marítimo",
+        "url": "https://www.datos.gob.mx/dataset/eventos_busqueda_rescate_maritimo",
+        "institucion": "Secretaría de Marina (SEMAR)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "9dc2a6b4ede00ba8",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 38,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Avisos Náuticos Emitidos en Aguas Nacionales",
+        "url": "https://www.datos.gob.mx/dataset/avisos_nauticos_emitidos_aguas_nacionales",
+        "institucion": "Secretaría de Marina (SEMAR)",
+        "actualizacion": "18 de noviembre 2026"
+      },
+      "raw": {
+        "titulo": "Avisos Náuticos Emitidos en Aguas Nacionales",
+        "url": "https://www.datos.gob.mx/dataset/avisos_nauticos_emitidos_aguas_nacionales",
+        "institucion": "Secretaría de Marina (SEMAR)",
+        "actualizacion": "Última Actualización: 18 de noviembre 2026"
+      },
+      "lineage": {
+        "record_id": "368d48f0f4541e64",
+        "run_id": "20261121T203738Z-989d99",
+        "position": 39,
+        "source_url": "https://www.datos.gob.mx/dataset/?page=2",
+        "retrieved_at": "2026-11-21T20:37:59Z",
+        "method": "static_html",
+        "page_index": 1,
+        "field_sources": {
+          "titulo": "selector 'h3 a'",
+          "url": "selector 'h3 a' @href",
+          "institucion": "selector 'a.link-pink'",
+          "actualizacion": "selector 'p.mb-2'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "institucion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizacion": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+        "tool_version": "0.1.0"
+      }
+    }
+  ]
+}

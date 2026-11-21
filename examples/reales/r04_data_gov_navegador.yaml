@@ -1,0 +1,49 @@
+# Sitio real 4 — Data.gov (catálogo): extracción con Selenium (Chrome o Edge headless).
+# robots.txt de catalog.data.gov: Crawl-Delay 10, sin rutas prohibidas. La API CKAN que documenta
+# data.gov/developers/apis respondió 404 (retirada), así que no se usa.
+version: 1
+project:
+  name: r04-data-gov-navegador
+  description: Conjuntos de datos destacados del catálogo de Data.gov.
+target_url: "https://catalog.data.gov/"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  confirmed: true
+  authorized_by: "Data.gov — catálogo público del Gobierno de EE. UU."
+  purpose: "Reto final académico: inventario de conjuntos de datos y formatos publicados"
+  terms_reviewed: true
+  evidence_reference: "https://catalog.data.gov/robots.txt"
+  environment: production
+
+scope:
+  allowed_domains: ["catalog.data.gov"]
+  allowed_path_prefixes: ["/"]
+  allowed_schemes: ["https"]
+
+limits:
+  max_pages: 1
+  max_records: 30
+  max_requests: 3
+  max_seconds: 90
+  delay_seconds: 10      # Crawl-Delay publicado
+  timeout_seconds: 30
+
+extraction:
+  method: browser
+  record_selector: "li.usa-collection__item"
+  browser:
+    wait_selector: "li.usa-collection__item h2 a"
+    wait_timeout_seconds: 20
+    page_load_timeout_seconds: 45
+  deduplicate_on: [url]
+  fields:
+    - {name: titulo, selector: "h2 a", required: true, normalize: [collapse_whitespace]}
+    - {name: url, selector: "h2 a", attribute: href, type: url, required: true}
+    - {name: organizacion, selector: ".usa-collection__meta-item a", normalize: [collapse_whitespace]}
+    - {name: actualizado, selector: ".usa-collection__meta-item:nth-of-type(2)", pattern: "Updated:\\s*(.+)", normalize: [collapse_whitespace]}
+    - {name: formatos, selector: "ul.dataset-resources", normalize: [collapse_whitespace]}
+
+output:
+  directory: outputs
+  formats: [csv, json, excel, sqlite]

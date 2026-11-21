@@ -1,0 +1,5 @@
+{"action": "http_get", "target": "https://www.datos.gob.mx/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:37:39Z"}
+{"action": "http_get", "target": "https://www.datos.gob.mx/dataset/?page=1", "detail": "página 1 -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:37:49Z"}
+{"action": "parse", "target": "https://www.datos.gob.mx/dataset/?page=1", "detail": "20 registros en página 1", "outcome": "ok", "timestamp": "2026-11-21T20:37:49Z"}
+{"action": "http_get", "target": "https://www.datos.gob.mx/dataset/?page=2", "detail": "página 2 -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:37:59Z"}
+{"action": "parse", "target": "https://www.datos.gob.mx/dataset/?page=2", "detail": "20 registros en página 2", "outcome": "ok", "timestamp": "2026-11-21T20:37:59Z"}

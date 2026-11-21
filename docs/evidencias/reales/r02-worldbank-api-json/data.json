@@ -1,0 +1,1960 @@
+{
+  "run_id": "20261121T203225Z-f50691",
+  "project": "r02-worldbank-api-json",
+  "metadata": {
+    "target_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20",
+    "method": "api",
+    "status": "completado_con_limites",
+    "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+    "tool_version": "0.1.0",
+    "started_at": "2026-11-21T20:32:25Z",
+    "finished_at": "2026-11-21T20:32:29Z",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Banco Mundial — Indicators API pública y documentada (licencia CC BY 4.0)",
+      "purpose": "Reto final académico: serie histórica de población",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "limits": {
+      "max_pages": 2,
+      "max_records": 40,
+      "max_requests": 4,
+      "max_seconds": 60.0,
+      "delay_seconds": 2.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "quality": {
+      "total_raw": 40,
+      "valid": 40,
+      "with_warnings": 0,
+      "invalid": 0,
+      "duplicates_removed": 0,
+      "dropped_invalid": 0,
+      "exported": 40,
+      "fields": {
+        "pais": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "codigo_pais": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "anio": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "poblacion": {
+          "filled": 40,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        }
+      },
+      "error_samples": []
+    }
+  },
+  "fields": [
+    "pais",
+    "codigo_pais",
+    "anio",
+    "poblacion"
+  ],
+  "records": [
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2025,
+        "poblacion": 131946900.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2025",
+        "poblacion": 131946900
+      },
+      "lineage": {
+        "record_id": "177dcd7440f34989",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 0,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2024,
+        "poblacion": 130861007.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2024",
+        "poblacion": 130861007
+      },
+      "lineage": {
+        "record_id": "7171da680781a466",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 1,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2023,
+        "poblacion": 129739759.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2023",
+        "poblacion": 129739759
+      },
+      "lineage": {
+        "record_id": "85ce49c29dee0340",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 2,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2022,
+        "poblacion": 128613117.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2022",
+        "poblacion": 128613117
+      },
+      "lineage": {
+        "record_id": "e8c0c76a08754d58",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 3,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2021,
+        "poblacion": 127648148.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2021",
+        "poblacion": 127648148
+      },
+      "lineage": {
+        "record_id": "10fe782fc7f53963",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 4,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2020,
+        "poblacion": 126799054.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2020",
+        "poblacion": 126799054
+      },
+      "lineage": {
+        "record_id": "32c20c05445e0ddc",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 5,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2019,
+        "poblacion": 125762982.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2019",
+        "poblacion": 125762982
+      },
+      "lineage": {
+        "record_id": "df18f2ae62495979",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 6,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2018,
+        "poblacion": 124573711.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2018",
+        "poblacion": 124573711
+      },
+      "lineage": {
+        "record_id": "884dcb62fdcc175e",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 7,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2017,
+        "poblacion": 123400057.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2017",
+        "poblacion": 123400057
+      },
+      "lineage": {
+        "record_id": "a4e78374a0c560ad",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 8,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2016,
+        "poblacion": 122251351.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2016",
+        "poblacion": 122251351
+      },
+      "lineage": {
+        "record_id": "3b3dcf771c3dd5df",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 9,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2015,
+        "poblacion": 121072306.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2015",
+        "poblacion": 121072306
+      },
+      "lineage": {
+        "record_id": "25dba757220ea1b3",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 10,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2014,
+        "poblacion": 119784261.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2014",
+        "poblacion": 119784261
+      },
+      "lineage": {
+        "record_id": "79eefe0bc6970502",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 11,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2013,
+        "poblacion": 118343573.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2013",
+        "poblacion": 118343573
+      },
+      "lineage": {
+        "record_id": "596ba2c12e562c65",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 12,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2012,
+        "poblacion": 116818208.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2012",
+        "poblacion": 116818208
+      },
+      "lineage": {
+        "record_id": "2d4be9bb7928dbba",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 13,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2011,
+        "poblacion": 115243504.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2011",
+        "poblacion": 115243504
+      },
+      "lineage": {
+        "record_id": "9276d08f086d6efd",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 14,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2010,
+        "poblacion": 113623895.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2010",
+        "poblacion": 113623895
+      },
+      "lineage": {
+        "record_id": "ef16e742169a3d5f",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 15,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2009,
+        "poblacion": 111999721.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2009",
+        "poblacion": 111999721
+      },
+      "lineage": {
+        "record_id": "78bbfeace614f6e7",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 16,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2008,
+        "poblacion": 110374288.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2008",
+        "poblacion": 110374288
+      },
+      "lineage": {
+        "record_id": "7058a43ed4547787",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 17,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2007,
+        "poblacion": 108774360.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2007",
+        "poblacion": 108774360
+      },
+      "lineage": {
+        "record_id": "2467eec9b5d97795",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 18,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2006,
+        "poblacion": 107253666.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2006",
+        "poblacion": 107253666
+      },
+      "lineage": {
+        "record_id": "193124078318ba11",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 19,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=1",
+        "retrieved_at": "2026-11-21T20:32:27Z",
+        "method": "api",
+        "page_index": 0,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2005,
+        "poblacion": 105811504.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2005",
+        "poblacion": 105811504
+      },
+      "lineage": {
+        "record_id": "b65bb67209ab3558",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 20,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2004,
+        "poblacion": 104394131.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2004",
+        "poblacion": 104394131
+      },
+      "lineage": {
+        "record_id": "be81a59df29ef3c8",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 21,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2003,
+        "poblacion": 102978515.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2003",
+        "poblacion": 102978515
+      },
+      "lineage": {
+        "record_id": "2c709cb79f3b0d06",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 22,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2002,
+        "poblacion": 101548624.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2002",
+        "poblacion": 101548624
+      },
+      "lineage": {
+        "record_id": "0cdbac66e5865f3f",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 23,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2001,
+        "poblacion": 100099099.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2001",
+        "poblacion": 100099099
+      },
+      "lineage": {
+        "record_id": "3e951fbb6746ec29",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 24,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 2000,
+        "poblacion": 98625552.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "2000",
+        "poblacion": 98625552
+      },
+      "lineage": {
+        "record_id": "e824a510f7f3e9f2",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 25,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1999,
+        "poblacion": 97115707.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1999",
+        "poblacion": 97115707
+      },
+      "lineage": {
+        "record_id": "a72a7b81d1966238",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 26,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1998,
+        "poblacion": 95575245.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1998",
+        "poblacion": 95575245
+      },
+      "lineage": {
+        "record_id": "47043e43993d2e5a",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 27,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1997,
+        "poblacion": 94021207.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1997",
+        "poblacion": 94021207
+      },
+      "lineage": {
+        "record_id": "e96ab50e20382e83",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 28,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1996,
+        "poblacion": 92452702.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1996",
+        "poblacion": 92452702
+      },
+      "lineage": {
+        "record_id": "6248943879aea3d2",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 29,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1995,
+        "poblacion": 90862455.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1995",
+        "poblacion": 90862455
+      },
+      "lineage": {
+        "record_id": "5f982ba73f8fe9e2",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 30,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1994,
+        "poblacion": 89259205.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1994",
+        "poblacion": 89259205
+      },
+      "lineage": {
+        "record_id": "ca5f6cf9efbbdb3a",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 31,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1993,
+        "poblacion": 87653807.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1993",
+        "poblacion": 87653807
+      },
+      "lineage": {
+        "record_id": "bff9a6a4939a14e2",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 32,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1992,
+        "poblacion": 86044809.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1992",
+        "poblacion": 86044809
+      },
+      "lineage": {
+        "record_id": "e9e8007c33958365",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 33,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1991,
+        "poblacion": 84430572.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1991",
+        "poblacion": 84430572
+      },
+      "lineage": {
+        "record_id": "d1d19e10de0ac6c2",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 34,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1990,
+        "poblacion": 82820170.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1990",
+        "poblacion": 82820170
+      },
+      "lineage": {
+        "record_id": "ff92229b4ac45421",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 35,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1989,
+        "poblacion": 81247182.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1989",
+        "poblacion": 81247182
+      },
+      "lineage": {
+        "record_id": "fdeb06d5b883da55",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 36,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1988,
+        "poblacion": 79695531.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1988",
+        "poblacion": 79695531
+      },
+      "lineage": {
+        "record_id": "ef447426ed7f42f2",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 37,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1987,
+        "poblacion": 78136651.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1987",
+        "poblacion": 78136651
+      },
+      "lineage": {
+        "record_id": "edf99a7b81cadd84",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 38,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": 1986,
+        "poblacion": 76585637.0
+      },
+      "raw": {
+        "pais": "Mexico",
+        "codigo_pais": "MEX",
+        "anio": "1986",
+        "poblacion": 76585637
+      },
+      "lineage": {
+        "record_id": "f8dc80cfb70df540",
+        "run_id": "20261121T203225Z-f50691",
+        "position": 39,
+        "source_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20&page=2",
+        "retrieved_at": "2026-11-21T20:32:29Z",
+        "method": "api",
+        "page_index": 1,
+        "field_sources": {
+          "pais": "ruta 'country.value'",
+          "codigo_pais": "ruta 'countryiso3code'",
+          "anio": "ruta 'date'",
+          "poblacion": "ruta 'value'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "pais": [
+            "cast:string"
+          ],
+          "codigo_pais": [
+            "cast:string"
+          ],
+          "anio": [
+            "cast:integer"
+          ],
+          "poblacion": [
+            "cast:float"
+          ]
+        },
+        "config_sha256": "08f436efe5e48f16f6d7f324b47644030f82027505e4320c0a5c861fd3f6ffad",
+        "tool_version": "0.1.0"
+      }
+    }
+  ]
+}

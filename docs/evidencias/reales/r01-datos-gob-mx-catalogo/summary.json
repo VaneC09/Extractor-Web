@@ -1,0 +1,160 @@
+{
+  "run_id": "20261121T203738Z-989d99",
+  "project": "r01-datos-gob-mx-catalogo",
+  "config_sha256": "7493d6f317365963fe3674813a433bb30a3fd910ff2b84eff518b7a832decd9e",
+  "tool_version": "0.1.0",
+  "target_url": "https://www.datos.gob.mx/dataset/?page=1",
+  "method": "static_html",
+  "status": "completado_con_limites",
+  "status_message": "Límite alcanzado: max_records (40)",
+  "started_at": "2026-11-21T20:37:38Z",
+  "finished_at": "2026-11-21T20:37:59Z",
+  "budget": {
+    "requests": 3,
+    "pages": 2,
+    "records": 40,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 20.94,
+    "max_requests": 4,
+    "max_pages": 2,
+    "max_records": 40,
+    "max_seconds": 120.0
+  },
+  "quality": {
+    "total_raw": 40,
+    "valid": 40,
+    "with_warnings": 0,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 40,
+    "fields": {
+      "titulo": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "url": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "institucion": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "actualizacion": {
+        "filled": 40,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      }
+    },
+    "error_samples": []
+  },
+  "incidents": [
+    {
+      "kind": "limit",
+      "message": "Límite alcanzado: max_records (40)",
+      "url": "https://www.datos.gob.mx/dataset/?page=1",
+      "next_step": "Ampliar límites solo dentro de lo autorizado.",
+      "severity": "baja",
+      "timestamp": "2026-11-21T20:37:59Z"
+    }
+  ],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\data.csv",
+    "json": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\data.json",
+    "excel": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\data.xlsx",
+    "sqlite": "outputs\\web_extractor.sqlite",
+    "actions": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\actions.jsonl",
+    "log": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\run.log",
+    "profile": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\profile.json",
+    "config": "outputs\\r01-datos-gob-mx-catalogo\\20261121T203738Z-989d99\\config_efectiva.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Ampliar límites solo dentro de lo autorizado.",
+    "Si necesita más datos, amplíe límites solo dentro de lo autorizado y con pausas adecuadas."
+  ],
+  "structure": [
+    "a.link-pink",
+    "a.ms-1",
+    "a.text-black",
+    "div.col.p-3",
+    "div.g-0.row",
+    "h3.mb-2",
+    "p.mb-0",
+    "p.mb-2",
+    "strong"
+  ],
+  "config": {
+    "project": "r01-datos-gob-mx-catalogo",
+    "target_url": "https://www.datos.gob.mx/dataset/?page=1",
+    "method": "static_html",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Plataforma Nacional de Datos Abiertos (datos públicos de libre uso); URL indicada por el docente",
+      "purpose": "Reto final académico: catálogo de conjuntos de datos abiertos, sin datos personales",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://www.datos.gob.mx/ (datos abiertos) y https://www.datos.gob.mx/robots.txt",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "www.datos.gob.mx"
+      ],
+      "allowed_path_prefixes": [
+        "/dataset/"
+      ],
+      "allowed_schemes": [
+        "https"
+      ],
+      "allow_private_network": false,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 2,
+      "max_records": 40,
+      "max_requests": 4,
+      "max_seconds": 120.0,
+      "delay_seconds": 10.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "titulo",
+      "url",
+      "institucion",
+      "actualizacion"
+    ],
+    "pagination": "url_template",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'r01-datos-gob-mx-catalogo' actualizado como línea base."
+  ]
+}

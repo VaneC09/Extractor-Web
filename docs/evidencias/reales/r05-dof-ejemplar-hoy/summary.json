@@ -1,0 +1,136 @@
+{
+  "run_id": "20261121T204050Z-63d9e2",
+  "project": "r05-dof-ejemplar-hoy",
+  "config_sha256": "480f49eb4cb0dab964286be6760dfc987f69d1eccc9ec01498efc2bd82fc8046",
+  "tool_version": "0.1.0",
+  "target_url": "https://dof.gob.mx/index.php",
+  "method": "static_html",
+  "status": "completado",
+  "status_message": "Extracción finalizada sin incidencias",
+  "started_at": "2026-11-21T20:40:50Z",
+  "finished_at": "2026-11-21T20:40:54Z",
+  "budget": {
+    "requests": 2,
+    "pages": 1,
+    "records": 18,
+    "clicks": 0,
+    "scrolls": 0,
+    "elapsed_seconds": 4.06,
+    "max_requests": 3,
+    "max_pages": 1,
+    "max_records": 60,
+    "max_seconds": 60.0
+  },
+  "quality": {
+    "total_raw": 18,
+    "valid": 16,
+    "with_warnings": 2,
+    "invalid": 0,
+    "duplicates_removed": 0,
+    "dropped_invalid": 0,
+    "exported": 18,
+    "fields": {
+      "titulo": {
+        "filled": 18,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "url": {
+        "filled": 18,
+        "empty": 0,
+        "invalid": 0,
+        "fill_rate": 1.0
+      },
+      "fecha_publicacion": {
+        "filled": 16,
+        "empty": 2,
+        "invalid": 2,
+        "fill_rate": 0.8889
+      }
+    },
+    "error_samples": [
+      "#16 (https://dof.gob.mx/index.php): fecha_publicacion: patrón 'fecha=(\\\\d{2}/\\\\d{2}/\\\\d{4})' no coincide con 'https://dof.gob.mx/busqueda_avanzada.php?cod_orga=AV&busqueda_cuerpo=C'",
+      "#17 (https://dof.gob.mx/index.php): fecha_publicacion: patrón 'fecha=(\\\\d{2}/\\\\d{2}/\\\\d{4})' no coincide con 'https://dof.gob.mx/indicadores.php'"
+    ]
+  },
+  "incidents": [],
+  "errors": [],
+  "outputs": {
+    "csv": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\data.csv",
+    "json": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\data.json",
+    "excel": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\data.xlsx",
+    "sqlite": "outputs\\web_extractor.sqlite",
+    "actions": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\actions.jsonl",
+    "log": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\run.log",
+    "profile": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\profile.json",
+    "config": "outputs\\r05-dof-ejemplar-hoy\\20261121T204050Z-63d9e2\\config_efectiva.json"
+  },
+  "profile_changes": [],
+  "requires_human_review": false,
+  "next_steps": [
+    "Validar muestras manualmente y documentar el resultado en la matriz de pruebas."
+  ],
+  "structure": [],
+  "config": {
+    "project": "r05-dof-ejemplar-hoy",
+    "target_url": "https://dof.gob.mx/index.php",
+    "method": "static_html",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Diario Oficial de la Federación — publicación oficial de acceso público",
+      "purpose": "Reto final académico: índice diario de publicaciones oficiales",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://dof.gob.mx/robots.txt",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "scope": {
+      "allowed_domains": [
+        "dof.gob.mx"
+      ],
+      "allowed_path_prefixes": [
+        "/index.php"
+      ],
+      "allowed_schemes": [
+        "https"
+      ],
+      "allow_private_network": false,
+      "respect_robots_txt": true
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 60,
+      "max_requests": 3,
+      "max_seconds": 60.0,
+      "delay_seconds": 3.0,
+      "timeout_seconds": 20.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "fields": [
+      "titulo",
+      "url",
+      "fecha_publicacion"
+    ],
+    "pagination": "none",
+    "auth": {
+      "type": "none",
+      "username_env": null,
+      "password_env": null
+    },
+    "outputs": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ]
+  },
+  "notes": [
+    "Perfil 'r05-dof-ejemplar-hoy' actualizado como línea base."
+  ]
+}

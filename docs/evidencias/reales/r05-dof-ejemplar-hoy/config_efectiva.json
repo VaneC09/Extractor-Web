@@ -1,0 +1,152 @@
+{
+  "auth": {
+    "failure_text": null,
+    "header_name": "Authorization",
+    "header_prefix": "Bearer ",
+    "login_url": null,
+    "password_env": null,
+    "password_field": "password",
+    "token_env": null,
+    "type": "none",
+    "username_env": null,
+    "username_field": "username"
+  },
+  "authorization": {
+    "allow_authentication": false,
+    "authorized_by": "Diario Oficial de la Federación — publicación oficial de acceso público",
+    "confirmed": true,
+    "environment": "production",
+    "evidence_reference": "https://dof.gob.mx/robots.txt",
+    "personal_data": "none",
+    "purpose": "Reto final académico: índice diario de publicaciones oficiales",
+    "terms_reviewed": true,
+    "valid_until": null
+  },
+  "diagnosis": {
+    "max_requests": 3,
+    "render_with_browser": false
+  },
+  "extraction": {
+    "api": {
+      "accept": "application/json",
+      "documentation_url": null,
+      "documented": false
+    },
+    "browser": {
+      "engine": "auto",
+      "headless": true,
+      "infinite_scroll": false,
+      "load_more_selector": null,
+      "page_load_timeout_seconds": 20.0,
+      "scroll_pause_seconds": 1.0,
+      "wait_selector": null,
+      "wait_timeout_seconds": 10.0
+    },
+    "deduplicate_on": [
+      "url"
+    ],
+    "drop_invalid": false,
+    "fields": [
+      {
+        "attribute": "text",
+        "column": null,
+        "date_format": null,
+        "name": "titulo",
+        "normalize": [
+          "collapse_whitespace"
+        ],
+        "path": null,
+        "pattern": null,
+        "required": true,
+        "selector": null,
+        "type": "string",
+        "validate": null
+      },
+      {
+        "attribute": "href",
+        "column": null,
+        "date_format": null,
+        "name": "url",
+        "normalize": [],
+        "path": null,
+        "pattern": null,
+        "required": true,
+        "selector": null,
+        "type": "url",
+        "validate": null
+      },
+      {
+        "attribute": "href",
+        "column": null,
+        "date_format": "%d/%m/%Y",
+        "name": "fecha_publicacion",
+        "normalize": [],
+        "path": null,
+        "pattern": "fecha=(\\d{2}/\\d{2}/\\d{4})",
+        "required": false,
+        "selector": null,
+        "type": "date",
+        "validate": null
+      }
+    ],
+    "file_format": null,
+    "keep_raw": true,
+    "method": "static_html",
+    "pagination": {
+      "mode": "none",
+      "next_field": null,
+      "next_selector": null,
+      "page_param": "page",
+      "start_page": 1,
+      "url_template": null
+    },
+    "record_selector": "a.enlaces",
+    "records_path": null,
+    "table_selector": null
+  },
+  "limits": {
+    "concurrency": 1,
+    "delay_seconds": 3.0,
+    "max_clicks": 3,
+    "max_pages": 1,
+    "max_records": 60,
+    "max_requests": 3,
+    "max_response_bytes": 5000000,
+    "max_retries": 1,
+    "max_scrolls": 3,
+    "max_seconds": 60.0,
+    "timeout_seconds": 20.0
+  },
+  "output": {
+    "directory": "outputs",
+    "formats": [
+      "csv",
+      "json",
+      "excel",
+      "sqlite"
+    ],
+    "profile_name": null,
+    "sqlite_path": null,
+    "stop_file": "STOP"
+  },
+  "project": {
+    "description": "Títulos de las publicaciones del ejemplar del día del DOF.",
+    "name": "r05-dof-ejemplar-hoy"
+  },
+  "scope": {
+    "allow_private_network": false,
+    "allowed_domains": [
+      "dof.gob.mx"
+    ],
+    "allowed_path_prefixes": [
+      "/index.php"
+    ],
+    "allowed_schemes": [
+      "https"
+    ],
+    "respect_robots_txt": true
+  },
+  "target_url": "https://dof.gob.mx/index.php",
+  "user_agent": "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)",
+  "version": 1
+}

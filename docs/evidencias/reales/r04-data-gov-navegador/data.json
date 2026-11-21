@@ -1,0 +1,1245 @@
+{
+  "run_id": "20261121T203842Z-f28df9",
+  "project": "r04-data-gov-navegador",
+  "metadata": {
+    "target_url": "https://catalog.data.gov/",
+    "method": "browser",
+    "status": "completado",
+    "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+    "tool_version": "0.1.0",
+    "started_at": "2026-11-21T20:38:42Z",
+    "finished_at": "2026-11-21T20:38:58Z",
+    "authorization": {
+      "confirmed": true,
+      "authorized_by": "Data.gov — catálogo público del Gobierno de EE. UU.",
+      "purpose": "Reto final académico: inventario de conjuntos de datos y formatos publicados",
+      "terms_reviewed": true,
+      "environment": "production",
+      "evidence_reference": "https://catalog.data.gov/robots.txt",
+      "allow_authentication": false,
+      "valid_until": null
+    },
+    "limits": {
+      "max_pages": 1,
+      "max_records": 30,
+      "max_requests": 3,
+      "max_seconds": 90.0,
+      "delay_seconds": 10.0,
+      "timeout_seconds": 30.0,
+      "max_retries": 1,
+      "max_clicks": 3,
+      "max_scrolls": 3,
+      "max_response_bytes": 5000000,
+      "concurrency": 1
+    },
+    "quality": {
+      "total_raw": 20,
+      "valid": 19,
+      "with_warnings": 1,
+      "invalid": 0,
+      "duplicates_removed": 0,
+      "dropped_invalid": 0,
+      "exported": 20,
+      "fields": {
+        "titulo": {
+          "filled": 20,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "url": {
+          "filled": 20,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "organizacion": {
+          "filled": 20,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        },
+        "actualizado": {
+          "filled": 19,
+          "empty": 1,
+          "invalid": 0,
+          "fill_rate": 0.95
+        },
+        "formatos": {
+          "filled": 20,
+          "empty": 0,
+          "invalid": 0,
+          "fill_rate": 1.0
+        }
+      },
+      "error_samples": []
+    }
+  },
+  "fields": [
+    "titulo",
+    "url",
+    "organizacion",
+    "actualizado",
+    "formatos"
+  ],
+  "records": [
+    {
+      "data": {
+        "titulo": "Electric Vehicle Population Data",
+        "url": "https://catalog.data.gov/dataset/electric-vehicle-population-data",
+        "organizacion": "State of Washington",
+        "actualizado": "October 14, 2026",
+        "formatos": "JSON XML CSV KML KML GEOJSON"
+      },
+      "raw": {
+        "titulo": "Electric Vehicle Population Data",
+        "url": "https://catalog.data.gov/dataset/electric-vehicle-population-data",
+        "organizacion": "State of Washington",
+        "actualizado": "Dataset Last Updated: October 14, 2026",
+        "formatos": "JSON XML CSV KML KML GEOJSON"
+      },
+      "lineage": {
+        "record_id": "3a827f6230c5343e",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 0,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Lottery Powerball Winning Numbers: Beginning 2010",
+        "url": "https://catalog.data.gov/dataset/lottery-powerball-winning-numbers-beginning-2010",
+        "organizacion": "State of New York",
+        "actualizado": "November 17, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "raw": {
+        "titulo": "Lottery Powerball Winning Numbers: Beginning 2010",
+        "url": "https://catalog.data.gov/dataset/lottery-powerball-winning-numbers-beginning-2010",
+        "organizacion": "State of New York",
+        "actualizado": "Dataset Last Updated: November 17, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "lineage": {
+        "record_id": "b216dd158f678d88",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 1,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Supply Chain Greenhouse Gas Emission Factors v1.3 by NAICS-6",
+        "url": "https://catalog.data.gov/dataset/supply-chain-greenhouse-gas-emission-factors-v1-3-by-naics-6",
+        "organizacion": "U.S. Environmental Protection Agency",
+        "actualizado": "July 05, 2024",
+        "formatos": "CSV CSV"
+      },
+      "raw": {
+        "titulo": "Supply Chain Greenhouse Gas Emission Factors v1.3 by NAICS-6",
+        "url": "https://catalog.data.gov/dataset/supply-chain-greenhouse-gas-emission-factors-v1-3-by-naics-6",
+        "organizacion": "U.S. Environmental Protection Agency",
+        "actualizado": "Dataset Last Updated: July 05, 2024",
+        "formatos": "CSV CSV"
+      },
+      "lineage": {
+        "record_id": "62b62b6288ecf19e",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 2,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "FY 2025 Disability Compensation Recipients by County",
+        "url": "https://catalog.data.gov/dataset/fy-2025-disability-compensation-recipients-by-county",
+        "organizacion": "Department of Veterans Affairs",
+        "actualizado": "August 11, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "raw": {
+        "titulo": "FY 2025 Disability Compensation Recipients by County",
+        "url": "https://catalog.data.gov/dataset/fy-2025-disability-compensation-recipients-by-county",
+        "organizacion": "Department of Veterans Affairs",
+        "actualizado": "Dataset Last Updated: August 11, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "lineage": {
+        "record_id": "c77c15d97792018a",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 3,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Warehouse and Retail Sales",
+        "url": "https://catalog.data.gov/dataset/warehouse-and-retail-sales",
+        "organizacion": "Montgomery County of Maryland",
+        "actualizado": "November 05, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "raw": {
+        "titulo": "Warehouse and Retail Sales",
+        "url": "https://catalog.data.gov/dataset/warehouse-and-retail-sales",
+        "organizacion": "Montgomery County of Maryland",
+        "actualizado": "Dataset Last Updated: November 05, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "lineage": {
+        "record_id": "2bd5f529701d1c20",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 4,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Baby Names from Social Security Card Applications - National Data",
+        "url": "https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-data",
+        "organizacion": "Social Security Administration",
+        "actualizado": "May 08, 2026",
+        "formatos": "HTML ZIP"
+      },
+      "raw": {
+        "titulo": "Baby Names from Social Security Card Applications - National Data",
+        "url": "https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-data",
+        "organizacion": "Social Security Administration",
+        "actualizado": "Dataset Last Updated: May 08, 2026",
+        "formatos": "HTML ZIP"
+      },
+      "lineage": {
+        "record_id": "b8827083b82f612a",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 5,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Crime Data from 2020 to 2024",
+        "url": "https://catalog.data.gov/dataset/crime-data-from-2020-to-present",
+        "organizacion": "City of Los Angeles",
+        "actualizado": "March 04, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "raw": {
+        "titulo": "Crime Data from 2020 to 2024",
+        "url": "https://catalog.data.gov/dataset/crime-data-from-2020-to-present",
+        "organizacion": "City of Los Angeles",
+        "actualizado": "Dataset Last Updated: March 04, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "lineage": {
+        "record_id": "d366758f4853ace0",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 6,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Business Lookup",
+        "url": "https://catalog.data.gov/dataset/business-lookup",
+        "organizacion": "State of Washington",
+        "actualizado": "May 20, 2026",
+        "formatos": "HTML"
+      },
+      "raw": {
+        "titulo": "Business Lookup",
+        "url": "https://catalog.data.gov/dataset/business-lookup",
+        "organizacion": "State of Washington",
+        "actualizado": "Dataset Last Updated: May 20, 2026",
+        "formatos": "HTML"
+      },
+      "lineage": {
+        "record_id": "c7185abb959433ff",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 7,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Inventory of Owned and Leased Properties (IOLP)",
+        "url": "https://catalog.data.gov/dataset/inventory-of-owned-and-leased-properties-iolp",
+        "organizacion": "General Services Administration",
+        "actualizado": "November 17, 2026 at 02:27 PM",
+        "formatos": "XML XLSX XLSX"
+      },
+      "raw": {
+        "titulo": "Inventory of Owned and Leased Properties (IOLP)",
+        "url": "https://catalog.data.gov/dataset/inventory-of-owned-and-leased-properties-iolp",
+        "organizacion": "General Services Administration",
+        "actualizado": "Dataset Last Updated: November 17, 2026 at 02:27 PM",
+        "formatos": "XML XLSX XLSX"
+      },
+      "lineage": {
+        "record_id": "795561086f3df7b2",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 8,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "College Scorecard",
+        "url": "https://catalog.data.gov/dataset/college-scorecard",
+        "organizacion": "Department of Education",
+        "actualizado": "September 12, 2025 at 12:00 AM",
+        "formatos": "ZIP XLSX ZIP ZIP"
+      },
+      "raw": {
+        "titulo": "College Scorecard",
+        "url": "https://catalog.data.gov/dataset/college-scorecard",
+        "organizacion": "Department of Education",
+        "actualizado": "Dataset Last Updated: September 12, 2025 at 12:00 AM",
+        "formatos": "ZIP XLSX ZIP ZIP"
+      },
+      "lineage": {
+        "record_id": "efba63b281e1d84b",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 9,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "2015-16 Harassment or Bullying by Basis Category Civil Rights Data Collection",
+        "url": "https://catalog.data.gov/dataset/2015-16-harassment-or-bullying-by-basis-category-civil-rights-data-collection",
+        "organizacion": "Department of Education",
+        "actualizado": "October 23, 2024 at 12:00 AM",
+        "formatos": "XLSX XLSX XLSX XLSX XLSX XLSX +1 more"
+      },
+      "raw": {
+        "titulo": "2015-16 Harassment or Bullying by Basis Category Civil Rights Data Collection",
+        "url": "https://catalog.data.gov/dataset/2015-16-harassment-or-bullying-by-basis-category-civil-rights-data-collection",
+        "organizacion": "Department of Education",
+        "actualizado": "Dataset Last Updated: October 23, 2024 at 12:00 AM",
+        "formatos": "XLSX XLSX XLSX XLSX XLSX XLSX +1 more"
+      },
+      "lineage": {
+        "record_id": "fb286e6e661d41d1",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 10,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "JPL Small Body Database Browser",
+        "url": "https://catalog.data.gov/dataset/jpl-small-body-database-browser",
+        "organizacion": "National Aeronautics and Space Administration",
+        "actualizado": "March 31, 2025",
+        "formatos": "HTML"
+      },
+      "raw": {
+        "titulo": "JPL Small Body Database Browser",
+        "url": "https://catalog.data.gov/dataset/jpl-small-body-database-browser",
+        "organizacion": "National Aeronautics and Space Administration",
+        "actualizado": "Dataset Last Updated: March 31, 2025",
+        "formatos": "HTML"
+      },
+      "lineage": {
+        "record_id": "0ba8e4fd0ab80fa5",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 11,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "NPS Visitor Use Statistics Data Package, 2024",
+        "url": "https://catalog.data.gov/dataset/nps-visitor-use-statistics-data-package-2024",
+        "organizacion": "Department of the Interior",
+        "actualizado": "January 15, 2026 at 12:00 AM",
+        "formatos": "XML CSV CSV"
+      },
+      "raw": {
+        "titulo": "NPS Visitor Use Statistics Data Package, 2024",
+        "url": "https://catalog.data.gov/dataset/nps-visitor-use-statistics-data-package-2024",
+        "organizacion": "Department of the Interior",
+        "actualizado": "Dataset Last Updated: January 15, 2026 at 12:00 AM",
+        "formatos": "XML CSV CSV"
+      },
+      "lineage": {
+        "record_id": "9574f8476beae935",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 12,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Motor Vehicle Collisions - Crashes",
+        "url": "https://catalog.data.gov/dataset/motor-vehicle-collisions-crashes",
+        "organizacion": "City of New York",
+        "actualizado": "November 17, 2026",
+        "formatos": "JSON XML CSV KML KML GEOJSON"
+      },
+      "raw": {
+        "titulo": "Motor Vehicle Collisions - Crashes",
+        "url": "https://catalog.data.gov/dataset/motor-vehicle-collisions-crashes",
+        "organizacion": "City of New York",
+        "actualizado": "Dataset Last Updated: November 17, 2026",
+        "formatos": "JSON XML CSV KML KML GEOJSON"
+      },
+      "lineage": {
+        "record_id": "0af539ff5f76afd0",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 13,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Company Census File",
+        "url": "https://catalog.data.gov/dataset/company-census-file",
+        "organizacion": "Department of Transportation",
+        "actualizado": "November 20, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "raw": {
+        "titulo": "Company Census File",
+        "url": "https://catalog.data.gov/dataset/company-census-file",
+        "organizacion": "Department of Transportation",
+        "actualizado": "Dataset Last Updated: November 20, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "lineage": {
+        "record_id": "f8d9d8de5762359d",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 14,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Lottery Mega Millions Winning Numbers: Beginning 2002",
+        "url": "https://catalog.data.gov/dataset/lottery-mega-millions-winning-numbers-beginning-2002",
+        "organizacion": "State of New York",
+        "actualizado": "November 18, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "raw": {
+        "titulo": "Lottery Mega Millions Winning Numbers: Beginning 2002",
+        "url": "https://catalog.data.gov/dataset/lottery-mega-millions-winning-numbers-beginning-2002",
+        "organizacion": "State of New York",
+        "actualizado": "Dataset Last Updated: November 18, 2026",
+        "formatos": "JSON XML CSV"
+      },
+      "lineage": {
+        "record_id": "fbf3f4f73f959405",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 15,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "NPS Visitor Use Statistics Data Package, 2025",
+        "url": "https://catalog.data.gov/dataset/nps-visitor-use-statistics-data-package-2025",
+        "organizacion": "Department of the Interior",
+        "actualizado": "March 26, 2026 at 12:00 AM",
+        "formatos": "XML CSV CSV"
+      },
+      "raw": {
+        "titulo": "NPS Visitor Use Statistics Data Package, 2025",
+        "url": "https://catalog.data.gov/dataset/nps-visitor-use-statistics-data-package-2025",
+        "organizacion": "Department of the Interior",
+        "actualizado": "Dataset Last Updated: March 26, 2026 at 12:00 AM",
+        "formatos": "XML CSV CSV"
+      },
+      "lineage": {
+        "record_id": "8bc23b1f08e72231",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 16,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Harmonized Tariff Schedule of the United States (2026)",
+        "url": "https://catalog.data.gov/dataset/harmonized-tariff-schedule-of-the-united-states-2025",
+        "organizacion": "US International Trade Commission",
+        "actualizado": null,
+        "formatos": "CSV XLSX JSON CSV XLSX JSON +66 more"
+      },
+      "raw": {
+        "titulo": "Harmonized Tariff Schedule of the United States (2026)",
+        "url": "https://catalog.data.gov/dataset/harmonized-tariff-schedule-of-the-united-states-2025",
+        "organizacion": "US International Trade Commission",
+        "actualizado": null,
+        "formatos": "CSV XLSX JSON CSV XLSX JSON +66 more"
+      },
+      "lineage": {
+        "record_id": "130cf8560f511271",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 17,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "advertencia",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "U.S. Chronic Disease Indicators",
+        "url": "https://catalog.data.gov/dataset/u-s-chronic-disease-indicators",
+        "organizacion": "U.S. Department of Health & Human Services",
+        "actualizado": "September 22, 2026",
+        "formatos": "CSV KML KML GEOJSON JSON XML"
+      },
+      "raw": {
+        "titulo": "U.S. Chronic Disease Indicators",
+        "url": "https://catalog.data.gov/dataset/u-s-chronic-disease-indicators",
+        "organizacion": "U.S. Department of Health & Human Services",
+        "actualizado": "Dataset Last Updated: September 22, 2026",
+        "formatos": "CSV KML KML GEOJSON JSON XML"
+      },
+      "lineage": {
+        "record_id": "06b1cd1a7160e736",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 18,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    },
+    {
+      "data": {
+        "titulo": "Crimes - 2001 to Present",
+        "url": "https://catalog.data.gov/dataset/crimes-2001-to-present",
+        "organizacion": "City of Chicago",
+        "actualizado": "November 18, 2026",
+        "formatos": "JSON XML CSV KML KML GEOJSON"
+      },
+      "raw": {
+        "titulo": "Crimes - 2001 to Present",
+        "url": "https://catalog.data.gov/dataset/crimes-2001-to-present",
+        "organizacion": "City of Chicago",
+        "actualizado": "Dataset Last Updated: November 18, 2026",
+        "formatos": "JSON XML CSV KML KML GEOJSON"
+      },
+      "lineage": {
+        "record_id": "fecc7577ff7f6726",
+        "run_id": "20261121T203842Z-f28df9",
+        "position": 19,
+        "source_url": "https://catalog.data.gov/",
+        "retrieved_at": "2026-11-21T20:38:56Z",
+        "method": "browser",
+        "page_index": 0,
+        "field_sources": {
+          "titulo": "selector 'h2 a'",
+          "url": "selector 'h2 a' @href",
+          "organizacion": "selector '.usa-collection__meta-item a'",
+          "actualizado": "selector '.usa-collection__meta-item:nth-of-type(2)'",
+          "formatos": "selector 'ul.dataset-resources'"
+        },
+        "validation_status": "valido",
+        "validation_errors": [],
+        "transformations": {
+          "titulo": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "url": [
+            "cast:url"
+          ],
+          "organizacion": [
+            "collapse_whitespace",
+            "cast:string"
+          ],
+          "actualizado": [
+            "collapse_whitespace",
+            "pattern",
+            "cast:string"
+          ],
+          "formatos": [
+            "collapse_whitespace",
+            "cast:string"
+          ]
+        },
+        "config_sha256": "f69cf036aec62bfd19dc5258c9f729767dad4e67954c7523ef3a46852bf6bb01",
+        "tool_version": "0.1.0"
+      }
+    }
+  ]
+}

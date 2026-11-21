@@ -1,0 +1,34 @@
+# Sitio real 8 — https://www.dof.gob.mx/ (URL tal como la indicó el docente): el certificado TLS no
+# es válido para ese nombre. La herramienta se detiene sin desactivar la verificación y sugiere la
+# dirección oficial con certificado válido (https://dof.gob.mx, ver r05).
+version: 1
+project:
+  name: r08-dof-www-tls
+  description: Diagnóstico de www.dof.gob.mx.
+target_url: "https://www.dof.gob.mx/"
+user_agent: "WebExtractorAcademico/0.1 (+proyecto academico TAD; uso de datos abiertos)"
+
+authorization:
+  authorized_by: "Diario Oficial de la Federación — publicación pública; URL de ejemplo del docente"
+  purpose: "Reto final académico: identificar restricciones de conexión segura"
+  environment: production
+
+scope:
+  allowed_domains: ["www.dof.gob.mx"]
+  allowed_path_prefixes: ["/"]
+  allowed_schemes: ["https"]
+
+limits:
+  delay_seconds: 3
+  timeout_seconds: 20
+
+diagnosis:
+  max_requests: 3
+
+extraction:
+  method: auto
+  fields:
+    - {name: texto, normalize: [collapse_whitespace]}
+
+output:
+  directory: outputs

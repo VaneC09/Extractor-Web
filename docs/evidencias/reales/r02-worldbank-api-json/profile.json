@@ -1,0 +1,61 @@
+{
+  "profile_name": "r02-worldbank-api-json",
+  "saved_at": "2026-11-21T20:32:29Z",
+  "run_id": "20261121T203225Z-f50691",
+  "target_url": "https://api.worldbank.org/v2/country/MX/indicator/SP.POP.TOTL?format=json&per_page=20",
+  "method": "api",
+  "record_selector": null,
+  "table_selector": null,
+  "records_path": "1",
+  "api_documentation_url": "https://datahelpdesk.worldbank.org/knowledgebase/articles/898581-api-basic-call-structures",
+  "record_count": 40,
+  "max_records": 40,
+  "fields": {
+    "pais": {
+      "selector": null,
+      "path": "country.value",
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "codigo_pais": {
+      "selector": null,
+      "path": "countryiso3code",
+      "column": null,
+      "attribute": "text",
+      "type": "string",
+      "fill_rate": 1.0
+    },
+    "anio": {
+      "selector": null,
+      "path": "date",
+      "column": null,
+      "attribute": "text",
+      "type": "integer",
+      "fill_rate": 1.0
+    },
+    "poblacion": {
+      "selector": null,
+      "path": "value",
+      "column": null,
+      "attribute": "text",
+      "type": "float",
+      "fill_rate": 1.0
+    }
+  },
+  "structure": [
+    "country",
+    "country.id",
+    "country.value",
+    "countryiso3code",
+    "date",
+    "decimal",
+    "indicator",
+    "indicator.id",
+    "indicator.value",
+    "obs_status",
+    "unit",
+    "value"
+  ]
+}

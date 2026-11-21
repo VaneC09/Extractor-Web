@@ -1,0 +1,5 @@
+{"action": "browser_start", "target": "", "detail": "Chrome headless", "outcome": "ok", "timestamp": "2026-11-21T20:38:44Z"}
+{"action": "http_get", "target": "https://catalog.data.gov/robots.txt", "detail": "robots.txt -> 200", "outcome": "ok", "timestamp": "2026-11-21T20:38:45Z"}
+{"action": "browser_get", "target": "https://catalog.data.gov/", "detail": "página 1", "outcome": "ok", "timestamp": "2026-11-21T20:38:56Z"}
+{"action": "parse", "target": "https://catalog.data.gov/", "detail": "20 registros en página 1", "outcome": "ok", "timestamp": "2026-11-21T20:38:56Z"}
+{"action": "browser_close", "target": "", "detail": "navegador cerrado", "outcome": "ok", "timestamp": "2026-11-21T20:38:58Z"}
