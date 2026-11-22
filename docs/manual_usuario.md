@@ -42,27 +42,30 @@ indica `authorized_by`, y pruebas con archivos locales (`preview --from-file`).
 Escriba la URL y pulse **Comenzar**. Si el sitio ya se analizó antes, se recupera su última
 configuración (campos, método y límites) y solo hay que volver a confirmar la autorización.
 
-1. **Sitio y autorización**: complete los datos del permiso; a la derecha se listan en vivo los
-   requisitos que faltan. El dominio y la ruta permitidos se ajustan solos a la URL (una variante
-   `www.` es otro dominio: añádala en «Opciones avanzadas» del paso 3 solo si está autorizada).
-2. **Diagnóstico y campos**: en sitios reales pide confirmar la inspección. Muestra:
-   - el método recomendado, con su confianza y evidencia;
-   - la lista de lo que se detectó (JavaScript, API, paginación, «cargar más», interacción, tiempo…);
-   - las paradas, con el siguiente paso legítimo; si hay inicio de sesión, explica cómo configurar
-     una autenticación autorizada;
-   - la tabla de campos, que se llena con la sugerencia (los campos de una configuración recuperada
-     se conservan; el botón «Reemplazar por los campos sugeridos» los cambia);
-   - **Vista previa en vivo** (1 página) o con un archivo guardado (0 solicitudes).
-   Selectores, paginación, navegador, API y autenticación están en «Ajustes del método (avanzado)»;
-   la limpieza y validación por campo, en «Mostrar columnas avanzadas».
-3. **Extraer**: páginas, registros, pausa y formatos de salida; el resto de límites y el alcance
-   están en «Opciones avanzadas». Marque la confirmación y pulse **Iniciar extracción**. Se ven
-   contadores y acciones en vivo, y **Cancelar** detiene tras la acción en curso. Cada ejecución
-   exige confirmar de nuevo.
-4. **Resultados**: estado, calidad por campo, incidencias, cambios de estructura, descargas
-   (CSV, JSON, Excel, informe, log) e historial del proyecto.
+La página avanza de arriba hacia abajo; cada sección aparece cuando la anterior está lista.
 
-**Guardar configuración (YAML)** (barra lateral) la guarda para usarla con la CLI.
+1. **Autorización**: quién autoriza, el permiso o licencia (enlace o referencia), la finalidad y la
+   casilla «Confirmo que tengo autorización y que revisé los términos de uso del sitio». Debajo se
+   indica lo que falta. El dominio y la ruta permitidos se ajustan solos a la URL.
+2. **Diagnóstico del sitio**: **Diagnosticar sitio** hace pocas solicitudes y muestra:
+   - la estrategia recomendada, con su confianza y evidencia;
+   - las tecnologías y mecanismos detectados (JavaScript, API, paginación, «cargar más», interacción…);
+   - las barreras, con el siguiente paso legítimo. Un CAPTCHA o un bloqueo detienen el flujo; si el
+     sitio pide iniciar sesión, se puede configurar un acceso autorizado en el paso de configuración;
+   - el botón para descargar el informe del diagnóstico.
+3. **Datos a extraer**: la tabla se llena con los campos sugeridos (los de una configuración
+   recuperada se conservan; «Usar los campos sugeridos por el diagnóstico» los cambia). Desmarque
+   «Extraer» en los que no necesite, edite nombre, selector o tipo, y active «Mostrar reglas de
+   limpieza y validación» si quiere reglas por campo. Si los registros no son los correctos, cambie
+   el selector en el desplegable. **Vista previa** obtiene una página.
+4. **Configuración y ejecución**: estrategia (ya viene la recomendada), paginación, páginas,
+   registros, pausa y formatos. Con la estrategia Navegador aparecen «cargar más» y scroll; con API,
+   la confirmación de que está documentada. **Iniciar extracción** muestra el progreso, y
+   **Cancelar** detiene tras la acción en curso. Los topes de solicitudes, clics, scrolls y tiempo se
+   calculan a partir de las páginas y la pausa.
+5. **Resultados**: estado, calidad por campo, errores, incidencias, cambios de estructura, descargas
+   (CSV, Excel, JSON, informe final) y la carpeta con todos los archivos (datos originales y
+   procesados, log, configuración efectiva).
 
 Qué ocurre con un sitio que no es de los ejemplos (sin permiso, redirecciones, robots.txt,
 CAPTCHA, codificación): [sitios_no_incluidos.md](sitios_no_incluidos.md).
@@ -153,7 +156,7 @@ Reglas del token:
 - Si el servidor responde 401, la ejecución se detiene con `auth_required` y no se reintenta.
 - `Cookie`, `Host` y `User-Agent` no se admiten como encabezado.
 
-En la interfaz gráfica, la sección «Autenticación autorizada» de la pestaña «Campos y reglas»
+En la interfaz gráfica, el desplegable «Acceso autorizado» de la sección de configuración
 ofrece las mismas tres opciones: sin autenticación, formulario y token.
 
 ## 4. Interpretar el estado final

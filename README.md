@@ -64,22 +64,27 @@ las que se ejecutaron las pruebas documentadas.
 python -m web_extractor gui            # http://127.0.0.1:8611
 ```
 
-Recorre el mismo flujo que la CLI en cuatro pasos:
+Es una sola página guiada que sigue el flujo del reto. Cada sección aparece cuando la anterior está
+lista:
 
-1. **Sitio y autorización:** la URL y quién autoriza, para qué y con qué referencia. A la derecha
-   se lista en vivo lo que falta. El alcance (dominio y ruta) se ajusta solo a la URL.
-2. **Diagnóstico y campos:** **Ejecutar diagnóstico** muestra el método recomendado con su confianza,
-   la lista de lo que se detectó en el sitio y las paradas con el siguiente paso legítimo. Los campos
-   sugeridos se cargan solos en la tabla, y **Vista previa en vivo** muestra los primeros registros.
-3. **Extraer:** páginas, registros, pausa y formatos; confirmación, progreso en vivo y **Cancelar**.
-4. **Resultados:** calidad, incidencias, cambios de estructura, descargas (CSV, Excel, JSON) e historial.
+1. **URL del sitio** y **Comenzar**.
+2. **Autorización:** quién autoriza, permiso o licencia, finalidad y una casilla de confirmación.
+   Hasta completarla no se hace ninguna solicitud y se indica qué falta.
+3. **Diagnóstico del sitio:** tecnologías y mecanismos detectados, estrategia recomendada con su
+   confianza, barreras con el siguiente paso legítimo e informe descargable. Un CAPTCHA o un bloqueo
+   detienen el flujo. Si el sitio pide iniciar sesión, se ofrece el acceso autorizado con credenciales
+   en variables de entorno.
+4. **Datos a extraer:** tabla de campos sugeridos con una casilla «Extraer» por campo, reglas de
+   limpieza y validación opcionales y **Vista previa**.
+5. **Configuración y ejecución:** estrategia, paginación, páginas, registros, pausa y formatos;
+   **Iniciar extracción** con progreso y **Cancelar**. El resto de topes (solicitudes, clics, scrolls,
+   tiempo) se calcula a partir de las páginas y la pausa.
+6. **Resultados:** estado, calidad por campo, errores, incidencias y cambios de estructura, descargas
+   (CSV, Excel, JSON, informe final) y carpeta con los datos originales y procesados.
 
-Las opciones técnicas (selectores, paginación, autenticación autorizada, límites finos, alcance)
-quedan en secciones «avanzadas» cerradas. Sin autorización completa, los botones que harían
-solicitudes quedan deshabilitados y la interfaz explica qué falta. La interfaz no usa datos
-ficticios: la barra lateral solo ofrece las configuraciones de los sitios reales y abrir o guardar
-un YAML. Si se escribe la URL de un sitio ya analizado, recupera su última configuración y, al
-extraer, compara con el perfil anterior para detectar cambios.
+La interfaz no usa datos ficticios ni hay que modificarla para una URL nueva. Si se escribe la URL de
+un sitio ya analizado, recupera su última configuración y, al extraer, compara con el perfil anterior
+para detectar cambios.
 
 Para un sitio que **no** es uno de los ejemplos, escriba su URL en la pantalla inicial. Qué pasa en
 cada caso (sin permiso, redirección a `www`, robots.txt, CAPTCHA, codificación…) se explica en
@@ -192,7 +197,7 @@ Resultados, clasificación de protección y viabilidad legal por sitio, y el dat
 (SQLite y Excel): [docs/evidencias/reales/](docs/evidencias/reales/README.md).
 
 Una URL nueva no necesita cambios de código: en la GUI se escribe la URL, se completa la
-autorización y se siguen las pestañas (diagnóstico, sugerencia de campos, vista previa, extracción).
+autorización y se siguen las secciones de la página (diagnóstico, datos a extraer, vista previa, extracción).
 
 ## Estado
 

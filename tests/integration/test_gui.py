@@ -65,30 +65,40 @@ def _button(at, label):
     return next(b for b in at.button if b.label == label)
 
 
+def _labels(at):
+    return [b.label for b in at.button]
+
+
+def _authorize(at, evidence=False):
+    at.text_input(key="w:authorization.authorized_by").input("Equipo docente")
+    at.text_input(key="w:authorization.purpose").input("Validar el extractor")
+    if evidence:
+        at.text_input(key="w:authorization.evidence_reference").input("https://datos.example.org/licencia")
+    at.checkbox(key="w:authorization.confirmed").check().run()
+
+
 def test_welcome_screen_renders():
     at = _app().run()
     assert not at.exception
-    assert any("¿De qué sitio quiere obtener datos?" in m.value for m in at.markdown)
+    assert any("¿Qué sitio quiere analizar?" in m.value for m in at.markdown)
+    assert not at.sidebar.selectbox  # sin barra lateral para el usuario
     assert not any("ficticio" in c.value or "pruebas local" in c.value for c in at.caption)
 
 
-def test_unknown_real_url_stays_locked(monkeypatch):
+def test_unknown_real_url_stays_locked_until_authorized():
     at = _app().run()
     at.text_input(key="start_url").input("datos.example.org/catalogo")
     _button(at, "Comenzar").click().run()
     assert not at.exception
     assert at.session_state["w:target_url"] == "https://datos.example.org/catalogo"
-    assert _button(at, "Ejecutar diagnóstico").disabled
-    assert _button(at, "Vista previa en vivo").disabled
-    assert not any(b.label == "Iniciar extracción" for b in at.button)
-    texts = " ".join(w.value for w in at.warning)
-    assert "authorized_by" in texts and "bloqueada" in texts
+    assert "Diagnosticar sitio" not in _labels(at) and "Iniciar extracción" not in _labels(at)
+    assert any("quién autoriza" in c.value for c in at.caption)
 
     at.text_input(key="w:authorization.authorized_by").input("Responsable de datos").run()
-    assert _button(at, "Ejecutar diagnóstico").disabled  # falta el consentimiento para esta inspección
-    at.checkbox(key="diag_consent").check().run()
-    assert not _button(at, "Ejecutar diagnóstico").disabled
-    assert _button(at, "Vista previa en vivo").disabled  # extraer sigue bloqueado
+    assert "Diagnosticar sitio" not in _labels(at)  # faltan finalidad, permiso y confirmación
+    _authorize(at, evidence=True)
+    assert "Diagnosticar sitio" in _labels(at)
+    assert at.session_state["w:authorization.confirmed"] is True
 
 
 def _wait_job(at):
@@ -105,23 +115,23 @@ def test_unseen_site_flow_uses_suggested_rules_and_pagination(server):
     at = _app().run()
     at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
     _button(at, "Comenzar").click().run()
-    _button(at, "Ejecutar diagnóstico").click().run()
+    _authorize(at)
+    _button(at, "Diagnosticar sitio").click().run()
     assert not at.exception
     assert at.session_state["w:extraction.method"] == "static_html"  # la sugerencia se aplica sola
     assert at.session_state["w:extraction.pagination.mode"] == "url_template"
     assert at.session_state["w:extraction.record_selector"] == "div.evento"
+    assert any("Tecnologías y mecanismos detectados" in m.value for m in at.markdown)
 
-    at.text_input(key="w:authorization.authorized_by").input("Equipo docente")
-    at.text_area(key="w:authorization.purpose").input("Validar un sitio no incluido")
-    at.checkbox(key="w:authorization.terms_reviewed").check()
-    at.checkbox(key="w:authorization.confirmed").check().run()
-    at.checkbox(key="run_confirm").check().run()
+    _button(at, "Vista previa").click().run()
+    assert at.session_state["preview"].records
     _button(at, "Iniciar extracción").click().run()
     assert not at.exception
     job = _wait_job(at)
     assert job.result.status == "completado_con_limites" and job.result.quality.exported == 7
+    assert any("Resultados" in m.value for m in at.markdown)
 
-    _button(at, "Empezar de nuevo").click().run()
+    _button(at, "Analizar otra URL").click().run()
     at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
     _button(at, "Comenzar").click().run()
     assert not at.exception
@@ -129,18 +139,30 @@ def test_unseen_site_flow_uses_suggested_rules_and_pagination(server):
     assert at.session_state["w:extraction.record_selector"] == "div.evento"
     assert at.session_state["w:authorization.confirmed"] is False
     kept = at.session_state["fields_rows"]
-    _button(at, "Ejecutar diagnóstico").click().run()
+    at.checkbox(key="w:authorization.confirmed").check().run()
+    _button(at, "Diagnosticar sitio").click().run()
     assert not at.exception
     assert at.session_state["fields_rows"] == kept  # el diagnóstico no pisa los campos recuperados
 
 
-def test_sidebar_offers_only_real_site_configurations():
+def test_unchecked_fields_are_not_extracted(server):
     at = _app().run()
-    options = at.selectbox(key="example_choice").options
-    assert options and all(o.startswith("r0") for o in options)
+    at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
+    _button(at, "Comenzar").click().run()
+    _authorize(at)
+    _button(at, "Diagnosticar sitio").click().run()
+    import pandas as pd
+
+    from web_extractor.gui import app as gui
+
+    rows = at.session_state["fields_rows"]
+    frame = pd.DataFrame([{"usar": i == 0, **r} for i, r in enumerate(rows)])
+    names = [f["name"] for f in gui.rows_to_fields([{k: v for k, v in r.items() if k != "usar"}
+                                                    for r in frame.to_dict(orient="records") if r["usar"]])]
+    assert names == [rows[0]["name"]]
 
 
-def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
+def test_full_flow_with_example(fixture_env, monkeypatch):
     monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
     at = _app().run()
     option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f01"))
@@ -148,23 +170,16 @@ def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
     _button(at, "Cargar").click().run()
     assert not at.exception and not at.error
 
-    _button(at, "Ejecutar diagnóstico").click().run()
+    _button(at, "Diagnosticar sitio").click().run()
     assert not at.exception
     assert at.session_state["diagnosis"].best.method == "static_html"
 
-    _button(at, "Vista previa en vivo").click().run()
+    _button(at, "Vista previa").click().run()
     assert at.session_state["preview"].records
 
-    at.checkbox(key="run_confirm").check().run()
     _button(at, "Iniciar extracción").click().run()
     assert not at.exception
-    assert at.session_state["run_confirm"] is False  # cada ejecución exige una confirmación nueva
-    job = at.session_state["job"]
-    for _ in range(200):
-        if not job.running:
-            break
-        time.sleep(0.1)
-    at.run()
+    job = _wait_job(at)
     assert not at.exception
     assert job.result.status == "completado" and job.result.quality.exported > 0
     assert any("completado" in s.value for s in at.success)
@@ -179,11 +194,24 @@ def test_token_example_round_trips_and_runs(fixture_env, monkeypatch):
     assert not at.exception and not at.error
     assert at.session_state["w:auth.type"] == "header"
     assert at.session_state["w:auth.token_env"] == "WE_FIXTURE_API_TOKEN"
-    assert any("WE_FIXTURE_API_TOKEN" in c.value and "definida" in c.value for c in at.caption)
 
-    at.checkbox(key="run_confirm").check().run()
+    _button(at, "Diagnosticar sitio").click().run()
+    assert not at.exception
+    assert any("WE_FIXTURE_API_TOKEN" in c.value and "definida" in c.value for c in at.caption)
     _button(at, "Iniciar extracción").click().run()
     job = _wait_job(at)
     assert not at.exception
     assert job.result.status == "completado" and job.result.quality.exported == 6
-    assert any(job.result.config_sha256 in c.value for c in at.caption)
+    assert any(job.result.run_id in c.value for c in at.caption)
+
+
+def test_captcha_stops_the_flow_with_next_step(fixture_env, monkeypatch):
+    monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
+    at = _app().run()
+    option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f09"))
+    at.selectbox(key="example_choice").select(option)
+    _button(at, "Cargar").click().run()
+    _button(at, "Diagnosticar sitio").click().run()
+    assert not at.exception
+    assert any("Barrera detectada: captcha" in e.value and "Siguiente paso legítimo" in e.value for e in at.error)
+    assert "Iniciar extracción" not in _labels(at) and "Vista previa" not in _labels(at)

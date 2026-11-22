@@ -74,7 +74,7 @@ Este recorrido sacó a la luz tres heurísticas débiles, ya corregidas:
 - **Ejecutado (en esta máquina):**
   - `tests/integration/test_sitio_no_incluido.py`: 14 pruebas. Usan el sitio local no visto y
     una sesión HTTP simulada con dominios reservados `example.org`, sin red.
-  - `tests/integration/test_gui.py`: 7 pruebas.
+  - `tests/integration/test_gui.py`: 10 pruebas.
   - Casos T17 y T18 de la matriz.
 - **No ejecutado:** ninguna prueba contra sitios públicos reales. Falta un sitio con autorización
   documentada. Las respuestas «reales» de la tabla son simulaciones de patrones conocidos y no

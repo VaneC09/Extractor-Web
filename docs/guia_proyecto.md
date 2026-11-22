@@ -71,19 +71,20 @@ python -m web_extractor gui
 
 Se abre el navegador en http://127.0.0.1:8611. Para una URL nueva:
 
-1. Escriba la URL en la pantalla inicial (por ejemplo `https://www.datos.gob.mx/dataset/`).
-2. En **1 · Sitio y autorización**, llene quién autoriza, la finalidad y la referencia del permiso
-   (por ejemplo la página de licencia o el `robots.txt`). Marque que revisó los términos y la
-   confirmación. A la derecha verá lo que falta.
-3. En **2 · Diagnóstico y campos**, marque el permiso de inspección y pulse **Ejecutar diagnóstico**.
-   Verá el método recomendado, la confianza, lo que se detectó en el sitio y los campos sugeridos
-   ya cargados en la tabla. Ajuste la tabla si hace falta y pulse **Vista previa en vivo**.
-4. En **3 · Extraer**, revise páginas, registros, pausa y formatos; marque la confirmación y pulse
-   **Iniciar extracción**. Puede cancelar en cualquier momento.
-5. En **4 · Resultados**, revise la calidad y las incidencias, y descargue CSV, JSON, Excel o el informe.
+1. Escriba la URL en la pantalla inicial (por ejemplo `https://www.datos.gob.mx/dataset/`) y pulse
+   **Comenzar**.
+2. En **Autorización**, llene quién autoriza, el permiso o licencia (por ejemplo la página de licencia)
+   y la finalidad, y marque la confirmación. Debajo verá lo que falta.
+3. En **Diagnóstico del sitio**, pulse **Diagnosticar sitio**. Verá la estrategia recomendada, la
+   confianza, las tecnologías y mecanismos detectados y las barreras con su siguiente paso.
+4. En **Datos a extraer**, los campos sugeridos ya están en la tabla. Desmarque «Extraer» en los que
+   no necesite, ajuste lo que haga falta y pulse **Vista previa**.
+5. En **Configuración y ejecución**, revise estrategia, paginación, páginas, registros, pausa y
+   formatos, y pulse **Iniciar extracción**. Puede cancelar en cualquier momento.
+6. En **Resultados**, revise la calidad y los errores, y descargue CSV, Excel, JSON o el informe final.
 
-Las opciones técnicas están en secciones «avanzadas» cerradas. Si escribe la URL de un sitio que ya
-analizó, la interfaz recupera su última configuración.
+Cada sección aparece cuando la anterior está lista. Si escribe la URL de un sitio que ya analizó, la
+interfaz recupera su última configuración.
 
 ### 2.5 Usar la línea de comandos (CLI)
 
@@ -139,7 +140,7 @@ Además, `outputs\web_extractor.sqlite` acumula todas las ejecuciones.
 ### 2.7 Ejecutar las pruebas
 
 ```powershell
-python -m pytest                    # 208 pruebas unitarias y de integración
+python -m pytest                    # 209 pruebas unitarias y de integración
 python -m web_extractor matrix      # 20 escenarios con el sitio de pruebas local
 ```
 
@@ -294,8 +295,9 @@ Todos implementan la misma interfaz (`iter_documents()` y `close()`), por eso el
 
 ### 4.10 Interfaz gráfica: `web_extractor/gui/`
 
-- **`app.py`**: interfaz Streamlit con 4 pasos (`step_site`, `step_diagnosis`, `step_run`,
-  `tab_results`). No tiene lógica propia de extracción: arma la misma configuración y llama al mismo
+- **`app.py`**: interfaz Streamlit de una sola página guiada (`step_authorization`, `step_diagnosis`,
+  `step_fields`, `step_config`, `step_results`). `derive_limits` calcula los topes de solicitudes,
+  clics, scrolls y tiempo a partir de páginas y pausa. No tiene lógica propia de extracción: arma la misma configuración y llama al mismo
   `ExtractionEngine`. `cb_diagnose` diagnostica y carga los campos sugeridos; `previous_config`
   recupera la configuración de un sitio ya analizado (perfil reutilizable). Los botones que harían
   solicitudes se desactivan si falta la autorización.
@@ -319,7 +321,7 @@ Todos implementan la misma interfaz (`iter_documents()` y `close()`), por eso el
 |---|---|
 | 1. Diagnóstico de la fuente | `core/engine.py` (`diagnose`), `inspectors/*`, `reports/diagnosis_report.py` |
 | 2. Recomendación del método | `inspectors/classifier.py` (puntuación, confianza y requisitos) |
-| 3. Selección de campos | `selection/suggest.py`, `selection/field_extractor.py`, pestaña 4 de la GUI |
+| 3. Selección de campos | `selection/suggest.py`, `selection/field_extractor.py`, sección «Datos a extraer» de la GUI |
 | 4. Extracción | `extractors/*` (HTML estático, Selenium, archivo, API) con `core/limits.py` |
 | 5. Limpieza y validación | `transforms/*` |
 | 6. Almacenamiento y exportación | `storage/exporters.py` (CSV, JSON, Excel, SQLite) |
@@ -369,7 +371,7 @@ probados; se demuestran con el sitio de pruebas local.
 | Al menos 5 sitios | 5 portales reales: datos.gob.mx, Banco Mundial, data.gov, DOF e INEGI (`examples/reales/`) |
 | Al menos 4 mecanismos | HTML estático, Selenium (JavaScript), API REST, archivo XML |
 | Motor reutilizable, sin modificar para URLs nuevas | Un solo `ExtractionEngine`; la GUI acepta cualquier URL |
-| Interfaz intuitiva | GUI de 4 pasos, sin datos ficticios, con lo técnico en secciones avanzadas |
+| Interfaz intuitiva | Una página guiada que sigue el flujo del reto, sin datos ficticios ni cambios para URL nuevas |
 | Sin datos ficticios en la evaluación | Corridas reales en `docs/evidencias/reales/` |
 | Evidencia de diagnóstico y extracción | `docs/evidencias/reales/<sitio>/diagnostico.md`, `report.md`, datos |
 | Informe de restricciones por sitio | `docs/evidencias/reales/README.md` (protección y viabilidad legal) |
@@ -378,7 +380,7 @@ probados; se demuestran con el sitio de pruebas local.
 | Dataset SQLite, CSV y Excel | `docs/evidencias/reales/dataset_reales.sqlite` y `.xlsx`; CSV por sitio |
 | Informe técnico | `docs/informe_tecnico.md` |
 | Video de 3 a 5 minutos | Guion en `docs/guion_demo.md` (la grabación la hace el equipo) |
-| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (208 + matriz de 20) |
+| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (209 + matriz de 20) |
 | Plan en 5 fases | `docs/plan_fases.md` |
 
 ## 6. Límites éticos y legales que aplica el sistema
