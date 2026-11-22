@@ -68,7 +68,8 @@ def _button(at, label):
 def test_welcome_screen_renders():
     at = _app().run()
     assert not at.exception
-    assert any("Empezar con una URL" in m.value for m in at.markdown)
+    assert any("¿De qué sitio quiere obtener datos?" in m.value for m in at.markdown)
+    assert not any("ficticio" in c.value or "pruebas local" in c.value for c in at.caption)
 
 
 def test_unknown_real_url_stays_locked(monkeypatch):
@@ -105,8 +106,8 @@ def test_unseen_site_flow_uses_suggested_rules_and_pagination(server):
     at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
     _button(at, "Comenzar").click().run()
     _button(at, "Ejecutar diagnóstico").click().run()
-    _button(at, "Aplicar sugerencia a «Campos y reglas»").click().run()
     assert not at.exception
+    assert at.session_state["w:extraction.method"] == "static_html"  # la sugerencia se aplica sola
     assert at.session_state["w:extraction.pagination.mode"] == "url_template"
     assert at.session_state["w:extraction.record_selector"] == "div.evento"
 
@@ -120,13 +121,31 @@ def test_unseen_site_flow_uses_suggested_rules_and_pagination(server):
     job = _wait_job(at)
     assert job.result.status == "completado_con_limites" and job.result.quality.exported == 7
 
+    _button(at, "Empezar de nuevo").click().run()
+    at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
+    _button(at, "Comenzar").click().run()
+    assert not at.exception
+    assert any("Sitio ya analizado" in i.value for i in at.info)
+    assert at.session_state["w:extraction.record_selector"] == "div.evento"
+    assert at.session_state["w:authorization.confirmed"] is False
+    kept = at.session_state["fields_rows"]
+    _button(at, "Ejecutar diagnóstico").click().run()
+    assert not at.exception
+    assert at.session_state["fields_rows"] == kept  # el diagnóstico no pisa los campos recuperados
+
+
+def test_sidebar_offers_only_real_site_configurations():
+    at = _app().run()
+    options = at.selectbox(key="example_choice").options
+    assert options and all(o.startswith("r0") for o in options)
+
 
 def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
-    monkeypatch.setenv("WE_GUI_FIXTURE_PORT", str(fixture_env.base_url.rsplit(":", 1)[1]))
+    monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
     at = _app().run()
     option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f01"))
     at.selectbox(key="example_choice").select(option)
-    _button(at, "Cargar ejemplo").click().run()
+    _button(at, "Cargar").click().run()
     assert not at.exception and not at.error
 
     _button(at, "Ejecutar diagnóstico").click().run()
@@ -152,11 +171,11 @@ def test_full_flow_with_example(fixture_env, monkeypatch, tmp_path):
 
 
 def test_token_example_round_trips_and_runs(fixture_env, monkeypatch):
-    monkeypatch.setenv("WE_GUI_FIXTURE_PORT", str(fixture_env.base_url.rsplit(":", 1)[1]))
+    monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
     at = _app().run()
     option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f13"))
     at.selectbox(key="example_choice").select(option)
-    _button(at, "Cargar ejemplo").click().run()
+    _button(at, "Cargar").click().run()
     assert not at.exception and not at.error
     assert at.session_state["w:auth.type"] == "header"
     assert at.session_state["w:auth.token_env"] == "WE_FIXTURE_API_TOKEN"

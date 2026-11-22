@@ -1,8 +1,9 @@
 """Interfaz gráfica local del extractor (Streamlit).
 
-Ejecutar con ``python -m web_extractor gui``. Recorre el mismo flujo que la CLI: proyecto y
-autorización → alcance y límites → diagnóstico → campos → vista previa → extracción → resultados.
-Todas las acciones que generan solicitudes pasan por las mismas puertas de autorización del motor.
+Ejecutar con ``python -m web_extractor gui``. Cuatro pasos: sitio y autorización → diagnóstico,
+campos y vista previa → extracción → resultados. Las opciones técnicas quedan en secciones
+«avanzadas». Todas las acciones que generan solicitudes pasan por las mismas puertas de
+autorización del motor.
 """
 
 from __future__ import annotations
@@ -10,7 +11,6 @@ from __future__ import annotations
 import copy
 import json
 import os
-import socket
 import sys
 from datetime import date
 from pathlib import Path
@@ -30,7 +30,6 @@ from web_extractor.config.templates import FIELD_COLUMNS, default_config_dict, f
 from web_extractor.core.authorization import missing_for_diagnosis, missing_for_extraction
 from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError, WebExtractorError
-from web_extractor.devtools.fixture_server import DEFAULT_API_TOKEN, DEFAULT_PASSWORD, DEFAULT_USER, FixtureServer
 from web_extractor.gui.jobs import ExtractionJob
 from web_extractor.reports.diagnosis_report import diagnosis_markdown
 from web_extractor.reports.run_report import STATUS_TEXT
@@ -39,17 +38,15 @@ from web_extractor.transforms.casting import SUPPORTED_TYPES
 from web_extractor.transforms.normalizers import NORMALIZERS
 
 ROOT = Path(__file__).resolve().parents[2]
-EXAMPLES = ROOT / "examples"
-FIXTURE_PORT = int(os.environ.get("WE_GUI_FIXTURE_PORT", "8765"))
+EXAMPLES = Path(os.environ.get("WE_GUI_EXAMPLES_DIR") or ROOT / "examples" / "reales")
 
 METHODS = {
     "auto": "Automático (solo diagnóstico)",
     "static_html": "HTML estático (Requests + BeautifulSoup)",
     "browser": "Navegador (Selenium)",
-    "structured_file": "Archivo CSV/JSON descargable",
+    "structured_file": "Archivo CSV/JSON/XML descargable",
     "api": "API pública documentada",
 }
-ENVIRONMENTS = {"fixture": "Fixture local controlado", "test": "Entorno de prueba", "production": "Sitio real"}
 STATUS_STYLE = {
     "completado": "success", "completado_con_limites": "info", "parcial_barrera": "warning",
     "detenido_barrera": "error", "detenido_politica": "error", "cancelado": "warning", "fallido": "error",
@@ -195,26 +192,6 @@ def exportable_yaml(data: dict) -> str:
     return "# Generado por la interfaz gráfica de Proyecto final_TAD\n" + yaml.safe_dump(clean, allow_unicode=True, sort_keys=False)
 
 
-# ------------------------------------------------------------------ servidor de fixtures
-def _port_open(port: int) -> bool:
-    with socket.socket() as sock:
-        sock.settimeout(0.3)
-        return sock.connect_ex(("127.0.0.1", port)) == 0
-
-
-@st.cache_resource(show_spinner=False)
-def fixture_server() -> tuple[FixtureServer | None, str]:
-    os.environ.setdefault("WE_FIXTURE_USER", DEFAULT_USER)
-    os.environ.setdefault("WE_FIXTURE_PASSWORD", DEFAULT_PASSWORD)
-    os.environ.setdefault("WE_FIXTURE_API_TOKEN", DEFAULT_API_TOKEN)
-    base = f"http://127.0.0.1:{FIXTURE_PORT}"
-    os.environ["FIXTURE_BASE_URL"] = base
-    if _port_open(FIXTURE_PORT):
-        return None, f"Usando el sitio de pruebas que ya se está ejecutando en {base}"
-    server = FixtureServer("127.0.0.1", FIXTURE_PORT).start()
-    return server, f"Sitio de pruebas iniciado en {base}"
-
-
 def example_catalog() -> dict[str, Path]:
     catalog = {}
     for path in sorted(EXAMPLES.glob("*.yaml")):
@@ -222,6 +199,28 @@ def example_catalog() -> dict[str, Path]:
         label = (raw.get("project") or {}).get("description") or path.stem
         catalog[f"{path.stem} — {label}"] = path
     return catalog
+
+
+def _same_page(a: str, b: str) -> bool:
+    x, y = urlsplit(a), urlsplit(b)
+    return (x.netloc.lower(), x.path.rstrip("/"), x.query) == (y.netloc.lower(), y.path.rstrip("/"), y.query)
+
+
+def previous_config(url: str) -> tuple[dict, str] | None:
+    """Configuración de la última ejecución sobre esta misma URL (perfil reutilizable), si existe."""
+    found = []
+    for path in (ROOT / "outputs").glob("*/*/config_efectiva.json"):
+        try:
+            data = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        if _same_page(data.get("target_url") or "", url):
+            found.append((path.parent.name, data))
+    if not found:
+        return None
+    run_id, data = max(found, key=lambda item: item[0])
+    data["authorization"]["confirmed"] = False
+    return data, run_id
 
 
 # ----------------------------------------------------------------------------- callbacks
@@ -232,18 +231,22 @@ def cb_new_from_url() -> None:
         return
     if "://" not in url:
         url = "https://" + url
-    load_into_state(default_config_dict(url))
+    known = previous_config(url)
+    load_into_state(known[0] if known else default_config_dict(url))
     st.session_state["started"] = True
-    st.session_state["flash"] = ("success", "Configuración inicial creada. Complete la autorización antes de "
-                                            "cualquier solicitud al sitio.")
+    if known:
+        st.session_state["flash"] = ("info", f"Sitio ya analizado: se recuperó la configuración de la ejecución "
+                                             f"{known[1]} (campos, método y límites). Vuelva a confirmar la autorización; "
+                                             "al extraer se compara con el perfil anterior para detectar cambios.")
+    else:
+        st.session_state["flash"] = ("success", "Configuración inicial creada. Complete la autorización antes de "
+                                                "cualquier solicitud al sitio.")
 
 
 def cb_load_example() -> None:
     choice = st.session_state.get("example_choice")
     if not choice:
         return
-    fixture_server()
-    st.session_state["fixtures_on"] = True
     path = example_catalog()[choice]
     raw = yaml.safe_load(path.read_text(encoding="utf-8"))
     try:
@@ -272,8 +275,14 @@ def cb_upload_config() -> None:
 
 
 def cb_scope_from_url() -> None:
-    url = st.session_state.get(wkey("target_url")) or ""
+    url = (st.session_state.get(wkey("target_url")) or "").strip()
+    if not url:
+        return
+    if "://" not in url:
+        url = "https://" + url
+        st.session_state[wkey("target_url")] = url
     fresh = default_config_dict(url)
+    st.session_state[wkey("project.name")] = fresh["project"]["name"]
     st.session_state[wkey("scope.allowed_domains")] = ", ".join(fresh["scope"]["allowed_domains"])
     st.session_state[wkey("scope.allowed_path_prefixes")] = ", ".join(fresh["scope"]["allowed_path_prefixes"])
     st.session_state[wkey("scope.allowed_schemes")] = fresh["scope"]["allowed_schemes"]
@@ -281,12 +290,11 @@ def cb_scope_from_url() -> None:
     st.session_state[wkey("authorization.environment")] = fresh["authorization"]["environment"]
     st.session_state[wkey("limits.delay_seconds")] = float(max(st.session_state.get(wkey("limits.delay_seconds"), 0) or 0,
                                                                fresh["limits"]["delay_seconds"]))
+    for key in ("diagnosis", "preview", "suggestion"):
+        st.session_state.pop(key, None)
 
 
-def cb_apply_suggestion() -> None:
-    suggestion = st.session_state.get("suggestion")
-    if not suggestion:
-        return
+def apply_suggestion(suggestion: dict) -> None:
     for key in ("record_selector", "table_selector", "records_path", "file_format"):
         st.session_state[wkey(f"extraction.{key}")] = suggestion.get(key) or (None if key == "file_format" else "")
     st.session_state[wkey("extraction.method")] = suggestion["method"]
@@ -296,7 +304,35 @@ def cb_apply_suggestion() -> None:
         st.session_state[wkey(f"extraction.pagination.{key}")] = pagination.get(key) or ""
     st.session_state["fields_rows"] = fields_to_rows(suggestion["fields"])
     st.session_state["fields_version"] = st.session_state.get("fields_version", 0) + 1
-    st.session_state["flash"] = ("success", "Reglas sugeridas aplicadas en «Campos y reglas». Revíselas antes de usarlas.")
+
+
+def cb_diagnose() -> None:
+    cfg, errors = validate(collect())
+    if cfg is None:
+        st.session_state["flash"] = ("error", "Corrija la configuración antes de diagnosticar.")
+        return
+    try:
+        diagnosis = ExtractionEngine(cfg).diagnose()
+    except (AuthorizationError, WebExtractorError) as exc:
+        st.session_state["flash"] = ("error", str(exc))
+        return
+    st.session_state.pop("preview", None)
+    st.session_state["diagnosis"] = diagnosis
+    suggestion = suggest_extraction(diagnosis) if not diagnosis.stopped else None
+    st.session_state["suggestion"] = suggestion
+    if suggestion and (st.session_state.get(wkey("extraction.method")) or "auto") == "auto":
+        apply_suggestion(suggestion)
+        st.session_state["flash"] = ("success", f"Diagnóstico listo: se propusieron {len(suggestion['fields'])} campos. "
+                                                "Revíselos abajo y pulse «Vista previa en vivo».")
+    elif suggestion:
+        st.session_state["flash"] = ("success", "Diagnóstico listo. Se conservaron los campos que ya tenía; si prefiere "
+                                                "los sugeridos, use «Reemplazar por los campos sugeridos».")
+
+
+def cb_apply_suggestion() -> None:
+    if st.session_state.get("suggestion"):
+        apply_suggestion(st.session_state["suggestion"])
+        st.session_state["flash"] = ("success", "Campos sugeridos aplicados. Revíselos antes de la vista previa.")
 
 
 def cb_use_method(method: str) -> None:
@@ -323,19 +359,17 @@ def render_sidebar(data: dict, cfg: ProjectConfig | None, errors: list[str]) -> 
         st.markdown("### Proyecto final_TAD")
         st.caption("Diagnóstico y extracción web responsable")
         st.divider()
-        st.markdown("**Cargar un escenario de prueba**")
-        st.selectbox("Ejemplo", list(example_catalog()), index=None, key="example_choice",
-                     placeholder="Elija un ejemplo…", label_visibility="collapsed")
-        st.button("Cargar ejemplo", on_click=cb_load_example, width="stretch")
-        st.file_uploader("…o subir una configuración YAML", type=["yaml", "yml", "json"], key="config_upload",
-                         on_change=cb_upload_config)
-        st.divider()
-        if st.toggle("Sitio de pruebas local", key="fixtures_on",
-                     help="Sirve los fixtures ficticios en el puerto 8765 para practicar sin sitios reales."):
-            st.caption(fixture_server()[1])
-        st.divider()
+        catalog = example_catalog()
+        if catalog:
+            st.markdown("**Sitios ya configurados** (opcional)")
+            st.selectbox("Ejemplo", list(catalog), index=None, key="example_choice",
+                         placeholder="Elija un sitio…", label_visibility="collapsed")
+            st.button("Cargar", on_click=cb_load_example, width="stretch")
+        st.file_uploader("…o abrir una configuración guardada (YAML)", type=["yaml", "yml", "json"],
+                         key="config_upload", on_change=cb_upload_config)
         if st.session_state.get("started"):
-            st.download_button("Descargar configuración YAML", exportable_yaml(data),
+            st.divider()
+            st.download_button("Guardar configuración (YAML)", exportable_yaml(data),
                                file_name=f"{data['project']['name'] or 'config'}.yaml", mime="text/yaml",
                                width="stretch", disabled=cfg is None,
                                help=None if cfg else "Corrija los errores de validación primero")
@@ -345,82 +379,80 @@ def render_sidebar(data: dict, cfg: ProjectConfig | None, errors: list[str]) -> 
 
 def render_welcome() -> None:
     st.title("Proyecto final_TAD")
-    st.markdown("Herramienta para **diagnosticar** cómo un sitio entrega su información y **extraer** datos "
-                "solo dentro de un alcance autorizado, con límites, calidad y trazabilidad.")
+    st.markdown("Diagnostica cómo un sitio entrega su información y **extrae** datos solo dentro de un alcance "
+                "autorizado, con límites, calidad y trazabilidad. Funciona con cualquier URL.")
     with st.container(border=True):
-        st.markdown("#### Empezar con una URL")
+        st.markdown("#### ¿De qué sitio quiere obtener datos?")
         cols = st.columns([4, 1], vertical_alignment="bottom")
-        cols[0].text_input("URL del sitio", key="start_url", placeholder="https://datos.ejemplo.org/catalogo")
+        cols[0].text_input("URL del sitio", key="start_url", placeholder="https://www.datos.gob.mx/dataset/")
         cols[1].button("Comenzar", type="primary", on_click=cb_new_from_url, width="stretch")
-        st.caption("Se crea una configuración conservadora: sin autorización confirmada, alcance limitado al "
-                   "dominio de la URL y método automático. No se hace ninguna solicitud hasta que usted lo pida.")
-    cols = st.columns(3)
-    for col, (title, text) in zip(cols, [
-        ("1. Autorizar", "Declare quién permite el acceso, para qué y con qué límites."),
-        ("2. Diagnosticar", "Pocas solicitudes para ver si el contenido es HTML, JavaScript, archivo o API."),
-        ("3. Extraer y revisar", "Vista previa, confirmación, extracción con límites y descarga de resultados."),
-    ]):
+        st.caption("No se hace ninguna solicitud al sitio hasta que usted complete la autorización y lo pida.")
+    cols = st.columns(4)
+    for col, (title, text) in zip(cols, STEPS):
         with col.container(border=True):
             st.markdown(f"**{title}**")
             st.caption(text)
-    st.info("¿Primera vez? Active **Sitio de pruebas local** en la barra lateral y cargue un ejemplo.", icon="💡")
+
+
+STEPS = [
+    ("1 · Sitio y autorización", "Quién permite el acceso y para qué."),
+    ("2 · Diagnóstico y campos", "Cómo entrega los datos el sitio, qué campos tomar y vista previa."),
+    ("3 · Extraer", "Extracción con límites; se puede cancelar."),
+    ("4 · Resultados", "Calidad, incidencias y descargas (CSV, Excel, JSON)."),
+]
 
 
 def status_header(data: dict, cfg: ProjectConfig | None, errors: list[str]) -> list[str]:
     missing = missing_for_extraction(cfg) if cfg else []
-    st.markdown(f"## {data['project']['name'] or 'Proyecto sin nombre'}")
+    st.markdown(f"## {urlsplit(data.get('target_url') or '').netloc or 'Proyecto'}")
     st.caption(data.get("target_url") or "")
-    env = data["authorization"]["environment"] or "production"
     chips = st.container(horizontal=True)
     with chips:
-        st.badge(ENVIRONMENTS.get(env, env), color="blue" if env == "fixture" else "violet")
         if errors:
             st.badge(f"Configuración: {len(errors)} error(es)", color="red", icon=":material/error:")
-        else:
-            st.badge("Configuración válida", color="green", icon=":material/check:")
         if cfg and not missing:
-            st.badge("Autorización completa", color="green", icon=":material/verified_user:")
+            st.badge("1 · Autorización completa", color="green", icon=":material/verified_user:")
         elif cfg:
-            st.badge(f"Autorización: faltan {len(missing)}", color="orange", icon=":material/lock:")
-        st.badge(METHODS.get(data["extraction"]["method"] or "auto", "auto"), color="gray")
-        if st.session_state.get("diagnosis"):
-            st.badge("Diagnóstico hecho", color="green")
+            st.badge(f"1 · Autorización: faltan {len(missing)}", color="orange", icon=":material/lock:")
+        diagnosis = st.session_state.get("diagnosis")
+        if diagnosis is not None:
+            st.badge("2 · Diagnóstico detenido" if diagnosis.stopped else "2 · Diagnóstico hecho",
+                     color="red" if diagnosis.stopped else "green")
+        if st.session_state.get("preview") is not None:
+            st.badge("2 · Vista previa hecha", color="green")
         result = current_result()
         if result:
-            st.badge(f"Última ejecución: {result.status}", color="green" if result.status.startswith("completado") else "orange")
+            st.badge(f"4 · Última ejecución: {result.status}",
+                     color="green" if result.status.startswith("completado") else "orange")
     flash = st.session_state.pop("flash", None)
     if flash:
         getattr(st, flash[0])(flash[1])
     return missing
 
 
-def tab_project(data: dict, cfg: ProjectConfig | None, errors: list[str], missing: list[str]) -> None:
+def step_site(data: dict, cfg: ProjectConfig | None, errors: list[str], missing: list[str]) -> None:
     left, right = st.columns([3, 2], gap="large")
     with left:
-        st.markdown("#### Sitio y proyecto")
-        st.text_input("URL objetivo", key=wkey("target_url"),
-                      help="Solo http(s). Cada solicitud, enlace y redirección se valida contra el alcance.")
-        st.button("Ajustar alcance a esta URL", on_click=cb_scope_from_url, type="secondary",
-                  help="Recalcula dominio, ruta, protocolo, entorno y pausa mínima a partir de la URL.")
-        c1, c2 = st.columns(2)
-        c1.text_input("Identificador del proyecto", key=wkey("project.name"), help="Minúsculas, números, - y _")
-        c2.selectbox("Entorno", list(ENVIRONMENTS), format_func=ENVIRONMENTS.get, key=wkey("authorization.environment"))
-        st.text_input("Descripción", key=wkey("project.description"))
-        st.text_input("User-Agent declarado", key=wkey("user_agent"),
-                      help="Identifíquese de forma honesta, idealmente con un contacto.")
-    with right:
+        st.markdown("#### Sitio")
+        st.text_input("URL", key=wkey("target_url"), on_change=cb_scope_from_url,
+                      help="Solo http(s). El alcance (dominio y ruta) se ajusta solo a esta URL.")
         st.markdown("#### Autorización")
         st.text_input("¿Quién autoriza?", key=wkey("authorization.authorized_by"),
-                      placeholder="Nombre, cargo y organización propietaria")
+                      placeholder="Propietario del sitio, o la licencia de datos abiertos que permite el uso")
         st.text_area("Finalidad del uso de los datos", key=wkey("authorization.purpose"), height=80)
         st.text_input("Referencia del permiso", key=wkey("authorization.evidence_reference"),
-                      placeholder="Correo, contrato o ticket")
-        st.date_input("Vigencia (opcional)", key=wkey("authorization.valid_until"), format="YYYY-MM-DD")
+                      placeholder="Enlace a la licencia o términos, correo, contrato…")
         st.checkbox("Revisé términos de uso, licencia y políticas del sitio", key=wkey("authorization.terms_reviewed"))
-        st.checkbox("El permiso incluye acceso con cuenta (autenticación)", key=wkey("authorization.allow_authentication"))
         st.checkbox("**Confirmo** que tengo autorización para este alcance y finalidad", key=wkey("authorization.confirmed"))
-    st.divider()
-    render_checklist(cfg, errors, missing)
+        with st.expander("Opciones avanzadas"):
+            st.text_input("Identificador del proyecto", key=wkey("project.name"), help="Minúsculas, números, - y _")
+            st.text_input("Descripción", key=wkey("project.description"))
+            st.text_input("User-Agent declarado", key=wkey("user_agent"),
+                          help="Identifíquese de forma honesta, idealmente con un contacto.")
+            st.date_input("Vigencia del permiso", key=wkey("authorization.valid_until"), format="YYYY-MM-DD")
+            st.checkbox("El permiso incluye acceso con cuenta (autenticación)", key=wkey("authorization.allow_authentication"))
+    with right:
+        render_checklist(cfg, errors, missing)
 
 
 def render_checklist(cfg: ProjectConfig | None, errors: list[str], missing: list[str]) -> None:
@@ -433,162 +465,179 @@ def render_checklist(cfg: ProjectConfig | None, errors: list[str], missing: list
     assert cfg is not None
     diag_missing = missing_for_diagnosis(cfg)
     if not missing:
-        st.success("Autorización declarada completa: puede previsualizar y extraer tras confirmar cada ejecución.",
-                   icon=":material/verified_user:")
+        st.success("Autorización completa. Siga con la pestaña **2 · Diagnóstico y campos**.", icon=":material/verified_user:")
         return
-    mode = "solo validación" if diag_missing else "solo diagnóstico pasivo y pruebas con archivos locales"
+    mode = "solo validación" if diag_missing else "puede diagnosticar, pero aún no extraer"
     with st.container(border=True):
-        st.markdown(f"**Modo actual: {mode}.** Para extraer falta:")
+        st.markdown(f"**Ahora: {mode}.** Para extraer falta:")
         for item in missing:
             st.markdown(f"- {item}")
 
 
-def tab_scope(data: dict, errors: list[str]) -> None:
-    c1, c2 = st.columns(2, gap="large")
-    with c1:
-        st.markdown("#### Alcance autorizado")
-        st.text_input("Dominios permitidos (separados por coma)", key=wkey("scope.allowed_domains"),
-                      help="Exactos; use *.dominio.org para incluir subdominios. 'www.' es un dominio distinto.")
-        st.text_input("Prefijos de ruta permitidos", key=wkey("scope.allowed_path_prefixes"), help="Cada uno empieza por /")
-        st.multiselect("Protocolos", ["https", "http"], key=wkey("scope.allowed_schemes"))
-        st.checkbox("Respetar robots.txt", key=wkey("scope.respect_robots_txt"),
-                    help="Recomendado siempre. Desactivarlo solo si el propietario lo indica por escrito.")
-        st.checkbox("Permitir red local (solo fixtures)", key=wkey("scope.allow_private_network"))
-        st.multiselect("Formatos de salida", ["csv", "json", "excel", "sqlite"], key=wkey("output.formats"))
-        if not st.session_state.get(wkey("scope.respect_robots_txt"), True):
-            st.warning("Ha desactivado robots.txt. Documente la autorización expresa del propietario.")
-    with c2:
-        st.markdown("#### Límites")
-        a, b = st.columns(2)
-        a.number_input("Páginas máx.", 1, 100, key=wkey("limits.max_pages"))
-        b.number_input("Registros máx.", 1, 10_000, key=wkey("limits.max_records"))
-        a.number_input("Solicitudes máx.", 1, 500, key=wkey("limits.max_requests"))
-        b.number_input("Tiempo máx. (s)", 1.0, 3600.0, key=wkey("limits.max_seconds"), step=10.0)
-        a.number_input("Pausa entre solicitudes (s)", 0.0, 60.0, key=wkey("limits.delay_seconds"), step=0.5,
-                       help="Mínimo 1 s para dominios remotos.")
-        b.number_input("Timeout por solicitud (s)", 1.0, 120.0, key=wkey("limits.timeout_seconds"))
-        a.number_input("Reintentos (solo fallos transitorios)", 0, 3, key=wkey("limits.max_retries"))
-        b.number_input("Solicitudes del diagnóstico", 1, 5, key=wkey("diagnosis.max_requests"))
-        a.number_input("Clics «cargar más» máx.", 0, 50, key=wkey("limits.max_clicks"))
-        b.number_input("Scrolls máx.", 0, 50, key=wkey("limits.max_scrolls"))
-        st.caption("Concurrencia fija en 1. CAPTCHA, 429, 403 o login inesperado detienen la ejecución sin reintentos.")
-    scope_errors = [e for e in errors if e.startswith(("scope", "limits", "target_url", "(raíz)", "diagnosis"))]
-    for message in scope_errors:
-        st.error(message)
-
-
-def tab_diagnosis(data: dict, cfg: ProjectConfig | None) -> None:
+def step_diagnosis(data: dict, cfg: ProjectConfig | None, errors: list[str]) -> None:
     if cfg is None:
-        st.info("Corrija la configuración para poder diagnosticar.", icon=":material/info:")
+        st.info("Corrija la configuración (paso 1) para poder diagnosticar.", icon=":material/info:")
         return
     blocked = missing_for_diagnosis(cfg)
     n = cfg.diagnosis.max_requests + (1 if st.session_state.get(wkey("diagnosis.render_with_browser")) else 0)
-    st.markdown(f"Inspección pasiva de **{urlsplit(cfg.target_url).netloc}**: hasta **{n} solicitudes** "
-                "(robots.txt, el documento y una redirección). No se ejecutan formularios ni se prueban rutas no enlazadas.")
-    st.checkbox("Comparar con render del navegador (+1 solicitud, requiere Chrome o Edge)", key=wkey("diagnosis.render_with_browser"))
+    st.markdown(f"Inspección de **{urlsplit(cfg.target_url).netloc}** con hasta **{n} solicitudes**. "
+                "Detecta si los datos vienen en HTML, con JavaScript, en un archivo o en una API, y si hay barreras.")
+    st.checkbox("Comparar también con el navegador (+1 solicitud, requiere Chrome o Edge)",
+                key=wkey("diagnosis.render_with_browser"))
     consent = True
     if cfg.authorization.environment != "fixture":
         consent = st.checkbox(f"Confirmo que tengo permiso para esta inspección de hasta {n} solicitudes", key="diag_consent")
     for item in blocked:
         st.warning(item)
-    if st.button("Ejecutar diagnóstico", type="primary", disabled=bool(blocked) or not consent):
-        with st.spinner("Inspeccionando con límites conservadores…"):
-            try:
-                diagnosis = ExtractionEngine(cfg).diagnose()
-            except (AuthorizationError, WebExtractorError) as exc:
-                st.error(str(exc))
-                return
-        st.session_state["diagnosis"] = diagnosis
-        st.session_state["suggestion"] = suggest_extraction(diagnosis) if not diagnosis.stopped else None
+    st.button("Ejecutar diagnóstico", type="primary", disabled=bool(blocked) or not consent, on_click=cb_diagnose)
     diagnosis = st.session_state.get("diagnosis")
-    if diagnosis is None:
-        return
+    if diagnosis is not None:
+        show_diagnosis(diagnosis)
     st.divider()
-    m = st.columns(4)
-    m[0].metric("Estado HTTP", diagnosis.status_code if diagnosis.status_code is not None else "—")
-    m[1].metric("Tipo", (diagnosis.content_type or "—").split(";")[0])
-    m[2].metric("Solicitudes usadas", diagnosis.requests_used)
-    m[3].metric("Indicios", len(diagnosis.findings))
+    show_fields(errors)
+    st.divider()
+    show_preview(cfg)
+
+
+AUTH_HINT = ("Si tiene una cuenta o un token **autorizados por el propietario**, configúrelos en «Ajustes del "
+             "método (avanzado)» → Autenticación autorizada, y marque en el paso 1 que el permiso incluye "
+             "autenticación. Las credenciales se leen de variables de entorno, nunca se escriben aquí.")
+
+
+def show_diagnosis(diagnosis) -> None:
     for incident in diagnosis.incidents:
         st.error(f"**Parada: {incident.kind}** — {incident.message}\n\n**Siguiente paso legítimo:** {incident.next_step}",
                  icon=":material/block:")
-    if diagnosis.recommendations:
-        st.markdown("#### Métodos sugeridos")
-        cols = st.columns(len(diagnosis.recommendations))
-        for col, rec in zip(cols, diagnosis.recommendations):
-            with col.container(border=True, height="stretch"):
-                st.markdown(f"**{METHODS.get(rec.method, rec.method)}**")
-                st.progress(rec.score, text=f"{rec.score:.2f}")
-                st.badge(f"Confianza {rec.confidence}", color=CONFIDENCE_COLOR[rec.confidence])
-                if not rec.executable:
-                    st.badge("No verificado / no ejecutar", color="red")
-                for reason in rec.reasons[:4]:
-                    st.caption(f"✓ {reason}")
-                for reason in rec.against[:3]:
-                    st.caption(f"✗ {reason}")
-                for req in rec.requirements:
-                    st.caption(f"• {req}")
-                if rec.executable:
-                    st.button("Usar este método", key=f"use_{rec.method}", on_click=cb_use_method, args=(rec.method,))
-    if st.session_state.get("suggestion"):
-        s = st.session_state["suggestion"]
+    if any(i.kind == "auth_required" for i in diagnosis.incidents) or any(f.code == "html.login_form" for f in diagnosis.findings):
+        st.info(AUTH_HINT, icon=":material/key:")
+    best = diagnosis.best
+    if best is not None and not diagnosis.stopped:
         with st.container(border=True):
-            st.markdown(f"**Reglas sugeridas** ({len(s['fields'])} campos, método {s['method']}). Son un borrador: "
-                        "revise selectores y tipos.")
-            st.button("Aplicar sugerencia a «Campos y reglas»", on_click=cb_apply_suggestion)
+            st.markdown(f"**Método recomendado: {METHODS.get(best.method, best.method)}**")
+            st.badge(f"Confianza {best.confidence} ({best.score:.2f})", color=CONFIDENCE_COLOR[best.confidence])
+            for reason in best.reasons[:3]:
+                st.caption(f"✓ {reason}")
+            for req in best.requirements:
+                st.caption(f"• {req}")
     if diagnosis.findings:
-        st.markdown("#### Indicios observados (heurísticos)")
-        st.dataframe(pd.DataFrame([{"Categoría": f.category, "Indicio": f.message, "Evidencia": f.evidence[:200]}
-                                   for f in diagnosis.findings]), hide_index=True, width="stretch")
-    with st.expander("Limitaciones del diagnóstico"):
+        st.markdown("**Qué se detectó en el sitio**")
+        for f in diagnosis.findings[:10]:
+            st.markdown(f"- **{f.category}:** {f.message}")
+    with st.expander("Ver detalle: otros métodos, evidencia y limitaciones"):
+        m = st.columns(4)
+        m[0].metric("Estado HTTP", diagnosis.status_code if diagnosis.status_code is not None else "—")
+        m[1].metric("Tipo", (diagnosis.content_type or "—").split(";")[0])
+        m[2].metric("Solicitudes usadas", diagnosis.requests_used)
+        m[3].metric("Indicios", len(diagnosis.findings))
+        if diagnosis.recommendations:
+            cols = st.columns(len(diagnosis.recommendations))
+            for col, rec in zip(cols, diagnosis.recommendations):
+                with col.container(border=True, height="stretch"):
+                    st.markdown(f"**{METHODS.get(rec.method, rec.method)}**")
+                    st.progress(rec.score, text=f"{rec.score:.2f}")
+                    st.badge(f"Confianza {rec.confidence}", color=CONFIDENCE_COLOR[rec.confidence])
+                    if not rec.executable:
+                        st.badge("No verificado / no ejecutar", color="red")
+                    for reason in rec.reasons[:4]:
+                        st.caption(f"✓ {reason}")
+                    for reason in rec.against[:3]:
+                        st.caption(f"✗ {reason}")
+                    for req in rec.requirements:
+                        st.caption(f"• {req}")
+                    if rec.executable:
+                        st.button("Usar este método", key=f"use_{rec.method}", on_click=cb_use_method, args=(rec.method,))
+        if diagnosis.findings:
+            st.dataframe(pd.DataFrame([{"Categoría": f.category, "Indicio": f.message, "Evidencia": f.evidence[:200]}
+                                       for f in diagnosis.findings]), hide_index=True, width="stretch")
         for item in diagnosis.limitations:
-            st.markdown(f"- {item}")
-    st.download_button("Descargar informe de diagnóstico (Markdown)", diagnosis_markdown(diagnosis),
-                       file_name="diagnostico.md", mime="text/markdown")
+            st.caption(f"• {item}")
+        st.download_button("Descargar informe de diagnóstico (Markdown)", diagnosis_markdown(diagnosis),
+                           file_name="diagnostico.md", mime="text/markdown")
 
 
-def tab_fields(data: dict, errors: list[str]) -> None:
+BASIC_FIELD_COLUMNS = ["name", "selector", "attribute", "column", "path", "type", "required"]
+
+
+def show_fields(errors: list[str]) -> None:
     method = st.session_state.get(wkey("extraction.method")) or "auto"
-    c1, c2 = st.columns([1, 2], gap="large")
-    with c1:
-        st.selectbox("Método de adquisición", list(METHODS), format_func=METHODS.get, key=wkey("extraction.method"))
-        if method in ("static_html", "browser", "auto"):
-            st.text_input("Selector de registro (CSS)", key=wkey("extraction.record_selector"),
-                          placeholder="article.producto", help="Un elemento por registro.")
-            st.text_input("…o selector de tabla", key=wkey("extraction.table_selector"), placeholder="table#datos",
-                          help="Con tabla, cada campo usa «column» (encabezado).")
-        if method in ("api", "structured_file", "auto"):
-            st.text_input("Ruta a la lista de registros (JSON)", key=wkey("extraction.records_path"), placeholder="data.items")
-        if method == "structured_file":
-            st.selectbox("Formato del archivo", [None, "csv", "json", "xml"], key=wkey("extraction.file_format"),
-                         format_func=lambda v: "—" if v is None else v.upper())
-        modes = {"static_html": ["none", "next_link", "url_template"], "browser": ["none", "next_link"],
-                 "api": ["none", "next_field", "page_param"]}.get(method, ["none"])
-        if st.session_state.get(wkey("extraction.pagination.mode")) not in modes:
-            st.session_state[wkey("extraction.pagination.mode")] = "none"
-        st.selectbox("Paginación", modes, key=wkey("extraction.pagination.mode"), format_func={
-            "none": "Sin paginación", "next_link": "Enlace «siguiente»", "url_template": "Plantilla de URL con {page}",
-            "next_field": "Campo «next» en la respuesta", "page_param": "Parámetro de página"}.get)
-        mode = st.session_state.get(wkey("extraction.pagination.mode"))
-        if mode == "next_link":
-            st.text_input("Selector del enlace siguiente", key=wkey("extraction.pagination.next_selector"), placeholder="a[rel=next]")
-        elif mode == "url_template":
-            st.text_input("Plantilla de URL", key=wkey("extraction.pagination.url_template"))
-        elif mode == "next_field":
-            st.text_input("Ruta del campo next", key=wkey("extraction.pagination.next_field"), placeholder="links.next")
-        elif mode == "page_param":
-            st.text_input("Parámetro", key=wkey("extraction.pagination.page_param"))
-        if method == "browser":
-            with st.expander("Opciones del navegador", expanded=True):
+    st.markdown("#### Campos a extraer")
+    st.caption("Tras el diagnóstico aparecen campos sugeridos. Puede renombrarlos, borrarlos o añadir filas.")
+    suggestion = st.session_state.get("suggestion")
+    if suggestion and fields_to_rows(suggestion["fields"]) != st.session_state.get("fields_rows"):
+        st.button(f"Reemplazar por los campos sugeridos ({len(suggestion['fields'])})", on_click=cb_apply_suggestion)
+    advanced = st.toggle("Mostrar columnas avanzadas (limpieza y validación)", key="fields_advanced")
+    frame = pd.DataFrame(st.session_state.get("fields_rows") or [], columns=FIELD_COLUMNS)
+    edited = st.data_editor(
+        frame, key=f"fields_editor_{st.session_state.get('fields_version', 0)}", num_rows="dynamic",
+        hide_index=True, width="stretch", column_order=None if advanced else BASIC_FIELD_COLUMNS,
+        column_config={
+            "name": st.column_config.TextColumn("Campo", required=True),
+            "selector": st.column_config.TextColumn("Selector CSS"),
+            "attribute": st.column_config.TextColumn("Atributo", help="text, html, href, src, data-…"),
+            "column": st.column_config.TextColumn("Columna (tabla)"),
+            "path": st.column_config.TextColumn("Ruta (JSON/XML/CSV)"),
+            "type": st.column_config.SelectboxColumn("Tipo", options=list(SUPPORTED_TYPES), required=True),
+            "required": st.column_config.CheckboxColumn("Obligatorio"),
+            "normalize": st.column_config.MultiselectColumn("Normalizar", options=sorted(NORMALIZERS)),
+            "pattern": st.column_config.TextColumn("Patrón (regex)"),
+            "date_format": st.column_config.TextColumn("Formato fecha"),
+            "regex": st.column_config.TextColumn("Validar regex"),
+            "min": st.column_config.NumberColumn("Mín."),
+            "max": st.column_config.NumberColumn("Máx."),
+            "choices": st.column_config.TextColumn("Valores permitidos", help="Separados por coma"),
+        })
+    st.session_state["fields_current"] = edited
+    names = [n for n in edited["name"].dropna().astype(str) if n.strip()] if "name" in edited else []
+    current = [d for d in st.session_state.get(wkey("extraction.deduplicate_on"), []) if d in names]
+    st.session_state[wkey("extraction.deduplicate_on")] = current
+    with st.expander("Ajustes del método (avanzado)"):
+        c1, c2 = st.columns(2, gap="large")
+        with c1:
+            st.selectbox("Método de adquisición", list(METHODS), format_func=METHODS.get, key=wkey("extraction.method"))
+            if method in ("static_html", "browser", "auto"):
+                st.text_input("Selector de registro (CSS)", key=wkey("extraction.record_selector"),
+                              placeholder="article.producto", help="Un elemento por registro.")
+                st.text_input("…o selector de tabla", key=wkey("extraction.table_selector"), placeholder="table#datos",
+                              help="Con tabla, cada campo usa «Columna».")
+            if method in ("api", "structured_file", "auto"):
+                st.text_input("Ruta a la lista de registros (JSON/XML)", key=wkey("extraction.records_path"),
+                              placeholder="data.items")
+            if method == "structured_file":
+                st.selectbox("Formato del archivo", [None, "csv", "json", "xml"], key=wkey("extraction.file_format"),
+                             format_func=lambda v: "—" if v is None else v.upper())
+            modes = {"static_html": ["none", "next_link", "url_template"], "browser": ["none", "next_link"],
+                     "api": ["none", "next_field", "page_param"]}.get(method, ["none"])
+            if st.session_state.get(wkey("extraction.pagination.mode")) not in modes:
+                st.session_state[wkey("extraction.pagination.mode")] = "none"
+            st.selectbox("Paginación", modes, key=wkey("extraction.pagination.mode"), format_func={
+                "none": "Sin paginación", "next_link": "Enlace «siguiente»", "url_template": "Plantilla de URL con {page}",
+                "next_field": "Campo «next» en la respuesta", "page_param": "Parámetro de página"}.get)
+            mode = st.session_state.get(wkey("extraction.pagination.mode"))
+            if mode == "next_link":
+                st.text_input("Selector del enlace siguiente", key=wkey("extraction.pagination.next_selector"),
+                              placeholder="a[rel=next]")
+            elif mode == "url_template":
+                st.text_input("Plantilla de URL", key=wkey("extraction.pagination.url_template"))
+            elif mode == "next_field":
+                st.text_input("Ruta del campo next", key=wkey("extraction.pagination.next_field"), placeholder="links.next")
+            elif mode == "page_param":
+                st.text_input("Parámetro", key=wkey("extraction.pagination.page_param"))
+            st.multiselect("Deduplicar por", names, key=wkey("extraction.deduplicate_on"),
+                           placeholder="Todos los campos", help="Vacío = todos los campos.")
+            st.checkbox("Conservar valor original (raw)", key=wkey("extraction.keep_raw"))
+            st.checkbox("Descartar registros inválidos", key=wkey("extraction.drop_invalid"))
+        with c2:
+            if method == "browser":
+                st.markdown("**Navegador**")
                 st.text_input("Esperar al selector", key=wkey("extraction.browser.wait_selector"))
                 st.text_input("Botón «cargar más»", key=wkey("extraction.browser.load_more_selector"), placeholder="#load-more")
                 st.checkbox("Scroll infinito", key=wkey("extraction.browser.infinite_scroll"))
                 st.number_input("Espera máx. (s)", 1.0, 60.0, key=wkey("extraction.browser.wait_timeout_seconds"))
-        if method == "api":
-            with st.expander("API documentada", expanded=True):
+            if method == "api":
+                st.markdown("**API documentada**")
                 st.checkbox("Es pública y está documentada por el propietario", key=wkey("extraction.api.documented"))
                 st.text_input("URL de la documentación", key=wkey("extraction.api.documentation_url"))
-        with st.expander("Autenticación autorizada"):
+            st.markdown("**Autenticación autorizada**")
             st.selectbox("Tipo", ["none", "form", "header"], key=wkey("auth.type"),
                          format_func={"none": "Sin autenticación", "form": "Formulario (credenciales propias)",
                                       "header": "Token/API key documentado (encabezado)"}.get)
@@ -614,41 +663,7 @@ def tab_fields(data: dict, errors: list[str]) -> None:
                     st.caption(f"{'✓' if defined else '✗'} `{name}` {'definida' if defined else 'no definida en este proceso'}")
             if st.session_state.get(wkey("auth.type")) != "none":
                 st.caption("Las credenciales nunca se escriben aquí: solo el nombre de la variable de entorno.")
-    with c2:
-        st.markdown("#### Campos")
-        st.caption("Selector CSS relativo al registro, «column» para tablas o «path» para JSON/CSV. "
-                   "El orden de limpieza es: normalizar → patrón → tipo → validar.")
-        frame = pd.DataFrame(st.session_state.get("fields_rows") or [], columns=FIELD_COLUMNS)
-        edited = st.data_editor(
-            frame, key=f"fields_editor_{st.session_state.get('fields_version', 0)}", num_rows="dynamic",
-            hide_index=True, width="stretch",
-            column_config={
-                "name": st.column_config.TextColumn("Campo", required=True),
-                "selector": st.column_config.TextColumn("Selector CSS"),
-                "attribute": st.column_config.TextColumn("Atributo", help="text, html, href, src, data-…"),
-                "column": st.column_config.TextColumn("Columna (tabla)"),
-                "path": st.column_config.TextColumn("Ruta (JSON/CSV)"),
-                "type": st.column_config.SelectboxColumn("Tipo", options=list(SUPPORTED_TYPES), required=True),
-                "required": st.column_config.CheckboxColumn("Obligatorio"),
-                "normalize": st.column_config.MultiselectColumn("Normalizar", options=sorted(NORMALIZERS)),
-                "pattern": st.column_config.TextColumn("Patrón (regex)"),
-                "date_format": st.column_config.TextColumn("Formato fecha"),
-                "regex": st.column_config.TextColumn("Validar regex"),
-                "min": st.column_config.NumberColumn("Mín."),
-                "max": st.column_config.NumberColumn("Máx."),
-                "choices": st.column_config.TextColumn("Valores permitidos", help="Separados por coma"),
-            })
-        st.session_state["fields_current"] = edited
-        names = [n for n in edited["name"].dropna().astype(str) if n.strip()] if "name" in edited else []
-        current = [d for d in st.session_state.get(wkey("extraction.deduplicate_on"), []) if d in names]
-        st.session_state[wkey("extraction.deduplicate_on")] = current
-        st.multiselect("Deduplicar por", names, key=wkey("extraction.deduplicate_on"),
-                       placeholder="Todos los campos", help="Vacío = todos los campos.")
-        a, b = st.columns(2)
-        a.checkbox("Conservar valor original (raw)", key=wkey("extraction.keep_raw"))
-        b.checkbox("Descartar registros inválidos", key=wkey("extraction.drop_invalid"))
-    field_errors = [e for e in errors if e.startswith(("extraction", "auth"))]
-    for message in field_errors:
+    for message in [e for e in errors if e.startswith(("extraction", "auth"))]:
         st.error(message)
 
 
@@ -672,16 +687,26 @@ def show_records(records, quality) -> None:
     m[3].metric("Duplicados", quality.duplicates_removed)
 
 
-def tab_preview(cfg: ProjectConfig | None) -> None:
-    if cfg is None:
-        st.info("Corrija la configuración para ver la vista previa.", icon=":material/info:")
-        return
-    c1, c2 = st.columns(2, gap="large")
-    with c1.container(border=True):
-        st.markdown("**Probar con un archivo local** (0 solicitudes)")
-        st.caption("Guarde una página permitida (HTML, JSON, XML o CSV) y pruebe sus reglas sin tocar el sitio.")
-        upload = st.file_uploader("Archivo", type=["html", "htm", "json", "xml", "csv"], key="preview_file",
-                                  label_visibility="collapsed")
+def show_preview(cfg: ProjectConfig) -> None:
+    st.markdown("#### Vista previa")
+    missing = missing_for_extraction(cfg)
+    consent = True
+    if cfg.authorization.environment != "fixture" and not missing:
+        consent = st.checkbox("Confirmo estas solicitudes al sitio (1 página, ≤ 2 solicitudes)", key="preview_consent")
+    if st.button("Vista previa en vivo", type="primary",
+                 disabled=bool(missing) or not consent or cfg.extraction.method == "auto"):
+        with st.spinner("Obteniendo una página…"):
+            try:
+                st.session_state["preview"] = ExtractionEngine(cfg).preview(max_records=10)
+            except WebExtractorError as exc:
+                st.error(str(exc))
+    if missing:
+        st.caption("Bloqueada hasta completar la autorización (paso 1).")
+    elif cfg.extraction.method == "auto":
+        st.caption("Primero ejecute el diagnóstico para elegir el método.")
+    with st.expander("Probar con un archivo guardado (0 solicitudes)"):
+        upload = st.file_uploader("Archivo HTML, JSON, XML o CSV", type=["html", "htm", "json", "xml", "csv"],
+                                  key="preview_file")
         if st.button("Vista previa del archivo", disabled=upload is None or cfg.extraction.method == "auto"):
             target = ROOT / "outputs" / "_gui_preview" / upload.name
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -690,33 +715,17 @@ def tab_preview(cfg: ProjectConfig | None) -> None:
                 st.session_state["preview"] = ExtractionEngine(cfg).preview(max_records=20, from_file=target)
             except WebExtractorError as exc:
                 st.error(str(exc))
-    missing = missing_for_extraction(cfg)
-    with c2.container(border=True):
-        st.markdown("**Vista previa en vivo** (1 página, ≤ 2 solicitudes)")
-        st.caption("Usa el adaptador real con clics y scrolls desactivados.")
-        consent = True
-        if cfg.authorization.environment != "fixture" and not missing:
-            consent = st.checkbox("Confirmo estas solicitudes al sitio", key="preview_consent")
-        if st.button("Vista previa en vivo", type="primary", disabled=bool(missing) or not consent):
-            with st.spinner("Obteniendo una página…"):
-                try:
-                    st.session_state["preview"] = ExtractionEngine(cfg).preview(max_records=10)
-                except WebExtractorError as exc:
-                    st.error(str(exc))
-        if missing:
-            st.caption("Bloqueada hasta completar la autorización (paso 1).")
-    if cfg.extraction.method == "auto":
-        st.info("Elija un método explícito en «Campos y reglas» para previsualizar.")
     preview = st.session_state.get("preview")
     if preview is None:
         return
-    st.markdown(f"#### Resultado — {preview.source}")
-    st.caption(f"Solicitudes usadas: {preview.requests_used}")
+    st.caption(f"Fuente: {preview.source} · solicitudes usadas: {preview.requests_used}")
     for incident in preview.incidents:
         st.error(f"**{incident.kind}** — {incident.message}\n\n**Siguiente paso:** {incident.next_step}")
     show_records(preview.records, preview.quality)
     for sample in preview.quality.error_samples[:10]:
         st.caption(f"• {sample}")
+    if preview.records:
+        st.success("Si los datos se ven bien, siga con **3 · Extraer**.")
 
 
 def current_result():
@@ -726,20 +735,49 @@ def current_result():
     return st.session_state.get("last_result")
 
 
-def tab_run(cfg: ProjectConfig | None) -> None:
+def step_run(cfg: ProjectConfig | None, errors: list[str]) -> None:
+    st.markdown("#### Límites")
+    a, b, c = st.columns(3)
+    a.number_input("Páginas máx.", 1, 100, key=wkey("limits.max_pages"))
+    b.number_input("Registros máx.", 1, 10_000, key=wkey("limits.max_records"))
+    c.number_input("Pausa entre solicitudes (s)", 0.0, 60.0, key=wkey("limits.delay_seconds"), step=0.5,
+                   help="Mínimo 1 s para sitios reales. Si robots.txt pide más (Crawl-delay), se respeta.")
+    st.multiselect("Formatos de salida", ["csv", "json", "excel", "sqlite"], key=wkey("output.formats"),
+                   help="Además se genera un informe; con «Conservar valor original» (activado por defecto) "
+                        "JSON y SQLite guardan también el dato sin procesar.")
+    with st.expander("Opciones avanzadas: límites y alcance"):
+        c1, c2 = st.columns(2, gap="large")
+        with c1:
+            x, y = st.columns(2)
+            x.number_input("Solicitudes máx.", 1, 500, key=wkey("limits.max_requests"))
+            y.number_input("Tiempo máx. (s)", 1.0, 3600.0, key=wkey("limits.max_seconds"), step=10.0)
+            x.number_input("Timeout por solicitud (s)", 1.0, 120.0, key=wkey("limits.timeout_seconds"))
+            y.number_input("Reintentos (solo fallos transitorios)", 0, 3, key=wkey("limits.max_retries"))
+            x.number_input("Clics «cargar más» máx.", 0, 50, key=wkey("limits.max_clicks"))
+            y.number_input("Scrolls máx.", 0, 50, key=wkey("limits.max_scrolls"))
+            x.number_input("Solicitudes del diagnóstico", 1, 5, key=wkey("diagnosis.max_requests"))
+            st.caption("Concurrencia fija en 1. CAPTCHA, 429, 403 o login inesperado detienen la ejecución sin reintentos.")
+        with c2:
+            st.text_input("Dominios permitidos (separados por coma)", key=wkey("scope.allowed_domains"),
+                          help="Exactos; use *.dominio.org para incluir subdominios. 'www.' es un dominio distinto.")
+            st.text_input("Prefijos de ruta permitidos", key=wkey("scope.allowed_path_prefixes"), help="Cada uno empieza por /")
+            st.multiselect("Protocolos", ["https", "http"], key=wkey("scope.allowed_schemes"))
+            st.checkbox("Respetar robots.txt", key=wkey("scope.respect_robots_txt"),
+                        help="Recomendado siempre. Desactivarlo solo si el propietario lo indica por escrito.")
+            if not st.session_state.get(wkey("scope.respect_robots_txt"), True):
+                st.warning("Ha desactivado robots.txt. Documente la autorización expresa del propietario.")
+    for message in [e for e in errors if e.startswith(("scope", "limits", "target_url", "(raíz)", "diagnosis", "output"))]:
+        st.error(message)
+    st.divider()
     if cfg is None:
         st.info("Corrija la configuración para extraer.", icon=":material/info:")
         return
     missing = missing_for_extraction(cfg)
     job: ExtractionJob | None = st.session_state.get("job")
     lim = cfg.limits
-    st.markdown(f"Extraer de **{cfg.target_url}** con el método **{METHODS[cfg.extraction.method]}**.")
-    m = st.columns(5)
-    m[0].metric("Solicitudes", lim.max_requests)
-    m[1].metric("Páginas", lim.max_pages)
-    m[2].metric("Registros", lim.max_records)
-    m[3].metric("Tiempo", f"{lim.max_seconds:.0f} s")
-    m[4].metric("Pausa", f"{lim.delay_seconds} s")
+    st.markdown(f"Extraer de **{cfg.target_url}** con el método **{METHODS[cfg.extraction.method]}**: hasta "
+                f"{lim.max_pages} página(s), {lim.max_records} registros y {lim.max_requests} solicitudes, "
+                f"con {lim.delay_seconds} s de pausa.")
     if missing:
         st.warning("La extracción está bloqueada. Complete la autorización en el paso 1:\n\n- " + "\n- ".join(missing),
                    icon=":material/lock:")
@@ -871,21 +909,14 @@ def main() -> None:
     cfg, errors = validate(data)
     render_sidebar(data, cfg, errors)
     missing = status_header(data, cfg, errors)
-    tabs = st.tabs(["1 · Proyecto y autorización", "2 · Alcance y límites", "3 · Diagnóstico",
-                    "4 · Campos y reglas", "5 · Vista previa", "6 · Extracción", "7 · Resultados"], key="main_tabs")
+    tabs = st.tabs([title for title, _ in STEPS], key="main_tabs")
     with tabs[0]:
-        tab_project(data, cfg, errors, missing)
+        step_site(data, cfg, errors, missing)
     with tabs[1]:
-        tab_scope(data, errors)
+        step_diagnosis(data, cfg, errors)
     with tabs[2]:
-        tab_diagnosis(data, cfg)
+        step_run(cfg, errors)
     with tabs[3]:
-        tab_fields(data, errors)
-    with tabs[4]:
-        tab_preview(cfg)
-    with tabs[5]:
-        tab_run(cfg)
-    with tabs[6]:
         tab_results(cfg)
 
 

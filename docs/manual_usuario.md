@@ -39,25 +39,30 @@ indica `authorized_by`, y pruebas con archivos locales (`preview --from-file`).
 
 `python -m web_extractor gui` abre `http://127.0.0.1:8611`.
 
-1. Escriba la URL y pulse **Comenzar**. Para practicar, active **Sitio de pruebas local** y elija
-   un ejemplo en la barra lateral.
-2. **Proyecto y autorización**: complete los datos del permiso. Abajo se listan en vivo los
-   requisitos que faltan.
-3. **Alcance y límites**: el dominio, las rutas y los topes. «Ajustar alcance a esta URL» los
-   recalcula. Una variante `www.` es otro dominio: añádala solo si está autorizada.
-4. **Diagnóstico**: en sitios reales pide confirmar la inspección. Muestra:
-   - una tarjeta por método, con puntuación, confianza y requisitos;
-   - las paradas, con el siguiente paso legítimo;
-   - el botón **Aplicar sugerencia**, que copia las reglas propuestas, incluida la paginación.
-5. **Campos y reglas**: tabla editable con selector, tipo, normalización y validación.
-6. **Vista previa**: con un archivo local (0 solicitudes) o en vivo (1 página, solo con la
-   autorización completa).
-7. **Extracción**: marque la confirmación y pulse **Iniciar extracción**. Se ven contadores y
-   acciones en vivo, y **Cancelar** detiene tras la acción en curso. Cada ejecución exige
-   confirmar de nuevo.
-8. **Resultados**: estado, calidad por campo, incidencias, cambios de estructura, descargas
+Escriba la URL y pulse **Comenzar**. Si el sitio ya se analizó antes, se recupera su última
+configuración (campos, método y límites) y solo hay que volver a confirmar la autorización.
+
+1. **Sitio y autorización**: complete los datos del permiso; a la derecha se listan en vivo los
+   requisitos que faltan. El dominio y la ruta permitidos se ajustan solos a la URL (una variante
+   `www.` es otro dominio: añádala en «Opciones avanzadas» del paso 3 solo si está autorizada).
+2. **Diagnóstico y campos**: en sitios reales pide confirmar la inspección. Muestra:
+   - el método recomendado, con su confianza y evidencia;
+   - la lista de lo que se detectó (JavaScript, API, paginación, «cargar más», interacción, tiempo…);
+   - las paradas, con el siguiente paso legítimo; si hay inicio de sesión, explica cómo configurar
+     una autenticación autorizada;
+   - la tabla de campos, que se llena con la sugerencia (los campos de una configuración recuperada
+     se conservan; el botón «Reemplazar por los campos sugeridos» los cambia);
+   - **Vista previa en vivo** (1 página) o con un archivo guardado (0 solicitudes).
+   Selectores, paginación, navegador, API y autenticación están en «Ajustes del método (avanzado)»;
+   la limpieza y validación por campo, en «Mostrar columnas avanzadas».
+3. **Extraer**: páginas, registros, pausa y formatos de salida; el resto de límites y el alcance
+   están en «Opciones avanzadas». Marque la confirmación y pulse **Iniciar extracción**. Se ven
+   contadores y acciones en vivo, y **Cancelar** detiene tras la acción en curso. Cada ejecución
+   exige confirmar de nuevo.
+4. **Resultados**: estado, calidad por campo, incidencias, cambios de estructura, descargas
    (CSV, JSON, Excel, informe, log) e historial del proyecto.
-9. **Descargar configuración YAML** (barra lateral) la guarda para usarla con la CLI.
+
+**Guardar configuración (YAML)** (barra lateral) la guarda para usarla con la CLI.
 
 Qué ocurre con un sitio que no es de los ejemplos (sin permiso, redirecciones, robots.txt,
 CAPTCHA, codificación): [sitios_no_incluidos.md](sitios_no_incluidos.md).

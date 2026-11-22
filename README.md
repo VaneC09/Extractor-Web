@@ -64,19 +64,22 @@ las que se ejecutaron las pruebas documentadas.
 python -m web_extractor gui            # http://127.0.0.1:8611
 ```
 
-Recorre el mismo flujo que la CLI en siete pestañas:
+Recorre el mismo flujo que la CLI en cuatro pasos:
 
-1. Proyecto y autorización, con la lista en vivo de lo que falta.
-2. Alcance y límites.
-3. Diagnóstico, con tarjetas de métodos, puntuación, confianza e indicios.
-4. Campos y reglas, en una tabla editable, con «Aplicar sugerencia».
-5. Vista previa, en vivo (1 página) o sobre un archivo local.
-6. Extracción, con confirmación, progreso en vivo y botón **Cancelar**.
-7. Resultados: calidad, incidencias, cambios de estructura, descargas e historial.
+1. **Sitio y autorización:** la URL y quién autoriza, para qué y con qué referencia. A la derecha
+   se lista en vivo lo que falta. El alcance (dominio y ruta) se ajusta solo a la URL.
+2. **Diagnóstico y campos:** **Ejecutar diagnóstico** muestra el método recomendado con su confianza,
+   la lista de lo que se detectó en el sitio y las paradas con el siguiente paso legítimo. Los campos
+   sugeridos se cargan solos en la tabla, y **Vista previa en vivo** muestra los primeros registros.
+3. **Extraer:** páginas, registros, pausa y formatos; confirmación, progreso en vivo y **Cancelar**.
+4. **Resultados:** calidad, incidencias, cambios de estructura, descargas (CSV, Excel, JSON) e historial.
 
-Desde la barra lateral se activa el sitio de pruebas local, se cargan los ejemplos y se
-sube o descarga la configuración YAML. Sin autorización completa, los botones que harían
-solicitudes quedan deshabilitados y la interfaz explica qué falta.
+Las opciones técnicas (selectores, paginación, autenticación autorizada, límites finos, alcance)
+quedan en secciones «avanzadas» cerradas. Sin autorización completa, los botones que harían
+solicitudes quedan deshabilitados y la interfaz explica qué falta. La interfaz no usa datos
+ficticios: la barra lateral solo ofrece las configuraciones de los sitios reales y abrir o guardar
+un YAML. Si se escribe la URL de un sitio ya analizado, recupera su última configuración y, al
+extraer, compara con el perfil anterior para detectar cambios.
 
 Para un sitio que **no** es uno de los ejemplos, escriba su URL en la pantalla inicial. Qué pasa en
 cada caso (sin permiso, redirección a `www`, robots.txt, CAPTCHA, codificación…) se explica en
