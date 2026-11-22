@@ -386,6 +386,17 @@ def authorization_missing(cfg: ProjectConfig) -> list[str]:
     return missing
 
 
+LICENSES = [
+    "Licencia de Libre Uso MX (datos abiertos)",
+    "Creative Commons CC BY 4.0",
+    "Creative Commons CC0 (dominio público)",
+    "Open Data Commons ODbL",
+    "Términos de uso del sitio que permiten la reutilización",
+    "Permiso escrito del propietario (correo o contrato)",
+    "Convenio académico o institucional",
+]
+
+
 def step_authorization(cfg: ProjectConfig | None, errors: list[str]) -> bool:
     missing = authorization_missing(cfg) if cfg else ["corregir la configuración"]
     with section(2, "Autorización", done=not missing):
@@ -393,8 +404,12 @@ def step_authorization(cfg: ProjectConfig | None, errors: list[str]) -> bool:
         c1, c2 = st.columns(2)
         c1.text_input("¿Quién autoriza el uso?", key=wkey("authorization.authorized_by"),
                       placeholder="Propietario del sitio o licencia de datos abiertos")
-        c2.text_input("Permiso o licencia (enlace o referencia)", key=wkey("authorization.evidence_reference"),
-                      placeholder="https://…/terminos  ·  correo  ·  contrato")
+        key = wkey("authorization.evidence_reference")
+        current = st.session_state.get(key) or None
+        st.session_state[key] = current
+        c2.selectbox("Permiso o licencia de uso", LICENSES + ([current] if current and current not in LICENSES else []),
+                     key=key, accept_new_options=True,
+                     placeholder="Elija una opción o escriba otra (p. ej. un enlace)")
         st.text_input("¿Para qué usará los datos?", key=wkey("authorization.purpose"))
         st.checkbox("Confirmo que tengo autorización y que revisé los términos de uso del sitio",
                     key=wkey("authorization.confirmed"))

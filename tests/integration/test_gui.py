@@ -73,7 +73,7 @@ def _authorize(at, evidence=False):
     at.text_input(key="w:authorization.authorized_by").input("Equipo docente")
     at.text_input(key="w:authorization.purpose").input("Validar el extractor")
     if evidence:
-        at.text_input(key="w:authorization.evidence_reference").input("https://datos.example.org/licencia")
+        at.selectbox(key="w:authorization.evidence_reference").select("Creative Commons CC BY 4.0")
     at.checkbox(key="w:authorization.confirmed").check().run()
 
 

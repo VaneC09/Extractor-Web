@@ -73,7 +73,7 @@ Se abre el navegador en http://127.0.0.1:8611. Para una URL nueva:
 
 1. Escriba la URL en la pantalla inicial (por ejemplo `https://www.datos.gob.mx/dataset/`) y pulse
    **Comenzar**.
-2. En **Autorización**, llene quién autoriza, el permiso o licencia (por ejemplo la página de licencia)
+2. En **Autorización**, llene quién autoriza, el permiso o licencia de uso (elíjalo de la lista desplegable o escriba otro, como un enlace)
    y la finalidad, y marque la confirmación. Debajo verá lo que falta.
 3. En **Diagnóstico del sitio**, pulse **Diagnosticar sitio**. Verá la estrategia recomendada, la
    confianza, las tecnologías y mecanismos detectados y las barreras con su siguiente paso.
