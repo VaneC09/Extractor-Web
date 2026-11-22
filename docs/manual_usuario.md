@@ -44,7 +44,7 @@ configuración (campos, método y límites) y solo hay que volver a confirmar la
 
 La página avanza de arriba hacia abajo; cada sección aparece cuando la anterior está lista.
 
-1. **Autorización**: quién autoriza, el permiso o licencia de uso (lista desplegable con las licencias y permisos más comunes; también se puede escribir otro, como un enlace), la finalidad y la
+1. **Autorización**: tres listas desplegables que también aceptan un valor escrito (quién autoriza, el permiso o licencia de uso (lista desplegable con las licencias y permisos más comunes; por ejemplo un enlace, y la finalidad) y la
    casilla «Confirmo que tengo autorización y que revisé los términos de uso del sitio». Debajo se
    indica lo que falta. El dominio y la ruta permitidos se ajustan solos a la URL.
 2. **Diagnóstico del sitio**: **Diagnosticar sitio** hace pocas solicitudes y muestra:

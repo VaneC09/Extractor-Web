@@ -386,6 +386,20 @@ def authorization_missing(cfg: ProjectConfig) -> list[str]:
     return missing
 
 
+AUTHORIZERS = [
+    "Propietario del sitio",
+    "Licencia de datos abiertos del sitio",
+    "Institución pública que publica los datos",
+    "Docente o institución académica",
+    "Cliente o contratante del proyecto",
+]
+PURPOSES = [
+    "Uso educativo (proyecto académico)",
+    "Investigación",
+    "Análisis estadístico",
+    "Periodismo de datos",
+    "Uso interno de la organización",
+]
 LICENSES = [
     "Licencia de Libre Uso MX (datos abiertos)",
     "Creative Commons CC BY 4.0",
@@ -397,20 +411,24 @@ LICENSES = [
 ]
 
 
+def combo(container, label: str, path: str, options: list[str], placeholder: str = "Elija una opción o escriba otra"):
+    """Lista desplegable que también acepta un valor escrito (y conserva el de una configuración recuperada)."""
+    key = wkey(path)
+    current = st.session_state.get(key) or None
+    st.session_state[key] = current
+    container.selectbox(label, options + ([current] if current and current not in options else []),
+                        key=key, accept_new_options=True, placeholder=placeholder)
+
+
 def step_authorization(cfg: ProjectConfig | None, errors: list[str]) -> bool:
     missing = authorization_missing(cfg) if cfg else ["corregir la configuración"]
     with section(2, "Autorización", done=not missing):
         st.caption("Solo se trabaja con sitios y datos cuyo uso esté permitido. Indique quién lo permite y para qué.")
         c1, c2 = st.columns(2)
-        c1.text_input("¿Quién autoriza el uso?", key=wkey("authorization.authorized_by"),
-                      placeholder="Propietario del sitio o licencia de datos abiertos")
-        key = wkey("authorization.evidence_reference")
-        current = st.session_state.get(key) or None
-        st.session_state[key] = current
-        c2.selectbox("Permiso o licencia de uso", LICENSES + ([current] if current and current not in LICENSES else []),
-                     key=key, accept_new_options=True,
-                     placeholder="Elija una opción o escriba otra (p. ej. un enlace)")
-        st.text_input("¿Para qué usará los datos?", key=wkey("authorization.purpose"))
+        combo(c1, "¿Quién autoriza el uso?", "authorization.authorized_by", AUTHORIZERS)
+        combo(c2, "Permiso o licencia de uso", "authorization.evidence_reference", LICENSES,
+              "Elija una opción o escriba otra (p. ej. un enlace)")
+        combo(st, "¿Para qué usará los datos?", "authorization.purpose", PURPOSES)
         st.checkbox("Confirmo que tengo autorización y que revisé los términos de uso del sitio",
                     key=wkey("authorization.confirmed"))
         for message in errors:

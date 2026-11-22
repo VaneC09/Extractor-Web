@@ -70,8 +70,8 @@ def _labels(at):
 
 
 def _authorize(at, evidence=False):
-    at.text_input(key="w:authorization.authorized_by").input("Equipo docente")
-    at.text_input(key="w:authorization.purpose").input("Validar el extractor")
+    at.selectbox(key="w:authorization.authorized_by").select("Docente o institución académica")
+    at.selectbox(key="w:authorization.purpose").select("Uso educativo (proyecto académico)")
     if evidence:
         at.selectbox(key="w:authorization.evidence_reference").select("Creative Commons CC BY 4.0")
     at.checkbox(key="w:authorization.confirmed").check().run()
@@ -94,7 +94,7 @@ def test_unknown_real_url_stays_locked_until_authorized():
     assert "Diagnosticar sitio" not in _labels(at) and "Iniciar extracción" not in _labels(at)
     assert any("quién autoriza" in c.value for c in at.caption)
 
-    at.text_input(key="w:authorization.authorized_by").input("Responsable de datos").run()
+    at.selectbox(key="w:authorization.authorized_by").select("Propietario del sitio").run()
     assert "Diagnosticar sitio" not in _labels(at)  # faltan finalidad, permiso y confirmación
     _authorize(at, evidence=True)
     assert "Diagnosticar sitio" in _labels(at)

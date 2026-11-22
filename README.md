@@ -68,7 +68,7 @@ Es una sola página guiada que sigue el flujo del reto. Cada sección aparece cu
 lista:
 
 1. **URL del sitio** y **Comenzar**.
-2. **Autorización:** quién autoriza, permiso o licencia de uso (lista desplegable que acepta otro valor), finalidad y una casilla de confirmación.
+2. **Autorización:** quién autoriza, permiso o licencia de uso y finalidad (listas desplegables que aceptan otro valor) y una casilla de confirmación.
    Hasta completarla no se hace ninguna solicitud y se indica qué falta.
 3. **Diagnóstico del sitio:** tecnologías y mecanismos detectados, estrategia recomendada con su
    confianza, barreras con el siguiente paso legítimo e informe descargable. Un CAPTCHA o un bloqueo
