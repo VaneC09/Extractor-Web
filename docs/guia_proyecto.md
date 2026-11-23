@@ -134,13 +134,38 @@ Cada ejecución crea `outputs\<proyecto>\<run_id>\` con:
 | `actions.jsonl` | Bitácora de cada solicitud, clic o scroll |
 | `profile.json` | Perfil del sitio para detectar cambios en la próxima ejecución |
 | `config_efectiva.json` | Configuración exacta usada (sin secretos) |
+| `run.log` | Log de la ejecución |
+| `intervencion_humana.md` y `.json` | Solo si hubo una barrera: si se puede continuar y los pasos a seguir |
 
-Además, `outputs\web_extractor.sqlite` acumula todas las ejecuciones.
+Además:
+
+- `outputs\web_extractor.sqlite` acumula todas las ejecuciones (tabla `incidents` incluida).
+- `outputs\web_extractor.log` es el log general de todo lo que hace la herramienta.
+- `outputs\intervenciones.jsonl` es el registro central de las intervenciones humanas (una línea por
+  barrera).
+- Cada diagnóstico queda en `outputs\<proyecto>\diagnosticos\<id>\` (informe, bitácora, log e
+  intervención), y cada vista previa con barrera, en `outputs\<proyecto>\vistas_previas\<id>\`.
+
+### 2.6.1 Sitios que requieren intervención humana
+
+Ante una barrera, la herramienta se detiene, no reintenta y dice si se puede continuar:
+
+| Barrera | ¿Se puede continuar? |
+|---|---|
+| Pide iniciar sesión o token (`auth_required`) | Sí, con usuario y contraseña o token autorizados por el propietario |
+| CAPTCHA o desafío anti-bot | No: pedir API, descarga o permiso al propietario |
+| Límite de solicitudes o sobrecarga | Más tarde, con menor frecuencia |
+| Acceso denegado o muro de pago | Solo si el propietario o la licencia dan credenciales para ese uso |
+
+Con credenciales autorizadas: se guardan en variables de entorno (por ejemplo
+`$env:WE_USUARIO`, `$env:WE_CLAVE` o `$env:WE_TOKEN`), se configuran en «Acceso autorizado» y se
+pulsa «Vista previa» y luego «Iniciar extracción». El detalle completo está en el
+[manual de usuario, sección 5](manual_usuario.md).
 
 ### 2.7 Ejecutar las pruebas
 
 ```powershell
-python -m pytest                    # 209 pruebas unitarias y de integración
+python -m pytest                    # 214 pruebas unitarias y de integración
 python -m web_extractor matrix      # 20 escenarios con el sitio de pruebas local
 ```
 
@@ -289,6 +314,10 @@ Todos implementan la misma interfaz (`iter_documents()` y `close()`), por eso el
 - **`diagnosis_report.py`**: informe Markdown del diagnóstico (métodos, evidencia, incidencias,
   limitaciones).
 - **`run_report.py`**: `report.md` y `summary.json` de cada ejecución, con siguientes pasos.
+- **`intervention.py`**: `GUIDES` define, por tipo de barrera, si se puede continuar y los pasos para una
+  persona. `write_intervention()` escribe `intervencion_humana.md` y `.json` y añade cada caso a
+  `outputs/intervenciones.jsonl`. El motor lo llama en el diagnóstico, en la vista previa y en la
+  extracción.
 - **`profiles.py`**: `build_profile()` guarda la "huella" del sitio (selectores, campos, columnas,
   estructura JSON, volumen, endpoint documentado). `compare_profiles()` detecta cambios, y
   `requires_review()` exige revisión humana si son graves.
@@ -375,12 +404,13 @@ probados; se demuestran con el sitio de pruebas local.
 | Sin datos ficticios en la evaluación | Corridas reales en `docs/evidencias/reales/` |
 | Evidencia de diagnóstico y extracción | `docs/evidencias/reales/<sitio>/diagnostico.md`, `report.md`, datos |
 | Informe de restricciones por sitio | `docs/evidencias/reales/README.md` (protección y viabilidad legal) |
+| Ante una barrera, informar y permitir la autorización legítima | `reports/intervention.py`: pasos en pantalla, `intervencion_humana.md` y `outputs/intervenciones.jsonl`; acceso con usuario y contraseña o token en «Acceso autorizado» |
 | Sin pruebas masivas | Topes bajos (2 páginas, ≤ 60 registros), pausa de 2 a 10 s, concurrencia 1 |
 | Código con Selenium | `extractors/browser_selenium.py` |
 | Dataset SQLite, CSV y Excel | `docs/evidencias/reales/dataset_reales.sqlite` y `.xlsx`; CSV por sitio |
 | Informe técnico | `docs/informe_tecnico.md` |
 | Video de 3 a 5 minutos | Guion en `docs/guion_demo.md` (la grabación la hace el equipo) |
-| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (209 + matriz de 20) |
+| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (214 + matriz de 20) |
 | Plan en 5 fases | `docs/plan_fases.md` |
 
 ## 6. Límites éticos y legales que aplica el sistema

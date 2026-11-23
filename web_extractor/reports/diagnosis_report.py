@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from web_extractor.models.results import Diagnosis
+from web_extractor.reports.intervention import guide_for
 
 
 def diagnosis_markdown(d: Diagnosis) -> str:
@@ -20,6 +21,10 @@ def diagnosis_markdown(d: Diagnosis) -> str:
         lines += ["## Incidencias", ""]
         for i in d.incidents:
             lines.append(f"- **{i.kind}** — {i.message} ({i.url}). Siguiente paso legítimo: {i.next_step}")
+            guide = guide_for(i.kind)
+            if guide:
+                lines.append(f"  - ¿Se puede continuar? {guide['answer']}")
+                lines += [f"  {n}. {step}" for n, step in enumerate(guide["steps"], 1)]
         lines.append("")
     lines += ["## Métodos sugeridos", "", "| Método | Puntuación | Confianza | Ejecutable | Requisitos |",
               "|---|---|---|---|---|"]

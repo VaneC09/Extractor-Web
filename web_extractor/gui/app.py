@@ -32,6 +32,7 @@ from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError, WebExtractorError
 from web_extractor.gui.jobs import ExtractionJob
 from web_extractor.reports.diagnosis_report import diagnosis_markdown
+from web_extractor.reports.intervention import GENERAL_LOG, INTERVENTION_LOG, guide_for
 from web_extractor.reports.run_report import STATUS_TEXT
 from web_extractor.selection.suggest import suggest_extraction
 from web_extractor.transforms.casting import SUPPORTED_TYPES
@@ -447,9 +448,8 @@ def step_diagnosis(cfg: ProjectConfig):
         if diagnosis is None:
             return None
         for incident in diagnosis.incidents:
-            st.error(f"**Barrera detectada: {incident.kind}** — {incident.message}\n\n"
-                     f"**Siguiente paso legítimo:** {incident.next_step}", icon=":material/block:")
-        if login_detected(diagnosis):
+            show_incident(incident, diagnosis.files.get("intervention"))
+        if login_detected(diagnosis) and not any(i.kind == "auth_required" for i in diagnosis.incidents):
             st.info(AUTH_HINT, icon=":material/key:")
         best = diagnosis.best
         if best is not None and not diagnosis.stopped:
@@ -461,7 +461,24 @@ def step_diagnosis(cfg: ProjectConfig):
                 st.markdown(f"- **{f.category}:** {f.message}")
         st.download_button("Descargar informe del diagnóstico", diagnosis_markdown(diagnosis),
                            file_name="diagnostico.md", mime="text/markdown")
+        if diagnosis.files.get("folder"):
+            st.caption(f"Registro del diagnóstico (informe, bitácora de acciones y log): `{diagnosis.files['folder']}`")
     return diagnosis
+
+
+def show_incident(incident, recorded_in: str | None = None) -> None:
+    """Barrera con lo que debe hacer una persona, si se puede continuar y dónde quedó registrada."""
+    guide = guide_for(incident.kind)
+    body = (f"**Barrera detectada: {incident.kind}** — {incident.message}\n\n"
+            f"**Siguiente paso legítimo:** {incident.next_step}")
+    if guide:
+        body += f"\n\n**¿Se puede continuar?** {guide['answer']}\n\n**Qué hacer:**\n" + "\n".join(
+            f"{n}. {step}" for n, step in enumerate(guide["steps"], 1))
+    if recorded_in:
+        body += (f"\n\nRegistrado en `{recorded_in}` y en el registro central "
+                 f"`{ROOT / 'outputs' / INTERVENTION_LOG}`.")
+    blocking = guide is None or guide["can_continue"] in ("no", "mas_tarde")
+    (st.error if blocking else st.warning)(body, icon=":material/block:" if blocking else ":material/key:")
 
 
 AUTH_HINT = ("El sitio pide iniciar sesión. Solo continúe si el propietario le dio una cuenta o un token: "
@@ -526,7 +543,7 @@ def step_fields(cfg: ProjectConfig) -> None:
         preview = st.session_state.get("preview")
         if preview is not None:
             for incident in preview.incidents:
-                st.error(f"**{incident.kind}** — {incident.message}\n\n**Siguiente paso:** {incident.next_step}")
+                show_incident(incident, preview.files.get("intervention"))
             show_records(preview.records, preview.quality)
 
 
@@ -676,7 +693,10 @@ def step_results(result) -> None:
         if result.incidents or result.profile_changes:
             st.markdown("**Errores, incidencias y cambios detectados**")
             for i in result.incidents:
-                st.markdown(f"- **{i.kind}:** {i.message}  \n  _Siguiente paso:_ {i.next_step}")
+                if guide_for(i.kind):
+                    show_incident(i, result.outputs.get("intervention"))
+                else:
+                    st.markdown(f"- **{i.kind}:** {i.message}  \n  _Siguiente paso:_ {i.next_step}")
             for c in result.profile_changes:
                 st.markdown(f"- Cambio **{c['severity']}** · {c['kind']}: {c['message']}")
         cols = st.columns(4)
@@ -690,7 +710,9 @@ def step_results(result) -> None:
                                     width="stretch", key=f"dl_{key}")
         st.caption(f"Cada registro guarda su origen (URL, fecha, método, campo, validación, transformaciones y "
                    f"ejecución {result.run_id}). Archivos completos en `{result.run_dir}`"
-                   + (f"; base SQLite `{result.outputs['sqlite']}`." if result.outputs.get("sqlite") else "."))
+                   + (f"; base SQLite `{result.outputs['sqlite']}`." if result.outputs.get("sqlite") else ".")
+                   + f" Log de esta ejecución: `run.log`; bitácora de acciones: `actions.jsonl`; log general de la "
+                   f"herramienta: `{ROOT / 'outputs' / GENERAL_LOG}`.")
 
 
 def main() -> None:

@@ -9,6 +9,7 @@ import pandas as pd
 
 from web_extractor.config.schema import ProjectConfig
 from web_extractor.models.results import Diagnosis, PreviewResult, RunResult
+from web_extractor.reports.intervention import guide_for
 from web_extractor.reports.run_report import STATUS_TEXT
 
 
@@ -65,6 +66,7 @@ def show_diagnosis(d: Diagnosis) -> None:
     for incident in d.incidents:
         out(f"\n[PARADA] {incident.kind}: {incident.message}")
         out(f"         Siguiente paso legítimo: {incident.next_step}")
+        show_guide(incident.kind)
     if d.findings:
         out("\nIndicios observados (heurísticos):")
         for f in d.findings:
@@ -81,6 +83,25 @@ def show_diagnosis(d: Diagnosis) -> None:
     out("\nLimitaciones:")
     for item in d.limitations:
         out(f"  - {item}")
+
+
+def show_guide(kind: str) -> None:
+    guide = guide_for(kind)
+    if guide is None:
+        return
+    out(f"         ¿Se puede continuar? {guide['answer']}")
+    for n, step in enumerate(guide["steps"], 1):
+        out(textwrap.fill(step, 100, initial_indent=f"         {n}. ", subsequent_indent="            "))
+
+
+def show_files(files: dict[str, str]) -> None:
+    labels = {"intervention": "Pasos de intervención humana", "markdown": "Informe de diagnóstico",
+              "actions": "Bitácora de acciones", "log": "Log", "folder": "Carpeta"}
+    shown = [(labels[k], files[k]) for k in labels if files.get(k)]
+    if shown:
+        out("\nRegistros guardados:")
+        for label, path in shown:
+            out(f"  {label}: {path}")
 
 
 def records_frame(preview_records) -> pd.DataFrame:
@@ -120,6 +141,7 @@ def show_run(r: RunResult) -> None:
         f"inválidos {q.invalid} · duplicados eliminados {q.duplicates_removed}")
     for incident in r.incidents:
         out(f"Incidencia [{incident.severity}] {incident.kind}: {incident.message}")
+        show_guide(incident.kind)
     for change in r.profile_changes:
         out(f"Cambio [{change['severity']}] {change['kind']}: {change['message']}")
     if r.requires_human_review:

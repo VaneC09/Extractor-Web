@@ -25,11 +25,9 @@ from web_extractor.core.engine import ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError
 from web_extractor.core.limits import CancelToken
 from web_extractor.interface import console
-from web_extractor.reports.diagnosis_report import write_diagnosis
 from web_extractor.reports.profiles import compare_profiles
 from web_extractor.selection.suggest import suggest_extraction
 from web_extractor.utils.logging_utils import setup_logging
-from web_extractor.utils.timeutils import utc_now
 
 EXIT_OK, EXIT_ERROR, EXIT_CONFIG, EXIT_AUTH, EXIT_STOPPED, EXIT_CANCELLED, EXIT_REVIEW = range(7)
 STATUS_EXIT = {"completado": EXIT_OK, "completado_con_limites": EXIT_OK, "parcial_barrera": EXIT_STOPPED,
@@ -80,10 +78,14 @@ def _diagnose(cfg: ProjectConfig, engine: ExtractionEngine, render: bool | None,
         return None
     diagnosis = engine.diagnose(render=render)
     console.show_diagnosis(diagnosis)
-    stem = f"diagnostico_{utc_now().strftime('%Y%m%dT%H%M%SZ')}"
-    paths = write_diagnosis(diagnosis, Path(cfg.output.directory) / cfg.project.name, stem)
-    console.out(f"\nInforme de diagnóstico: {paths['markdown']}")
+    console.show_files(diagnosis.files)
     return diagnosis
+
+
+def _login_barrier_with_auth(cfg: ProjectConfig, diagnosis) -> bool:
+    """Un 401/muro de acceso no detiene «run» si el usuario configuró un acceso autorizado."""
+    return cfg.auth.type != "none" and bool(diagnosis.incidents) and all(
+        i.kind == "auth_required" for i in diagnosis.incidents)
 
 
 def cmd_diagnose(args) -> int:
@@ -145,7 +147,10 @@ def cmd_run(args) -> int:
         diagnosis = _diagnose(cfg, engine, None, args.yes)
         if diagnosis is None:
             return EXIT_AUTH
-        if diagnosis.stopped:
+        if diagnosis.stopped and _login_barrier_with_auth(cfg, diagnosis):
+            console.out("\nEl sitio pide autenticación y la configuración tiene un acceso autorizado "
+                        f"(auth.type={cfg.auth.type}): se continúa; la vista previa inicia sesión una sola vez.")
+        elif diagnosis.stopped:
             console.out("\nEl diagnóstico se detuvo por una barrera o política; no se continúa con la extracción.")
             return EXIT_STOPPED
         best = diagnosis.best
@@ -157,6 +162,7 @@ def cmd_run(args) -> int:
         preview = engine.preview(max_records=5)
         console.show_preview(preview)
         if preview.incidents:
+            console.show_files(preview.files)
             console.out("\nLa vista previa encontró una barrera o error; no se continúa.")
             return EXIT_STOPPED
 

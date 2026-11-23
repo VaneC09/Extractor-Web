@@ -101,6 +101,7 @@ class Diagnosis:
     candidates: dict[str, Any] = field(default_factory=dict)
     requests_used: int = 0
     stopped: bool = False
+    files: dict[str, str] = field(default_factory=dict)
 
     @property
     def best(self) -> MethodRecommendation | None:
@@ -175,6 +176,7 @@ class PreviewResult:
     source: str
     requests_used: int = 0
     incidents: list[Incident] = field(default_factory=list)
+    files: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass

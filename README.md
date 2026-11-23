@@ -199,6 +199,15 @@ Resultados, clasificación de protección y viabilidad legal por sitio, y el dat
 Una URL nueva no necesita cambios de código: en la GUI se escribe la URL, se completa la
 autorización y se siguen las secciones de la página (diagnóstico, datos a extraer, vista previa, extracción).
 
+## Intervención humana y registros
+
+Ante una barrera la herramienta se detiene, no reintenta y dice si se puede continuar y cómo. Por
+ejemplo, si el sitio pide iniciar sesión y el propietario le dio usuario y contraseña o un token, se
+configuran en «Acceso autorizado» con variables de entorno y la extracción continúa. Ante un
+CAPTCHA no se continúa. Los pasos quedan en `intervencion_humana.md` (carpeta del diagnóstico o de la
+ejecución) y en `outputs/intervenciones.jsonl`. El log general es `outputs/web_extractor.log`.
+Detalle: [manual de usuario, sección 5](docs/manual_usuario.md).
+
 ## Estado
 
 MVP funcional de las fases 1 a 5: ver [plan de fases](docs/plan_fases.md). Las pruebas automáticas

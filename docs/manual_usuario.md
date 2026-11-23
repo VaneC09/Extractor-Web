@@ -168,10 +168,65 @@ ofrece las mismas tres opciones: sin autenticación, formulario y token.
 | `parcial_barrera` / `detenido_barrera` | CAPTCHA, 429, 403, login, paywall… | No reintentar; pedir vía autorizada |
 | `detenido_politica` | Fuera de alcance o robots.txt | Respetar; pedir permiso o ajustar alcance autorizado |
 | `cancelado` | Ctrl+C o archivo STOP | Revisar antes de reanudar |
-| `fallido` | Error técnico o login rechazado | Ver `run.log` y `report.md` |
+| `fallido` | Error técnico o login rechazado | Ver `run.log`, `report.md` e `intervencion_humana.md` |
 | Revisión humana | Cambió la estructura frente al perfil | Revisar selectores; la línea base no se tocó |
 
-## 5. Solución de errores comunes
+## 5. Intervención humana y dónde quedan los registros (logs)
+
+Cuando aparece una barrera, la herramienta **se detiene, no reintenta** y registra qué debe hacer una
+persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
+
+### 5.1 ¿Se puede continuar? Qué hacer según la barrera
+
+| Barrera (`kind`) | ¿Se puede continuar? | Qué hacer |
+|---|---|---|
+| `auth_required` (pide iniciar sesión o token) | **Sí**, si el propietario le dio usuario y contraseña o un token autorizado | Pasos de la sección 5.2 |
+| `auth_failed` (credenciales rechazadas) | Sí, tras corregirlo | Verificar con el propietario que la cuenta o el token siguen vigentes; revisar las variables de entorno; una sola nueva vista previa |
+| `access_denied` (403) / `paywall` | Solo si el propietario o la licencia dan una cuenta o token para ese uso | Confirmar la autorización; si la hay, sección 5.2 |
+| `captcha` / `bot_challenge` | **No**, ni siquiera con usuario y contraseña | Pedir al propietario una API documentada, un archivo de descarga o permiso por escrito, y analizar esa URL |
+| `rate_limit` (429) / `overload` (503) | Más tarde | Esperar (`Retry-After`), aumentar la pausa y reducir páginas; consultar los límites con el propietario |
+| `tls_error` | Tras ajustar la URL | Usar la dirección oficial con certificado válido |
+| `robots_disallow` | No | Pedir una vía alternativa autorizada (API o descarga) |
+| `out_of_scope`, `empty_page`, `change_detected`, `authorization` | Tras corregirlo | Analizar la URL autorizada, revisar selectores con la vista previa o completar la autorización |
+
+### 5.2 Continuar con usuario y contraseña o token autorizados
+
+1. Confirme con el propietario que la cuenta o el token le autoriza a extraer esos datos con esa
+   finalidad, y anote la evidencia (correo, contrato) en «Permiso o licencia de uso».
+2. Defina las credenciales como variables de entorno **en la misma terminal** desde la que abre la
+   herramienta. Nunca las escriba en la configuración, en capturas ni en archivos de ejemplo:
+
+   ```powershell
+   $env:WE_USUARIO="mi_usuario"; $env:WE_CLAVE="mi_contraseña"   # o bien: $env:WE_TOKEN="mi_token"
+   .\.venv\Scripts\python.exe -m web_extractor gui
+   ```
+
+3. En «Configuración y ejecución de la extracción» abra «Acceso autorizado»:
+   - **Usuario y contraseña:** página de inicio de sesión y los nombres de las variables
+     (`WE_USUARIO`, `WE_CLAVE`).
+   - **Token o API key documentado:** encabezado (por ejemplo `Authorization`) y la variable (`WE_TOKEN`).
+
+   Junto a cada nombre aparece ✓ si la variable está definida. En la CLI se usa la sección `auth`
+   del YAML (`type: form` o `type: header`), y `run` continúa aunque el diagnóstico haya
+   encontrado `auth_required`.
+4. Pulse **Vista previa**: inicia sesión una sola vez. Si se rechaza, se detiene sin reintentar.
+5. Si la vista previa muestra registros, pulse **Iniciar extracción**.
+
+### 5.3 Dónde se registra todo
+
+| Qué | Dónde |
+|---|---|
+| **Log general** de todo lo que hace la herramienta (diagnósticos, vistas previas, ejecuciones, incidencias) | `outputs\web_extractor.log` |
+| **Registro central de intervenciones humanas** (una línea JSON por barrera: fecha, etapa, sitio, tipo, ¿se puede continuar?, pasos y archivo) | `outputs\intervenciones.jsonl` |
+| Cada **diagnóstico** | `outputs\<proyecto>\diagnosticos\<id>\`: `diagnostico.md` y `.json`, `actions.jsonl`, `diagnostico.log` e `intervencion_humana.md` y `.json` si hubo barrera |
+| Cada **vista previa** con barrera | `outputs\<proyecto>\vistas_previas\<id>\`: `actions.jsonl` e `intervencion_humana.md` y `.json` |
+| Cada **extracción** | `outputs\<proyecto>\<run_id>\`: `run.log`, `actions.jsonl`, `report.md`, `summary.json`, datos y `intervencion_humana.md` y `.json` si hubo barrera |
+| Incidencias en base de datos y Excel | tabla `incidents` de `outputs\web_extractor.sqlite` y hoja `incidencias` de `data.xlsx` |
+
+`actions.jsonl` es la bitácora de cada solicitud, clic, scroll o decisión de parada. Ningún registro
+contiene contraseñas ni tokens: se enmascaran antes de escribirse.
+
+## 6. Solución de errores comunes
 
 | Síntoma | Causa probable | Solución |
 |---|---|---|

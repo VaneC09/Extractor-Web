@@ -213,5 +213,6 @@ def test_captcha_stops_the_flow_with_next_step(fixture_env, monkeypatch):
     _button(at, "Cargar").click().run()
     _button(at, "Diagnosticar sitio").click().run()
     assert not at.exception
-    assert any("Barrera detectada: captcha" in e.value and "Siguiente paso legítimo" in e.value for e in at.error)
+    assert any("Barrera detectada: captcha" in e.value and "Siguiente paso legítimo" in e.value
+               and "¿Se puede continuar?" in e.value and "intervenciones.jsonl" in e.value for e in at.error)
     assert "Iniciar extracción" not in _labels(at) and "Vista previa" not in _labels(at)

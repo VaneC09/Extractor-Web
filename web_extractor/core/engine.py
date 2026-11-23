@@ -50,6 +50,8 @@ from web_extractor.models.results import (
     RawRecord,
     RunResult,
 )
+from web_extractor.reports.diagnosis_report import write_diagnosis
+from web_extractor.reports.intervention import GENERAL_LOG, intervention_entries, write_intervention
 from web_extractor.reports.profiles import ProfileStore, build_profile, compare_profiles, requires_review
 from web_extractor.reports.run_report import next_steps_for, write_run_report
 from web_extractor.selection.field_extractor import parse_document
@@ -81,6 +83,7 @@ class ExtractionEngine:
         self.cancel = cancel or CancelToken(self.output_dir / cfg.output.stop_file)
         self.logger = logger or get_logger("engine")
         self.on_action = on_action
+        self._last_actions: ActionLog | None = None
 
     # ------------------------------------------------------------------ contexto
     def _limit_values(self, **overrides: float | int) -> LimitValues:
@@ -127,6 +130,45 @@ class ExtractionEngine:
         missing = missing_for_diagnosis(self.cfg)
         if missing:
             raise AuthorizationError(missing)
+        folder = self._event_dir("diagnosticos")
+        handlers = self._open_logs(folder / "diagnostico.log")
+        try:
+            diagnosis = self._diagnose(render)
+            diagnosis.files = self._record_event(diagnosis.incidents, "diagnóstico", folder, self._last_actions)
+            diagnosis.files.update(write_diagnosis(diagnosis, folder, "diagnostico"))
+            diagnosis.files["log"] = str(folder / "diagnostico.log")
+            return diagnosis
+        finally:
+            self._close_logs(handlers)
+
+    # --------------------------------------------------------------- registros
+    def _event_dir(self, kind: str) -> Path:
+        return self.output_dir / self.cfg.project.name / kind / new_run_id()
+
+    def _open_logs(self, event_log: Path | None = None) -> list:
+        handlers = [add_file_handler(self.output_dir / GENERAL_LOG)]
+        if event_log is not None:
+            handlers.append(add_file_handler(event_log))
+        return handlers
+
+    @staticmethod
+    def _close_logs(handlers: list) -> None:
+        for handler in handlers:
+            remove_handler(handler)
+
+    def _record_event(self, incidents: list[Incident], stage: str, folder: Path, actions: ActionLog | None) -> dict[str, str]:
+        """Bitácora de acciones y, si hace falta una persona, los pasos a seguir (carpeta + registro central)."""
+        files: dict[str, str] = {"folder": str(folder)}
+        if actions is not None:
+            actions.write_jsonl(folder / "actions.jsonl")
+            files["actions"] = str(folder / "actions.jsonl")
+        entries = intervention_entries(incidents, stage=stage, project=self.cfg.project.name, target_url=self.cfg.target_url)
+        files.update(write_intervention(entries, folder, self.output_dir))
+        if entries:
+            self.logger.warning("Intervención humana requerida (%s): pasos en %s", stage, files["intervention"])
+        return files
+
+    def _diagnose(self, render: bool | None) -> Diagnosis:
         render = self.cfg.diagnosis.render_with_browser if render is None else render
         max_requests = self.cfg.diagnosis.max_requests + (1 if render else 0)
         ctx = self._context(self._limit_values(max_pages=1, max_requests=max_requests,
@@ -152,6 +194,7 @@ class ExtractionEngine:
         diagnosis.limitations += ctx.client.robots.notes
         diagnosis.requests_used = ctx.budget.requests
         ctx.client.close()
+        self._last_actions = ctx.actions
         return diagnosis
 
     def _render_compare(self, ctx: AcquisitionContext, static_doc: FetchedDocument, diagnosis: Diagnosis) -> None:
@@ -216,6 +259,14 @@ class ExtractionEngine:
         missing = missing_for_extraction(self.cfg)
         if missing:
             raise AuthorizationError(missing)
+        handlers = self._open_logs()
+        try:
+            return self._preview_live(max_records)
+        finally:
+            self._close_logs(handlers)
+
+    def _preview_live(self, max_records: int) -> PreviewResult:
+        extraction = self.cfg.extraction
         auth_requests = 2 if self.cfg.auth.type != "none" else 0
         ctx = self._context(self._limit_values(max_pages=1, max_records=max_records,
                                                max_requests=min(self.cfg.limits.max_requests, 2 + auth_requests),
@@ -238,7 +289,10 @@ class ExtractionEngine:
             adapter.close()
             ctx.client.close()
         records, quality = TransformPipeline(extraction).process(raw, "preview")
-        return PreviewResult(records, quality, self.cfg.target_url, ctx.budget.requests, ctx.incidents.items)
+        result = PreviewResult(records, quality, self.cfg.target_url, ctx.budget.requests, ctx.incidents.items)
+        if result.incidents:
+            result.files = self._record_event(result.incidents, "vista previa", self._event_dir("vistas_previas"), ctx.actions)
+        return result
 
     # ------------------------------------------------------------------ extracción
     def run(self, *, confirmed: bool, run_id: str | None = None) -> RunResult:
@@ -251,7 +305,7 @@ class ExtractionEngine:
         cfg, extraction = self.cfg, self.cfg.extraction
         run_id = run_id or new_run_id()
         run_dir = self.output_dir / cfg.project.name / run_id
-        log_handler = add_file_handler(run_dir / "run.log")
+        log_handlers = self._open_logs(run_dir / "run.log")
         self.logger.info("Inicio de ejecución %s (%s, método %s)", run_id, cfg.target_url, extraction.method)
         ctx = self._context(self._limit_values())
         result = RunResult(run_id, cfg.project.name, cfg.target_url, extraction.method, "completado",
@@ -309,7 +363,7 @@ class ExtractionEngine:
         try:
             return self._finish(result, ctx, raw_records, run_dir)
         finally:
-            remove_handler(log_handler)
+            self._close_logs(log_handlers)
 
     def _finish(self, result: RunResult, ctx: AcquisitionContext, raw_records: list[RawRecord], run_dir: Path) -> RunResult:
         cfg = self.cfg
@@ -361,6 +415,10 @@ class ExtractionEngine:
         result.outputs["log"] = str(run_dir / "run.log")
         result.outputs["profile"] = str(run_dir / "profile.json")
         result.outputs["config"] = str(run_dir / "config_efectiva.json")
+        result.outputs.update(self._record_event(result.incidents, "extracción", run_dir, None))
+        if "intervention" in result.outputs:
+            notes.append(f"Intervención humana requerida: pasos en {result.outputs['intervention']} "
+                         f"(también en {self.output_dir / 'intervenciones.jsonl'}).")
         result.next_steps = next_steps_for(result)
         result.outputs.update(write_run_report(result, run_dir, summary, notes))
         self.logger.info("Fin de ejecución %s: %s (%d registros exportados)", result.run_id, result.status, quality.exported)
