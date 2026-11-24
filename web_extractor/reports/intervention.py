@@ -80,7 +80,8 @@ GUIDES: dict[str, dict] = {
         "title": "CAPTCHA",
         "can_continue": "no",
         "steps": [
-            "La herramienta no resuelve ni evade CAPTCHA, ni siquiera con usuario y contraseña.",
+            "La herramienta no resuelve ni evade ningún CAPTCHA (casilla, imágenes, rompecabezas o deslizador), "
+            "ni siquiera con usuario y contraseña, y no lo envía a servicios de resolución.",
             "Pida al propietario una vía autorizada: API documentada, archivo de descarga (CSV/JSON/XML) o permiso "
             "explícito por escrito.",
             "Si entrega una API o un archivo, analice esa URL en la herramienta (método «API documentada» o «Archivo "

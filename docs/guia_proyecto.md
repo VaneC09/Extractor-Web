@@ -153,7 +153,7 @@ Ante una barrera, la herramienta se detiene, no reintenta y dice si se puede con
 | Barrera | ¿Se puede continuar? |
 |---|---|
 | Pide iniciar sesión o token (`auth_required`) | Sí, con usuario y contraseña o token autorizados por el propietario |
-| CAPTCHA o desafío anti-bot | No: pedir API, descarga o permiso al propietario |
+| CAPTCHA (también de rompecabezas o deslizador) o desafío anti-bot | No: pedir API, descarga o permiso al propietario |
 | Límite de solicitudes o sobrecarga | Más tarde, con menor frecuencia |
 | Acceso denegado o muro de pago | Solo si el propietario o la licencia dan credenciales para ese uso |
 
@@ -165,7 +165,7 @@ pulsa «Vista previa» y luego «Iniciar extracción». El detalle completo est�
 ### 2.7 Ejecutar las pruebas
 
 ```powershell
-python -m pytest                    # 214 pruebas unitarias y de integración
+python -m pytest                    # 221 pruebas unitarias y de integración
 python -m web_extractor matrix      # 20 escenarios con el sitio de pruebas local
 ```
 
@@ -234,7 +234,7 @@ función `cmd_*`:
 - **`limits.py`**: `Budget` cuenta solicitudes, páginas, registros, clics, scrolls y tiempo;
   `RateLimiter` aplica la pausa; `CancelToken` permite cancelar (botón, `Ctrl+C` o archivo
   `outputs/STOP`).
-- **`barriers.py` → `detect_barrier()`**: reconoce CAPTCHA, desafío anti-bot (incluido Cloudflare),
+- **`barriers.py` → `detect_barrier()`**: reconoce CAPTCHA (incluidos los de rompecabezas o deslizador, como GeeTest o Arkose), desafío anti-bot (incluido Cloudflare),
   muro de inicio de sesión, límite de tasa, sobrecarga del servidor, acceso denegado, paywall y error
   TLS. Cada tipo tiene su
   "siguiente paso legítimo" en `NEXT_STEPS`. Un formulario de acceso opcional en una página con mucho
@@ -410,7 +410,7 @@ probados; se demuestran con el sitio de pruebas local.
 | Dataset SQLite, CSV y Excel | `docs/evidencias/reales/dataset_reales.sqlite` y `.xlsx`; CSV por sitio |
 | Informe técnico | `docs/informe_tecnico.md` |
 | Video de 3 a 5 minutos | Guion en `docs/guion_demo.md` (la grabación la hace el equipo) |
-| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (214 + matriz de 20) |
+| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (221 + matriz de 20) |
 | Plan en 5 fases | `docs/plan_fases.md` |
 
 ## 6. Límites éticos y legales que aplica el sistema

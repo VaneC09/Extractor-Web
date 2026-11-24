@@ -38,6 +38,14 @@ _CAPTCHA = re.compile(
     r"no soy un robot|i'?m not a robot|are you a robot",
     re.I,
 )
+# CAPTCHA de rompecabezas o deslizador: proveedores conocidos y frases de verificación (no de carruseles).
+_PUZZLE_CAPTCHA = re.compile(
+    r"geetest|arkoselabs\.com|funcaptcha|slider[-_ ]?captcha|puzzle[-_ ]?captcha|"
+    r"slide to (?:verify|complete|unlock)|complete the puzzle|drag the (?:slider|puzzle piece)|"
+    r"desliza (?:para (?:verificar|completar)|la pieza)|arrastra (?:la pieza|el control deslizante)|"
+    r"completa(?:r)? el rompecabezas",
+    re.I,
+)
 _BOT_CHALLENGE = re.compile(
     r"cf-browser-verification|cf-chl-|_cf_chl_opt|/cdn-cgi/challenge-platform/|<title>just a moment\.\.\.</title>|"
     r"checking your browser|attention required!|"
@@ -104,6 +112,8 @@ def detect_barrier(
         return Barrier("paywall", "HTTP 402: pago requerido", "", status)
     if status == 403:
         sample = text[:_SCAN_LIMIT]
+        if match := _PUZZLE_CAPTCHA.search(sample):
+            return Barrier("captcha", "HTTP 403 con CAPTCHA de rompecabezas o deslizador", _snippet(sample, match), status)
         if match := _CAPTCHA.search(sample):
             return Barrier("captcha", "HTTP 403 con CAPTCHA", _snippet(sample, match), status)
         if match := _BOT_CHALLENGE.search(sample):
@@ -111,6 +121,8 @@ def detect_barrier(
         return Barrier("access_denied", "HTTP 403: acceso denegado", "", status)
 
     sample = text[:_SCAN_LIMIT] if text else ""
+    if match := _PUZZLE_CAPTCHA.search(sample):
+        return Barrier("captcha", "Indicios de CAPTCHA de rompecabezas o deslizador", _snippet(sample, match), status)
     if match := _CAPTCHA.search(sample):
         return Barrier("captcha", "Indicios de CAPTCHA en la página", _snippet(sample, match), status)
     if match := _BOT_CHALLENGE.search(sample):

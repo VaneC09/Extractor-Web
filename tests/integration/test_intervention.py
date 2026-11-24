@@ -3,7 +3,10 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from web_extractor.app import EXIT_OK, EXIT_STOPPED, main
+from web_extractor.core.barriers import detect_barrier
 from web_extractor.core.engine import ExtractionEngine
 from web_extractor.models.results import Incident
 from web_extractor.reports.intervention import (
@@ -51,6 +54,34 @@ def test_captcha_diagnosis_records_steps_and_logs(example):
     central = [json.loads(line) for line in (out / INTERVENTION_LOG).read_text(encoding="utf-8").splitlines()]
     assert central[-1]["kind"] == "captcha" and central[-1]["stage"] == "diagnóstico"
     assert "INCIDENCIA captcha" in (out / GENERAL_LOG).read_text(encoding="utf-8")
+
+
+@pytest.mark.parametrize("html", [
+    '<div class="geetest_holder"></div><script src="https://static.geetest.com/static/js/gt.js"></script>',
+    '<script src="https://client-api.arkoselabs.com/fc/api/"></script><div id="FunCaptcha"></div>',
+    "<div>Desliza para completar el rompecabezas</div>",
+    "<p>Slide to complete the puzzle</p>",
+    "<p>Drag the puzzle piece into place</p>",
+])
+def test_puzzle_and_slider_captchas_are_detected(html):
+    barrier = detect_barrier(200, {}, html)
+    assert barrier is not None and barrier.kind == "captcha" and "rompecabezas" in barrier.message
+    assert detect_barrier(403, {}, html).kind == "captcha"
+
+
+def test_carousel_text_is_not_a_captcha():
+    assert detect_barrier(200, {}, "<div class='carrusel'>Desliza para ver más productos</div>") is None
+
+
+def test_puzzle_captcha_stops_run_and_records_steps(example, server):
+    cfg = example("f09_barrera_captcha.yaml", target_url=f"{server.base_url}/barrier/captcha_rompecabezas.html")
+    diagnosis = ExtractionEngine(cfg).diagnose()
+    assert diagnosis.stopped and diagnosis.incidents[0].kind == "captcha"
+    assert "rompecabezas" in Path(diagnosis.files["intervention"]).read_text(encoding="utf-8")
+    result = ExtractionEngine(cfg).run(confirmed=True)
+    assert result.status == "detenido_barrera" and not result.records
+    steps = Path(result.outputs["intervention"]).read_text(encoding="utf-8")
+    assert "No de forma automática" in steps and "deslizador" in steps
 
 
 def test_cli_run_continues_with_authorized_token(fixture_env, tmp_path, monkeypatch, capsys):

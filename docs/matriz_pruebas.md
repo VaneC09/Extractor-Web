@@ -59,7 +59,7 @@ fixture; sugerencias; comparación de perfiles; códigos de salida de la CLI.
 | A5 | Las barreras provocan parada segura e incidencia, sin evasión ni reintentos | T09, T10, T11; `test_barriers_stop_without_retries` |
 | A6 | CSV/JSON/Excel/SQLite contienen datos normalizados y linaje (URL, fecha, ejecución, método, estado, transformaciones, huella de configuración, versión) | `examples/demo_dataset/`; `test_static_pagination_end_to_end`, `test_every_output_carries_provenance` |
 | A7 | Errores y logs sin credenciales ni secretos | T08, T19, T20; `test_authorized_login_without_leaking_secrets`, `test_api_with_token_header`, `TestRedaction` |
-| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (214 pruebas superadas, ninguna omitida, el 2026-11-21 UTC en Windows 11) |
+| A8 | Pruebas unitarias e integración repetibles localmente | `python -m pytest` (221 pruebas superadas, ninguna omitida, el 2026-11-21 UTC en Windows 11) |
 | A10 | Un sitio que no es de los ejemplos sigue el mismo flujo y las mismas paradas | T17, T18; `tests/integration/test_sitio_no_incluido.py`; [sitios_no_incluidos.md](sitios_no_incluidos.md) |
 | A11 | La interfaz gráfica no permite solicitudes sin la autorización requerida y permite cancelar | `tests/integration/test_gui.py` |
 | A12 | La autenticación autorizada funciona igual con Requests, navegador y API con token, y se detiene sin reintentar si falla | T08, T19, T20; `tests/integration/test_rubrica.py` |

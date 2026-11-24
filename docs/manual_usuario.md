@@ -183,7 +183,7 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
 | `auth_required` (pide iniciar sesión o token) | **Sí**, si el propietario le dio usuario y contraseña o un token autorizado | Pasos de la sección 5.2 |
 | `auth_failed` (credenciales rechazadas) | Sí, tras corregirlo | Verificar con el propietario que la cuenta o el token siguen vigentes; revisar las variables de entorno; una sola nueva vista previa |
 | `access_denied` (403) / `paywall` | Solo si el propietario o la licencia dan una cuenta o token para ese uso | Confirmar la autorización; si la hay, sección 5.2 |
-| `captcha` / `bot_challenge` | **No**, ni siquiera con usuario y contraseña | Pedir al propietario una API documentada, un archivo de descarga o permiso por escrito, y analizar esa URL |
+| `captcha` (casilla, imágenes, rompecabezas o deslizador) / `bot_challenge` | **No**, ni siquiera con usuario y contraseña | Pedir al propietario una API documentada, un archivo de descarga o permiso por escrito, y analizar esa URL |
 | `rate_limit` (429) / `overload` (503) | Más tarde | Esperar (`Retry-After`), aumentar la pausa y reducir páginas; consultar los límites con el propietario |
 | `tls_error` | Tras ajustar la URL | Usar la dirección oficial con certificado válido |
 | `robots_disallow` | No | Pedir una vía alternativa autorizada (API o descarga) |
