@@ -221,6 +221,9 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
      datos en `/my/`), se agrega sola al alcance.
    - Empiece con la URL de la página que tiene los datos: el diagnóstico detecta que redirige al inicio
      de sesión y ofrece este acceso.
+   - Pulse **«Diagnosticar con la sesión iniciada»**: inicia sesión una sola vez y analiza la página
+     protegida (con la estrategia Navegador también la renderiza), de modo que se sugieren los campos y
+     el selector de registros. Sin este paso, el diagnóstico no ve la página y falta el selector.
    - **Token o API key documentado:** encabezado (por ejemplo `Authorization`) y la variable (`WE_TOKEN`).
 
    Junto a cada nombre aparece ✓ si la variable está definida. En la CLI se usa la sección `auth`

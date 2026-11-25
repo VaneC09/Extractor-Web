@@ -20,6 +20,7 @@ from typing import Callable
 from web_extractor import __version__
 from web_extractor.config.loader import config_fingerprint, config_summary
 from web_extractor.config.schema import ProjectConfig
+from web_extractor.core.auth import prepare_auth
 from web_extractor.core.authorization import missing_for_diagnosis, missing_for_extraction
 from web_extractor.core.errors import (
     AuthFailed,
@@ -71,6 +72,8 @@ DIAGNOSIS_LIMITATIONS = [
 ]
 
 POLICY_ERRORS = (RobotsDisallowed, ScopeError, AuthorizationError)
+# Solicitudes extra de un inicio de sesión: formulario, envíos (1 o 2 pasos y código) y redirecciones.
+LOGIN_REQUESTS = 8
 TECHNICAL_ERRORS = (HTTPStatusError, TransientHTTPError, ExtractionError, BrowserUnavailable)
 
 
@@ -135,14 +138,20 @@ class ExtractionEngine:
         return ctx.incidents.add("error", f"{type(exc).__name__}: {exc}", default_url, "Revisar el log de la ejecución.", "media")
 
     # ---------------------------------------------------------------- diagnóstico
-    def diagnose(self, render: bool | None = None) -> Diagnosis:
+    def diagnose(self, render: bool | None = None, *, with_login: bool = False) -> Diagnosis:
+        """Diagnóstico pasivo; con ``with_login`` inicia sesión una vez (autorizada) y analiza la página protegida."""
         missing = missing_for_diagnosis(self.cfg)
+        if with_login:
+            missing += [m for m in missing_for_extraction(self.cfg)
+                        if m not in missing and not m.startswith("extraction.method")]
+            if self.cfg.auth.type == "none":
+                missing.append("auth.type: configure el acceso autorizado para diagnosticar con sesión")
         if missing:
             raise AuthorizationError(missing)
         folder = self._event_dir("diagnosticos")
         handlers = self._open_logs(folder / "diagnostico.log")
         try:
-            diagnosis = self._diagnose(render)
+            diagnosis = self._diagnose(render, with_login)
             diagnosis.files = self._record_event(diagnosis.incidents, "diagnóstico", folder, self._last_actions)
             diagnosis.files.update(write_diagnosis(diagnosis, folder, "diagnostico"))
             diagnosis.files["log"] = str(folder / "diagnostico.log")
@@ -177,17 +186,22 @@ class ExtractionEngine:
             self.logger.warning("Intervención humana requerida (%s): pasos en %s", stage, files["intervention"])
         return files
 
-    def _diagnose(self, render: bool | None) -> Diagnosis:
+    def _diagnose(self, render: bool | None, with_login: bool = False) -> Diagnosis:
         render = self.cfg.diagnosis.render_with_browser if render is None else render
         max_requests = self.cfg.diagnosis.max_requests + (1 if render else 0)
+        if with_login:
+            max_requests += LOGIN_REQUESTS * (2 if render else 1)
         ctx = self._context(self._limit_values(max_pages=1, max_requests=max_requests,
                                                max_seconds=min(self.cfg.limits.max_seconds, 90), max_clicks=0, max_scrolls=0))
         target = self.cfg.target_url
         diagnosis = Diagnosis(target_url=target, limitations=list(DIAGNOSIS_LIMITATIONS))
         doc: FetchedDocument | None = None
         try:
+            if with_login:
+                prepare_auth(ctx.client, self.cfg.auth)
+                diagnosis.limitations.append("Diagnóstico con sesión iniciada: el contenido es el que ve esa cuenta.")
             doc = ctx.client.get(target, purpose="diagnóstico", auth_expected=self.cfg.auth.type != "none")
-        except (BarrierDetected, *POLICY_ERRORS, *TECHNICAL_ERRORS, LimitReached, Cancelled) as exc:
+        except (BarrierDetected, *POLICY_ERRORS, *TECHNICAL_ERRORS, AuthFailed, LimitReached, Cancelled) as exc:
             diagnosis.incidents.append(self._incident_from(exc, ctx, target))
             diagnosis.stopped = True
             if isinstance(exc, BarrierDetected):
@@ -198,7 +212,7 @@ class ExtractionEngine:
             output = run_inspectors(doc)
             diagnosis.findings, diagnosis.candidates = output.findings, output.candidates
             if render and doc.is_html:
-                self._render_compare(ctx, doc, diagnosis)
+                self._render_compare(ctx, doc, diagnosis, with_login)
             diagnosis.recommendations = classify(diagnosis.findings, self.cfg)
         diagnosis.limitations += ctx.client.robots.notes
         diagnosis.requests_used = ctx.budget.requests
@@ -206,7 +220,8 @@ class ExtractionEngine:
         self._last_actions = ctx.actions
         return diagnosis
 
-    def _render_compare(self, ctx: AcquisitionContext, static_doc: FetchedDocument, diagnosis: Diagnosis) -> None:
+    def _render_compare(self, ctx: AcquisitionContext, static_doc: FetchedDocument, diagnosis: Diagnosis,
+                        with_login: bool = False) -> None:
         from bs4 import BeautifulSoup
 
         from web_extractor.extractors.browser_selenium import SeleniumSession
@@ -220,13 +235,15 @@ class ExtractionEngine:
         session = SeleniumSession(ctx)
         try:
             session.start()
+            if with_login and self.cfg.auth.type == "form":
+                session.login(self.cfg.auth)
             session.navigate(self.cfg.target_url, "diagnóstico renderizado")
             session.wait_for(self.cfg.extraction.browser.wait_selector, self.cfg.extraction.browser.wait_timeout_seconds)
             ctx.cancel.wait(1.0)
             rendered = session.snapshot(0)
-        except (BarrierDetected, *POLICY_ERRORS, BrowserUnavailable, LimitReached, Cancelled) as exc:
+        except (BarrierDetected, *POLICY_ERRORS, BrowserUnavailable, AuthFailed, LimitReached, Cancelled) as exc:
             diagnosis.incidents.append(self._incident_from(exc, ctx, self.cfg.target_url))
-            if isinstance(exc, (BarrierDetected, *POLICY_ERRORS)):
+            if isinstance(exc, (BarrierDetected, *POLICY_ERRORS, AuthFailed)):
                 diagnosis.stopped = True
             return
         except Exception as exc:  # errores de WebDriver
@@ -276,7 +293,7 @@ class ExtractionEngine:
 
     def _preview_live(self, max_records: int) -> PreviewResult:
         extraction = self.cfg.extraction
-        auth_requests = 2 if self.cfg.auth.type != "none" else 0
+        auth_requests = LOGIN_REQUESTS if self.cfg.auth.type == "form" else 1 if self.cfg.auth.type != "none" else 0
         ctx = self._context(self._limit_values(max_pages=1, max_records=max_records,
                                                max_requests=min(self.cfg.limits.max_requests, 2 + auth_requests),
                                                max_clicks=0, max_scrolls=0))

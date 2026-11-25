@@ -160,7 +160,7 @@ comparar los dos `config_efectiva.json` muestra qué cambió.
 
 Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **20/20 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest` (Windows 11, 2026-11-25): **245 pruebas superadas, ninguna omitida**. Incluye:
+`python -m pytest` (Windows 11, 2026-11-25): **246 pruebas superadas, ninguna omitida**. Incluye:
 
 - 12 pruebas con navegador (Chrome o Edge): 4 con inicio de sesión (una en dos pantallas con código de
   verificación) y una con ventana visible que espera a la persona ante un CAPTCHA. En esa prueba la
@@ -174,7 +174,7 @@ esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resul
 - 16 pruebas de `tests/unit/test_reto_final.py`: XML, Excel, indicios de JS/GraphQL/interacción/
   tiempo, exclusión de menús, sugerencia de campos, login opcional frente a muro, linaje por campo
   (`field_sources`) y selección de navegador.
-- 15 pruebas de la interfaz gráfica con `streamlit.testing` (modo solo diagnóstico, bloqueo sin autorización, recuperación de la configuración de un sitio ya analizado, campos desmarcados, CAPTCHA con la opción de resolverlo usted, CAPTCHA bloqueado en modo solo diagnóstico y acceso con token, y acceso con cuenta a medio configurar sin bloquear los pasos, credenciales escritas en la interfaz sin guardarse y página de inicio de sesión en otra carpeta del sitio).
+- 16 pruebas de la interfaz gráfica con `streamlit.testing` (modo solo diagnóstico, bloqueo sin autorización, recuperación de la configuración de un sitio ya analizado, campos desmarcados, CAPTCHA con la opción de resolverlo usted, CAPTCHA bloqueado en modo solo diagnóstico y acceso con token, y acceso con cuenta a medio configurar sin bloquear los pasos, credenciales escritas en la interfaz sin guardarse página de inicio de sesión en otra carpeta del sitio y diagnóstico con la sesión iniciada que sugiere los campos de la página protegida).
 - 14 pruebas de `tests/integration/test_intervention.py` (incluyen «Press & Hold» y redirecciones a muros de verificación): pasos por tipo de barrera, registro central
   `intervenciones.jsonl`, archivos y logs del diagnóstico, continuación de `run` con token autorizado y
   detección y parada ante CAPTCHA de rompecabezas o deslizador (sin confundirlo con un carrusel).

@@ -28,7 +28,7 @@ from web_extractor.config.loader import parse_config
 from web_extractor.config.schema import ProjectConfig
 from web_extractor.config.templates import FIELD_COLUMNS, default_config_dict, fields_to_rows, rows_to_fields
 from web_extractor.core.authorization import missing_for_diagnosis, missing_for_extraction
-from web_extractor.core.engine import ExtractionEngine
+from web_extractor.core.engine import LOGIN_REQUESTS, ExtractionEngine
 from web_extractor.core.errors import AuthorizationError, ConfigError, WebExtractorError
 from web_extractor.gui.jobs import ExtractionJob
 from web_extractor.reports.diagnosis_report import diagnosis_markdown
@@ -215,8 +215,7 @@ def derive_limits(data: dict) -> None:
     lim = data["limits"]
     pages = int(lim.get("max_pages") or 1)
     delay = float(lim.get("delay_seconds") or 1.0)
-    # El inicio de sesión usa hasta 5 solicitudes más: formulario, envíos (1 o 2 pasos, código) y redirecciones.
-    lim["max_requests"] = pages + 3 + (5 if data["auth"]["type"] == "form" else 0)
+    lim["max_requests"] = pages + 3 + (LOGIN_REQUESTS if data["auth"]["type"] == "form" else 0)
     lim["max_clicks"] = lim["max_scrolls"] = max(pages - 1, 0)
     lim["max_seconds"] = float(min(3600, pages * (delay + float(lim.get("timeout_seconds") or 20)) + 60))
     if data["auth"]["type"] != "none":
@@ -236,9 +235,13 @@ def validate(data: dict) -> tuple[ProjectConfig | None, list[str]]:
     except ConfigError as exc:
         errors = exc.messages
     draft = copy.deepcopy(data)
+    draft["extraction"] = {"method": "auto", "fields": [{"name": "texto"}]}
+    try:
+        return parse_config(draft), errors
+    except ConfigError:
+        pass
     draft["auth"] = {"type": "none"}
     draft["authorization"]["allow_authentication"] = False
-    draft["extraction"] = {"method": "auto", "fields": [{"name": "texto"}]}
     try:
         return parse_config(draft), errors
     except ConfigError:
@@ -271,6 +274,11 @@ def credentials_missing() -> bool:
 
 
 def friendly(message: str) -> str:
+    if "requiere record_selector" in message and not st.session_state.get("suggestion") \
+            and login_detected(st.session_state.get("diagnosis")):
+        return ("**Falta el selector de los registros.** El diagnóstico no pudo ver la página porque pide iniciar "
+                "sesión: complete «Acceso autorizado» y pulse «Diagnosticar con la sesión iniciada» para que se "
+                "sugieran los campos.")
     return next((text for key, text in FRIENDLY_ERRORS if key in message), message)
 
 
@@ -352,15 +360,18 @@ def apply_suggestion(suggestion: dict) -> None:
         st.session_state[wkey(f"extraction.pagination.{key}")] = pagination.get(key) or ""
     st.session_state["fields_rows"] = fields_to_rows(suggestion["fields"])
     st.session_state["fields_version"] = st.session_state.get("fields_version", 0) + 1
+    st.session_state.pop("fields_current", None)
 
 
-def cb_diagnose() -> None:
+def cb_diagnose(with_login: bool = False) -> None:
     cfg, errors = validate(collect())
     if cfg is None:
         st.session_state["flash"] = ("error", "Corrija la configuración antes de diagnosticar.")
         return
     try:
-        diagnosis = ExtractionEngine(cfg).diagnose()
+        engine = ExtractionEngine(cfg, credentials=gui_credentials())
+        render = with_login and st.session_state.get(wkey("extraction.method")) == "browser"
+        diagnosis = engine.diagnose(render=render or None, with_login=with_login)
     except (AuthorizationError, WebExtractorError) as exc:
         st.session_state["flash"] = ("error", str(exc))
         return
@@ -368,7 +379,7 @@ def cb_diagnose() -> None:
     st.session_state["diagnosis"] = diagnosis
     suggestion = suggest_extraction(diagnosis) if not diagnosis.stopped else None
     st.session_state["suggestion"] = suggestion
-    if suggestion and (st.session_state.get(wkey("extraction.method")) or "auto") == "auto":
+    if suggestion and (with_login or (st.session_state.get(wkey("extraction.method")) or "auto") == "auto"):
         apply_suggestion(suggestion)
         st.session_state["flash"] = ("success", f"Diagnóstico listo: se propusieron {len(suggestion['fields'])} campos. "
                                                 "Revíselos en «Datos a extraer» y pulse «Vista previa».")
@@ -700,7 +711,7 @@ def step_config(cfg: ProjectConfig, errors: list[str]) -> None:
                            help="Mínimo 1 s en sitios reales; si robots.txt pide más, se respeta.")
             st.multiselect("Formatos de salida", ["csv", "excel", "json", "sqlite"], key=wkey("output.formats"))
         if st.session_state.get(wkey("auth.type"), "none") != "none" or login_detected(st.session_state.get("diagnosis")):
-            show_auth()
+            show_auth(cfg)
         for message in [e for e in errors if not e.startswith("authorization")]:
             st.error(friendly(message))
         for message in missing_for_extraction(cfg):
@@ -718,7 +729,7 @@ def step_config(cfg: ProjectConfig, errors: list[str]) -> None:
             job_panel()
 
 
-def show_auth() -> None:
+def show_auth(cfg: ProjectConfig) -> None:
     with st.expander("Acceso autorizado (solo si el propietario le dio una cuenta o un token)", expanded=True):
         st.selectbox("Tipo", ["none", "form", "header"], key=wkey("auth.type"),
                      format_func={"none": "Sin acceso con cuenta", "form": "Usuario y contraseña",
@@ -759,6 +770,12 @@ def show_auth() -> None:
             c1.text_input("Encabezado", key=wkey("auth.header_name"))
             c2.text_input("Variable con el token", key=wkey("auth.token_env"), placeholder="MI_API_TOKEN")
             names = [wkey("auth.token_env")]
+        if kind in ("form", "header"):
+            ready = cfg.auth.type != "none" and not credentials_missing()
+            st.button("Diagnosticar con la sesión iniciada", on_click=cb_diagnose, kwargs={"with_login": True},
+                      disabled=not ready, icon=":material/login:",
+                      help="Inicia sesión una sola vez con su cuenta autorizada y analiza la página protegida "
+                           "para sugerir los campos y el selector. Con la estrategia Navegador también la renderiza.")
         for key in names:
             name = st.session_state.get(key)
             if name:

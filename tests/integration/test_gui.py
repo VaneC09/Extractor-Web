@@ -199,6 +199,31 @@ def test_credentials_typed_in_interface_log_in_without_being_saved(example, hits
     assert len(hits("POST /auth/login")) == 1
 
 
+def test_diagnosis_with_login_suggests_fields_of_protected_page(server):
+    from web_extractor.devtools.fixture_server import DEFAULT_PASSWORD, DEFAULT_USER
+
+    at = _app().run()
+    at.text_input(key="start_url").input(f"{server.base_url}/auth/privado")
+    _button(at, "Comenzar").click().run()
+    _authorize(at)
+    _button(at, "Diagnosticar sitio").click().run()
+    assert at.session_state["diagnosis"].incidents[0].kind == "auth_required"
+    at.selectbox(key="w:extraction.method").select("static_html").run()
+    assert any("Diagnosticar con la sesión iniciada" in e.value for e in at.error)
+    at.session_state["w:auth.type"] = "form"
+    at.run()
+    at.text_input(key="w:auth.login_url").input(f"{server.base_url}/auth/login")
+    at.text_input(key="cred_user").input(DEFAULT_USER)
+    at.text_input(key="cred_pass").input(DEFAULT_PASSWORD).run()
+    _button(at, "Diagnosticar con la sesión iniciada").click().run()
+    assert not at.exception
+    diagnosis = at.session_state["diagnosis"]
+    assert not diagnosis.stopped and not diagnosis.incidents
+    assert at.session_state["w:extraction.table_selector"] == "table#informes"
+    _button(at, "Vista previa").click().run()
+    assert len(at.session_state["preview"].records) == 5
+
+
 def test_unchecked_fields_are_not_extracted(server):
     at = _app().run()
     at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
