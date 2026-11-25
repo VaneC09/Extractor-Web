@@ -48,7 +48,8 @@ def _install_cancel_handler(cancel: CancelToken) -> None:
 def _engine(cfg: ProjectConfig) -> ExtractionEngine:
     cancel = CancelToken(Path(cfg.output.directory) / cfg.output.stop_file)
     _install_cancel_handler(cancel)
-    return ExtractionEngine(cfg, cancel=cancel)
+    return ExtractionEngine(cfg, cancel=cancel, code_provider=console.ask_code,
+                            human_notice=console.human_notice)
 
 
 def _confirm_diagnosis(cfg: ProjectConfig, assume_yes: bool) -> bool:

@@ -35,6 +35,24 @@ def ask_yes_no(question: str) -> bool:
     return answer in ("si", "sí", "s", "yes", "y")
 
 
+def human_notice(prompt: str | None) -> None:
+    if prompt:
+        out(f"\n>>> Intervención humana: {prompt}. Ctrl+C para cancelar.")
+
+
+def ask_code(prompt: str) -> str | None:
+    """Código de verificación escrito por el titular de la cuenta; oculto en pantalla y nunca guardado."""
+    if not sys.stdin.isatty():
+        out(f"{prompt} [no interactivo: se detiene]")
+        return None
+    import getpass
+
+    try:
+        return getpass.getpass(f"{prompt}: ").strip() or None
+    except EOFError:
+        return None
+
+
 def ask(question: str, default: str = "") -> str:
     suffix = f" [{default}]" if default else ""
     answer = input(f"{question}{suffix}: ").strip()

@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Verificación requerida</title>
+</head>
+<body>
+  <main id="contenido">
+    <h1>Verifica que eres humano</h1>
+    <p>Para continuar, completa la verificación.</p>
+    <div class="g-recaptcha" data-sitekey="clave-ficticia-de-prueba"></div>
+  </main>
+  <script>
+    // Prueba automatizada: simula que la persona completó la verificación y el sitio muestra el contenido.
+    setTimeout(function () {
+      document.title = "Avisos (ficticios)";
+      document.getElementById("contenido").innerHTML =
+        "<h1>Avisos del área (ficticios)</h1>" +
+        "<article>Aviso de prueba 1</article><article>Aviso de prueba 2</article><article>Aviso de prueba 3</article>";
+    }, 1500);
+  </script>
+</body>
+</html>

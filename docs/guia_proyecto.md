@@ -26,7 +26,9 @@ El flujo de trabajo siempre es el mismo:
 9. **Informes:** reporte de la ejecución, incidencias y detección de cambios en el sitio.
 
 Ante un CAPTCHA, un bloqueo, un certificado inválido o una prohibición, **se detiene**, no reintenta y
-registra una incidencia con el siguiente paso legítimo.
+registra una incidencia con el siguiente paso legítimo. Con la estrategia Navegador y la opción
+«Resolveré yo el CAPTCHA», en lugar de detenerse espera a que una persona lo resuelva en la ventana
+visible; la herramienta no lo resuelve.
 
 ## 2. Cómo ejecutarlo (Windows, paso a paso)
 
@@ -154,19 +156,22 @@ Ante una barrera, la herramienta se detiene, no reintenta y dice si se puede con
 | Barrera | ¿Se puede continuar? |
 |---|---|
 | Pide iniciar sesión o token (`auth_required`) | Sí, con usuario y contraseña o token autorizados por el propietario |
-| CAPTCHA (también de rompecabezas o deslizador) o desafío anti-bot | No: pedir API, descarga o permiso al propietario |
+| Pide un código de verificación por SMS, correo o app (`mfa_required`) | Sí, si el titular de la cuenta escribe el código cuando se le pide |
+| CAPTCHA (también de rompecabezas o deslizador) o desafío anti-bot | Solo con la estrategia Navegador y si usted lo resuelve en la ventana visible; si no, pedir API, descarga o permiso al propietario |
 | Límite de solicitudes o sobrecarga | Más tarde, con menor frecuencia |
 | Acceso denegado o muro de pago | Solo si el propietario o la licencia dan credenciales para ese uso |
 
 Con credenciales autorizadas: se guardan en variables de entorno (por ejemplo
 `$env:WE_USUARIO`, `$env:WE_CLAVE` o `$env:WE_TOKEN`), se configuran en «Acceso autorizado» y se
-pulsa «Vista previa» y luego «Iniciar extracción». El detalle completo está en el
+pulsa «Vista previa» y luego «Iniciar extracción». El inicio de sesión en dos pantallas (correo y
+después contraseña) se detecta solo, y si el sitio pide un código de verificación, la herramienta lo
+pide al titular de la cuenta. El detalle completo está en el
 [manual de usuario, sección 5](manual_usuario.md).
 
 ### 2.7 Ejecutar las pruebas
 
 ```powershell
-python -m pytest                    # 224 pruebas unitarias y de integración
+python -m pytest                    # 242 pruebas unitarias y de integración
 python -m web_extractor matrix      # 20 escenarios con el sitio de pruebas local
 ```
 
@@ -241,7 +246,9 @@ función `cmd_*`:
   "siguiente paso legítimo" en `NEXT_STEPS`. Un formulario de acceso opcional en una página con mucho
   contenido público no se trata como muro.
 - **`auth.py`**: autenticación **solo si está autorizada**: formulario o token en encabezado. Las
-  credenciales se leen de variables de entorno y nunca se escriben en logs.
+  credenciales se leen de variables de entorno y nunca se escriben en logs. `form_login()` admite
+  formularios en una o dos pantallas; `find_code_field()` detecta el campo del código de verificación
+  y `request_code()` se lo pide al titular de la cuenta (o se detiene con `mfa_required`).
 - **`tracing.py`**: `ActionLog` (bitácora de acciones) e `IncidentLog` (incidencias).
 - **`errors.py`**: los errores propios (`BarrierDetected`, `RobotsDisallowed`, `LimitReached`,
   `Cancelled`, etc.).
@@ -277,7 +284,8 @@ Todos implementan la misma interfaz (`iter_documents()` y `close()`), por eso el
 - **`browser_selenium.py` → `SeleniumBrowserAdapter`**: Selenium con Edge o Chrome headless.
   `available_browsers()` detecta qué navegador hay. Espera un selector, hace clic en "cargar más" o
   scroll infinito con topes, y revisa barreras en cada paso. No oculta que es un navegador
-  automatizado.
+  automatizado. Con `human_verification`, ante un CAPTCHA abre la ventana visible y espera
+  (`_wait_for_human`, máx. 5 min y 3 veces) a que una persona lo resuelva.
 - **`structured_file.py` → `StructuredFileAdapter`**: descarga archivos CSV, JSON o XML públicos.
 - **`api_json.py` → `DocumentedApiAdapter`**: APIs públicas y documentadas, con paginación por
   parámetro o por campo "siguiente".
@@ -332,7 +340,8 @@ Todos implementan la misma interfaz (`iter_documents()` y `close()`), por eso el
   recupera la configuración de un sitio ya analizado (perfil reutilizable). Los botones que harían
   solicitudes se desactivan si falta la autorización.
 - **`jobs.py` → `ExtractionJob`**: ejecuta la extracción en segundo plano para mostrar el progreso en
-  vivo y permitir **Cancelar**.
+  vivo y permitir **Cancelar**. También muestra el aviso de CAPTCHA por resolver y el cuadro del
+  código de verificación (`code_request`, `provide_code`).
 
 ### 4.11 Otros
 
@@ -411,7 +420,7 @@ probados; se demuestran con el sitio de pruebas local.
 | Dataset SQLite, CSV y Excel | `docs/evidencias/reales/dataset_reales.sqlite` y `.xlsx`; CSV por sitio |
 | Informe técnico | `docs/informe_tecnico.md` |
 | Video de 3 a 5 minutos | Guion en `docs/guion_demo.md` (la grabación la hace el equipo) |
-| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (224 + matriz de 20) |
+| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (242 + matriz de 20) |
 | Plan en 5 fases | `docs/plan_fases.md` |
 
 ## 6. Límites éticos y legales que aplica el sistema
@@ -419,7 +428,8 @@ probados; se demuestran con el sitio de pruebas local.
 - Solo trabaja con autorización declarada y confirmada.
 - Respeta robots.txt, el `Crawl-delay`, el alcance y los límites configurados.
 - No evade CAPTCHA, bloqueos, inicios de sesión, paywalls ni certificados inválidos: se detiene y lo
-  registra.
+  registra. Solo continúa si una persona interviene de forma legítima: credenciales autorizadas, el
+  código de verificación del titular o un CAPTCHA resuelto por usted en la ventana del navegador.
 - No usa proxies, suplantación de identidad ni técnicas para ocultar la automatización.
 - No acepta campos con datos sensibles (CURP, RFC, tarjetas, contraseñas) ni secretos en la
   configuración.

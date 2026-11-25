@@ -120,7 +120,8 @@ no es requisito porque Selenium cubre los escenarios del MVP.
   `aria-expanded`, `onclick`) y contenido dependiente del tiempo (enlaces con `fecha=`, meta refresh,
   WebSocket o cuenta regresiva).
 - Un formulario de acceso opcional en una página con mucho contenido público (≥ 40 enlaces) no se
-  trata como muro de autenticación; un CAPTCHA en esa misma página sí detiene el flujo.
+  trata como muro de autenticación; un CAPTCHA en esa misma página sí detiene el flujo, salvo con la
+  estrategia Navegador y «Resolveré yo el CAPTCHA», en la que se espera a que una persona lo resuelva.
 - Un certificado TLS inválido detiene el flujo (`tls_error`): nunca se desactiva la verificación.
   La página «Just a moment...» de Cloudflare se clasifica como desafío anti-bot.
 - No se puede saber desde una inspección permitida: términos de uso aplicables, permisos reales,
@@ -159,13 +160,21 @@ comparar los dos `config_efectiva.json` muestra qué cambió.
 
 Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **20/20 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest` (Windows 11, 2026-11-21): **224 pruebas superadas, ninguna omitida**. Incluye:
+`python -m pytest` (Windows 11, 2026-11-25): **242 pruebas superadas, ninguna omitida**. Incluye:
 
-- 10 pruebas con navegador headless (ejecutadas con Edge; 3 de ellas con inicio de sesión).
+- 12 pruebas con navegador (Chrome o Edge): 4 con inicio de sesión (una en dos pantallas con código de
+  verificación) y una con ventana visible que espera a la persona ante un CAPTCHA. En esa prueba la
+  «persona» está simulada por el propio fixture, que muestra el contenido tras 1,5 s.
+- 10 pruebas de `tests/integration/test_two_step_login.py`: correo y contraseña en pantallas
+  separadas, usuario rechazado en el primer paso, código de verificación escrito por el titular, código
+  incorrecto sin reintento, parada `mfa_required` sin código, espera del código en la interfaz,
+  CAPTCHA en el formulario de acceso por HTTP y campo «código postal» que no se confunde con un código.
+- 7 pruebas de `tests/integration/test_human_captcha.py`: sin la opción se detiene; con ella espera sin
+  hacer solicitudes, continúa al resolverse, se detiene si nadie lo resuelve o si se repite más de 3 veces.
 - 16 pruebas de `tests/unit/test_reto_final.py`: XML, Excel, indicios de JS/GraphQL/interacción/
   tiempo, exclusión de menús, sugerencia de campos, login opcional frente a muro, linaje por campo
   (`field_sources`) y selección de navegador.
-- 11 pruebas de la interfaz gráfica con `streamlit.testing` (modo solo diagnóstico, bloqueo sin autorización, recuperación de la configuración de un sitio ya analizado, campos desmarcados, parada ante CAPTCHA y acceso con token).
+- 12 pruebas de la interfaz gráfica con `streamlit.testing` (modo solo diagnóstico, bloqueo sin autorización, recuperación de la configuración de un sitio ya analizado, campos desmarcados, CAPTCHA con la opción de resolverlo usted, CAPTCHA bloqueado en modo solo diagnóstico y acceso con token).
 - 14 pruebas de `tests/integration/test_intervention.py` (incluyen «Press & Hold» y redirecciones a muros de verificación): pasos por tipo de barrera, registro central
   `intervenciones.jsonl`, archivos y logs del diagnóstico, continuación de `run` con token autorizado y
   detección y parada ante CAPTCHA de rompecabezas o deslizador (sin confundirlo con un carrusel).
@@ -224,7 +233,9 @@ extracción propia.
 | Archivo CSV/JSON/XML | Alta | Alta con licencia abierta | Verificar licencia y vigencia |
 | Autenticación (Requests o navegador) | Media | Solo con autorización expresa y cuenta propia | Credenciales del usuario; nunca de terceros |
 | API con token | Alta | Solo si el propietario emite el token y documenta su uso | Token propio por variable de entorno; respetar cuotas |
-| CAPTCHA / 429 / 403 / robots | No aplica: se detiene | No se continúa | Vía alternativa autorizada por el propietario |
+| Código de verificación (2FA) | Media | Solo si el titular escribe el código | Nunca se lee de SMS o correo ni se genera |
+| CAPTCHA | Baja | Solo con Navegador visible y si una persona lo resuelve; por HTTP se detiene | Vía autorizada si los términos prohíben el acceso automatizado |
+| 429 / 403 / robots | No aplica: se detiene | No se continúa | Vía alternativa autorizada por el propietario |
 
 ## 9. Extensiones previstas
 

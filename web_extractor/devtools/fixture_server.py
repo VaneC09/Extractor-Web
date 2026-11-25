@@ -9,6 +9,10 @@ Rutas dinámicas:
   (``FIXTURE_LOGIN_USER`` / ``FIXTURE_LOGIN_PASSWORD``, con valores por defecto de prueba).
   ``/auth/informes.csv`` es el mismo contenido como archivo descargable tras iniciar sesión y
   ``/auth/panel`` lo dibuja con JavaScript (para el navegador con sesión).
+- ``/auth/pasos/login``: inicio de sesión en dos pantallas (primero el correo, después la contraseña).
+  ``/auth/pasos-codigo/login`` añade un código de verificación (``FIXTURE_MFA_CODE``, por defecto ``123456``)
+  en ``/auth/pasos-codigo/verificar``, como el que llegaría por SMS o correo.
+  ``/auth/con-captcha/login`` es un formulario de acceso con CAPTCHA.
 - ``/api/v1/privado``: API documentada que exige ``Authorization: Bearer`` (``FIXTURE_API_TOKEN``).
 - ``/barrier/limite`` (429), ``/barrier/prohibido`` (403), ``/barrier/inestable`` (502 una vez).
 - ``/privado/...``: existe, pero robots.txt lo prohíbe; sirve para comprobar que no se solicita.
@@ -35,6 +39,32 @@ SITE_DIR = Path(__file__).resolve().parents[2] / "fixtures" / "site"
 DEFAULT_USER = "usuario_demo"
 DEFAULT_PASSWORD = "clave-ficticia-solo-pruebas"
 DEFAULT_API_TOKEN = "token-ficticio-solo-pruebas"
+DEFAULT_MFA_CODE = "123456"
+TWO_STEP_PREFIXES = ("/auth/pasos", "/auth/pasos-codigo")
+
+
+def _page(title: str, body: str) -> str:
+    return (f'<!doctype html><html lang="es"><head><meta charset="utf-8"><title>{title}</title></head>'
+            f"<body><h1>{title} (entorno de prueba)</h1>{body}</body></html>")
+
+
+def email_form(prefix: str, error: str = "") -> str:
+    return _page("Acceso", f"""{error}<form method="post" action="{prefix}/login">
+<input type="hidden" name="csrf_token" value="{secrets.token_hex(8)}">
+<label>Correo o usuario <input name="email" autocomplete="username"></label><button type="submit">Siguiente</button></form>""")
+
+
+def password_form(prefix: str, flow: str) -> str:
+    return _page("Escriba su contraseña", f"""<form method="post" action="{prefix}/password">
+<input type="hidden" name="flow" value="{flow}">
+<label>Contraseña <input type="password" name="password"></label><button type="submit">Entrar</button></form>""")
+
+
+def code_form(prefix: str, error: str = "") -> str:
+    return _page("Verificación en dos pasos", f"""{error}<p>Enviamos un código a su teléfono.</p>
+<form method="post" action="{prefix}/verificar"><input type="hidden" name="csrf_token" value="{secrets.token_hex(8)}">
+<label>Código <input name="codigo" inputmode="numeric" autocomplete="one-time-code"></label>
+<button type="submit">Verificar</button></form>""")
 
 PRODUCTS = [
     {"sku": "SKU-001", "name": "Cuaderno reciclado A5", "price": "$45.50 MXN", "stock": "Disponible", "updated": "2025-01-10"},
@@ -116,6 +146,8 @@ de HTML estático. Página {page} de {len(CATALOG_PAGES)}.</p>
 class FixtureHandler(BaseHTTPRequestHandler):
     server_version = "FixtureServer/1.0"
     sessions: set[str] = set()
+    flows: dict[str, str] = {}
+    pending: set[str] = set()
 
     def log_message(self, fmt: str, *args) -> None:
         if os.environ.get("FIXTURE_VERBOSE"):
@@ -136,10 +168,46 @@ class FixtureHandler(BaseHTTPRequestHandler):
     def _record(self) -> None:
         self.server.hits.append(f"{self.command} {self.path}")  # type: ignore[attr-defined]
 
+    def _cookie(self, name: str) -> str:
+        for part in self.headers.get("Cookie", "").split(";"):
+            key, _, value = part.strip().partition("=")
+            if key == name:
+                return value
+        return ""
+
     def _logged_in(self) -> bool:
-        cookie = self.headers.get("Cookie", "")
-        return any(part.strip().startswith("fixture_session=") and part.strip().split("=", 1)[1] in self.sessions
-                   for part in cookie.split(";"))
+        return self._cookie("fixture_session") in self.sessions
+
+    def _new_session(self) -> None:
+        session = secrets.token_hex(16)
+        self.sessions.add(session)
+        self._send(303, "", headers={"Location": "/auth/privado",
+                                     "Set-Cookie": f"fixture_session={session}; Path=/; HttpOnly"})
+
+    def _two_step_post(self, prefix: str, step: str, form: dict) -> None:
+        value = lambda key: form.get(key, [""])[0]  # noqa: E731
+        if step == "login":
+            if value("email") != os.environ.get("FIXTURE_LOGIN_USER", DEFAULT_USER) or not value("csrf_token"):
+                return self._send(200, email_form(prefix, "<p class='error'>No encontramos esa cuenta.</p>"))
+            flow = secrets.token_hex(8)
+            self.flows[flow] = value("email")
+            return self._send(200, password_form(prefix, flow))
+        if step == "password":
+            if self.flows.pop(value("flow"), None) is None or \
+                    value("password") != os.environ.get("FIXTURE_LOGIN_PASSWORD", DEFAULT_PASSWORD):
+                return self._send(401, "<h1>Contraseña incorrecta</h1>")
+            if prefix == "/auth/pasos":
+                return self._new_session()
+            pending = secrets.token_hex(16)
+            self.pending.add(pending)
+            return self._send(303, "", headers={"Location": f"{prefix}/verificar",
+                                                "Set-Cookie": f"fixture_pending={pending}; Path=/; HttpOnly"})
+        if step == "verificar" and prefix == "/auth/pasos-codigo" and self._cookie("fixture_pending") in self.pending:
+            if value("codigo") != os.environ.get("FIXTURE_MFA_CODE", DEFAULT_MFA_CODE):
+                return self._send(200, code_form(prefix, "<p class='error'>Código incorrecto.</p>"))
+            self.pending.discard(self._cookie("fixture_pending"))
+            return self._new_session()
+        return self._send(400, "<h1>Solicitud no válida</h1>")
 
     def do_GET(self) -> None:  # noqa: N802
         self._record()
@@ -169,6 +237,17 @@ class FixtureHandler(BaseHTTPRequestHandler):
 <form method="post" action="/auth/login"><input type="hidden" name="csrf_token" value="{token}">
 <label>Usuario <input name="username"></label><label>Contraseña <input type="password" name="password"></label>
 <button type="submit">Entrar</button></form></body></html>""")
+        prefix, _, step = path.rpartition("/")
+        if prefix in TWO_STEP_PREFIXES and step == "login":
+            return self._send(200, email_form(prefix))
+        if path == "/auth/con-captcha/login":
+            return self._send(200, _page("Acceso", """<form method="post" action="/auth/con-captcha/login">
+<label>Usuario <input name="username"></label><label>Contraseña <input type="password" name="password"></label>
+<div class="g-recaptcha" data-sitekey="clave-ficticia"></div><button type="submit">Entrar</button></form>"""))
+        if prefix == "/auth/pasos-codigo" and step == "verificar":
+            if self._cookie("fixture_pending") not in self.pending:
+                return self._send(302, "", headers={"Location": f"{prefix}/login"})
+            return self._send(200, code_form(prefix))
         if path == "/auth/privado":
             if not self._logged_in():
                 return self._send(302, "", headers={"Location": "/auth/login"})
@@ -248,6 +327,9 @@ setTimeout(function () {{
                 return self._send(303, "", headers={"Location": "/auth/privado",
                                                     "Set-Cookie": f"fixture_session={session}; Path=/; HttpOnly"})
             return self._send(401, "<h1>Credenciales incorrectas</h1>")
+        prefix, _, step = urlsplit(self.path).path.rpartition("/")
+        if prefix in TWO_STEP_PREFIXES:
+            return self._two_step_post(prefix, step, form)
         return self._send(405, "<h1>Método no permitido</h1>")
 
     def _serve_file(self, path: str) -> None:

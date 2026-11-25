@@ -25,8 +25,9 @@ def test_guides_say_when_extraction_can_continue():
     assert auth["can_continue"] == "si_con_credenciales" and "token" in auth["answer"]
     steps = " ".join(auth["steps"])
     assert "Acceso autorizado" in steps and "$env:" in steps and "nunca en la configuración" in steps
-    assert guide_for("captcha")["can_continue"] == "no"
-    assert "ni siquiera con usuario y contraseña" in guide_for("captcha")["steps"][0]
+    assert guide_for("captcha")["can_continue"] == "con_persona_captcha"
+    assert guide_for("access_denied")["can_continue"] == "no"
+    assert "no lo envía a servicios de resolución" in guide_for("captcha")["steps"][0]
     assert guide_for("rate_limit")["can_continue"] == "mas_tarde"
     assert guide_for("limit") is None
 
@@ -37,7 +38,7 @@ def test_write_intervention_appends_to_central_log(tmp_path):
     assert [e["kind"] for e in entries] == ["captcha"]
     files = write_intervention(entries, tmp_path / "p" / "a", tmp_path)
     write_intervention(entries, tmp_path / "p" / "b", tmp_path)
-    assert "No de forma automática" in Path(files["intervention"]).read_text(encoding="utf-8")
+    assert "usted mismo lo resuelve" in Path(files["intervention"]).read_text(encoding="utf-8")
     lines = (tmp_path / INTERVENTION_LOG).read_text(encoding="utf-8").splitlines()
     assert len(lines) == 2 and json.loads(lines[0])["file"] == files["intervention"]
     assert write_intervention([], tmp_path / "p" / "c", tmp_path) == {}
@@ -99,7 +100,7 @@ def test_puzzle_captcha_stops_run_and_records_steps(example, server):
     result = ExtractionEngine(cfg).run(confirmed=True)
     assert result.status == "detenido_barrera" and not result.records
     steps = Path(result.outputs["intervention"]).read_text(encoding="utf-8")
-    assert "No de forma automática" in steps and "deslizador" in steps
+    assert "usted mismo lo resuelve" in steps and "deslizador" in steps
 
 
 def test_cli_run_continues_with_authorized_token(fixture_env, tmp_path, monkeypatch, capsys):

@@ -21,6 +21,9 @@ GENERAL_LOG = "web_extractor.log"
 ANSWERS = {
     "si_con_credenciales": "Sí, si el propietario le dio un usuario y contraseña o un token autorizado.",
     "tras_ajuste": "Sí, después de corregir lo indicado.",
+    "con_persona_captcha": "Sí, solo con la estrategia Navegador y si usted mismo lo resuelve en la ventana "
+    "visible; la herramienta no lo resuelve.",
+    "con_persona": "Sí, si usted, titular de la cuenta, escribe el código que recibe cuando la herramienta lo pida.",
     "mas_tarde": "Más tarde, con una frecuencia menor y solo si el propietario lo admite.",
     "no": "No de forma automática: hace falta una vía autorizada por el propietario.",
 }
@@ -56,6 +59,22 @@ GUIDES: dict[str, dict] = {
             "Repita una sola «Vista previa» después de corregirlo.",
         ],
     },
+    "mfa_required": {
+        "title": "El sitio pide un código de verificación (autenticación en dos pasos)",
+        "can_continue": "con_persona",
+        "steps": [
+            "La herramienta no lee SMS ni correos, no genera códigos ni usa servicios externos: el código lo "
+            "escribe usted, titular de la cuenta autorizada.",
+            "Interfaz: en «Acceso autorizado» active «Pedirme el código de verificación». CLI: "
+            "`auth.ask_verification_code: true` en el YAML.",
+            "Pulse «Iniciar extracción» (la vista previa no pide el código). Cuando aparezca el cuadro "
+            "«Código de verificación», escriba el código recibido y pulse «Enviar código»; tiene 5 minutos.",
+            "El código se oculta en los logs y no se guarda. Si se rechaza, se detiene sin reintentar "
+            "(incidencia `auth_failed`); pida un código nuevo y repita una sola vez.",
+            "Si el inicio de sesión muestra un CAPTCHA, solo continúa con la estrategia Navegador y «Resolveré yo "
+            "el CAPTCHA»: lo resuelve usted en la ventana; por HTTP se detiene.",
+        ],
+    },
     "access_denied": {
         "title": "Acceso denegado (HTTP 403)",
         "can_continue": "no",
@@ -78,23 +97,33 @@ GUIDES: dict[str, dict] = {
     },
     "captcha": {
         "title": "CAPTCHA",
-        "can_continue": "no",
+        "can_continue": "con_persona_captcha",
         "steps": [
-            "La herramienta no resuelve ni evade ningún CAPTCHA (casilla, imágenes, rompecabezas o deslizador), "
-            "ni siquiera con usuario y contraseña, y no lo envía a servicios de resolución.",
-            "Pida al propietario una vía autorizada: API documentada, archivo de descarga (CSV/JSON/XML) o permiso "
-            "explícito por escrito.",
-            "Si entrega una API o un archivo, analice esa URL en la herramienta (método «API documentada» o «Archivo "
-            "CSV/JSON/XML descargable»).",
+            "La herramienta no resuelve ni evade ningún CAPTCHA (casilla, imágenes, rompecabezas o deslizador) "
+            "y no lo envía a servicios de resolución.",
+            "Para continuar, **usted mismo** debe resolverlo: elija la estrategia «Navegador» y active «Resolveré "
+            "yo el CAPTCHA» (CLI: `extraction.browser.human_verification: true`). Se abre una ventana visible.",
+            "Resuélvalo en esa ventana. La herramienta espera hasta 5 minutos sin hacer solicitudes y continúa "
+            "sola cuando la verificación desaparece. Queda registrado en la bitácora (`human_verification`).",
+            "Si el CAPTCHA se repite más de 3 veces, la herramienta se detiene: el sitio no admite ese ritmo de "
+            "acceso. Aumente la pausa, reduzca páginas o pida una vía autorizada.",
+            "Resolver el CAPTCHA no sustituye la autorización: si los términos del sitio prohíben el acceso "
+            "automatizado, use el modo «Solo diagnosticar» o pida al propietario una API o descarga oficial.",
         ],
     },
     "bot_challenge": {
         "title": "Desafío anti-bot",
-        "can_continue": "no",
+        "can_continue": "con_persona_captcha",
         "steps": [
             "No intente evadirlo (sin proxies, sin cambiar la huella del navegador, sin reintentos).",
-            "Busque una API o descarga oficial documentada por el propietario, o solicite acceso autorizado.",
-            "Si obtiene esa vía, analice su URL en la herramienta.",
+            "Para continuar, **usted mismo** debe resolverlo: elija la estrategia «Navegador» y active «Resolveré "
+            "yo el CAPTCHA» (CLI: `extraction.browser.human_verification: true`). Se abre una ventana visible.",
+            "Resuélvalo en esa ventana. La herramienta espera hasta 5 minutos sin hacer solicitudes y continúa "
+            "sola cuando la verificación desaparece. Queda registrado en la bitácora (`human_verification`).",
+            "Si el CAPTCHA se repite más de 3 veces, la herramienta se detiene: el sitio no admite ese ritmo de "
+            "acceso. Aumente la pausa, reduzca páginas o pida una vía autorizada.",
+            "Resolver el CAPTCHA no sustituye la autorización: si los términos del sitio prohíben el acceso "
+            "automatizado, use el modo «Solo diagnosticar» o pida al propietario una API o descarga oficial.",
         ],
     },
     "rate_limit": {

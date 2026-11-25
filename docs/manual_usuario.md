@@ -58,8 +58,9 @@ En **Autorización** se elige qué hacer:
 2. **Diagnóstico del sitio**: **Diagnosticar sitio** hace pocas solicitudes y muestra:
    - la estrategia recomendada, con su confianza y evidencia;
    - las tecnologías y mecanismos detectados (JavaScript, API, paginación, «cargar más», interacción…);
-   - las barreras, con el siguiente paso legítimo. Un CAPTCHA o un bloqueo detienen el flujo; si el
-     sitio pide iniciar sesión, se puede configurar un acceso autorizado en el paso de configuración;
+   - las barreras, con el siguiente paso legítimo. Un bloqueo detiene el flujo. Ante un CAPTCHA se
+     puede seguir solo si usted lo resuelve (sección 5.4); si el sitio pide iniciar sesión, se puede
+     configurar un acceso autorizado en el paso de configuración;
    - el botón para descargar el informe del diagnóstico.
 3. **Datos a extraer**: la tabla se llena con los campos sugeridos (los de una configuración
    recuperada se conservan; «Usar los campos sugeridos por el diagnóstico» los cambia). Desmarque
@@ -191,7 +192,8 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
 | `auth_required` (pide iniciar sesión o token) | **Sí**, si el propietario le dio usuario y contraseña o un token autorizado | Pasos de la sección 5.2 |
 | `auth_failed` (credenciales rechazadas) | Sí, tras corregirlo | Verificar con el propietario que la cuenta o el token siguen vigentes; revisar las variables de entorno; una sola nueva vista previa |
 | `access_denied` (403) / `paywall` | Solo si el propietario o la licencia dan una cuenta o token para ese uso | Confirmar la autorización; si la hay, sección 5.2 |
-| `captcha` (casilla, imágenes, rompecabezas o deslizador) / `bot_challenge` | **No**, ni siquiera con usuario y contraseña | Pedir al propietario una API documentada, un archivo de descarga o permiso por escrito, y analizar esa URL |
+| `mfa_required` (código por SMS, correo o app) | **Sí**, si usted, titular de la cuenta, escribe el código | Sección 5.3 |
+| `captcha` (casilla, imágenes, rompecabezas o deslizador) / `bot_challenge` | **Sí, solo con la estrategia Navegador y si usted mismo lo resuelve**; por HTTP, no | Sección 5.4; si los términos prohíben el acceso automatizado, pedir una API, descarga o permiso por escrito |
 | `rate_limit` (429) / `overload` (503) | Más tarde | Esperar (`Retry-After`), aumentar la pausa y reducir páginas; consultar los límites con el propietario |
 | `tls_error` | Tras ajustar la URL | Usar la dirección oficial con certificado válido |
 | `robots_disallow` | No | Pedir una vía alternativa autorizada (API o descarga) |
@@ -220,7 +222,44 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
 4. Pulse **Vista previa**: inicia sesión una sola vez. Si se rechaza, se detiene sin reintentar.
 5. Si la vista previa muestra registros, pulse **Iniciar extracción**.
 
-### 5.3 Dónde se registra todo
+### 5.3 Inicio de sesión en dos pasos y código de verificación (2FA)
+
+- **Dos pantallas** (primero el correo o usuario y después la contraseña): no hay que configurar
+  nada más. Si la página de inicio de sesión solo tiene el campo de usuario, la herramienta lo envía,
+  espera la siguiente pantalla y envía la contraseña. Si el sitio rechaza el usuario, se detiene.
+- **Código de verificación** (SMS, correo o app de autenticación): active en «Acceso autorizado»
+  «Pedirme el código de verificación» (CLI: `auth.ask_verification_code: true`). Pulse **Iniciar
+  extracción**; cuando el sitio pida el código aparece el cuadro «Código de verificación»: escriba el
+  código que recibió y pulse «Enviar código» (5 minutos como máximo). En la CLI se pide en la terminal
+  sin mostrarlo.
+- La herramienta **no lee SMS ni correos, no genera códigos** y no usa servicios externos. El código
+  se oculta en los logs y no se guarda. Si se rechaza, se detiene sin reintentar (`auth_failed`).
+- Si la opción está desactivada o nadie escribe el código, se detiene con la incidencia `mfa_required`.
+- Google, Microsoft y servicios parecidos suelen bloquear los navegadores automatizados y sus términos
+  lo prohíben: no se ha probado con ellos y se espera que se detenga.
+
+### 5.4 CAPTCHA resuelto por usted
+
+La herramienta nunca resuelve un CAPTCHA ni lo envía a servicios de resolución, pero puede **esperar a
+que usted lo resuelva**:
+
+1. En el paso 5 elija la estrategia **Navegador** y active «Resolveré yo el CAPTCHA si aparece»
+   (CLI: `extraction.browser.human_verification: true`). El navegador se abre en una ventana visible.
+2. Pulse «Vista previa» o «Iniciar extracción». Si aparece un CAPTCHA (casilla, imágenes,
+   rompecabezas, deslizador o «verifica que eres humano»), la interfaz muestra «Intervención humana».
+3. Resuélvalo en la ventana de Chrome o Edge. La herramienta espera hasta 5 minutos sin hacer
+   solicitudes (ese tiempo no cuenta en el límite de duración) y continúa sola cuando la verificación
+   desaparece o el propio widget queda completado.
+4. Queda registrado en la bitácora (`human_verification`) y como incidencia de severidad media
+   «resuelto por una persona», además de en `intervenciones.jsonl`.
+5. Si nadie lo resuelve a tiempo, o si el CAPTCHA aparece más de 3 veces en la misma ejecución, se
+   detiene: el sitio no admite ese ritmo de acceso. Aumente la pausa o reduzca páginas.
+6. Por HTTP (estrategias HTML estático, API o archivo) no hay ventana donde resolverlo: se detiene.
+
+Resolver el CAPTCHA no sustituye la autorización: si los términos del sitio prohíben el acceso
+automatizado, use «Solo diagnosticar» o pida al propietario una API o una descarga oficial.
+
+### 5.5 Dónde se registra todo
 
 | Qué | Dónde |
 |---|---|

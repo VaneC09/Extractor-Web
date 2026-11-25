@@ -24,6 +24,10 @@ Funciona con cuatro mecanismos de adquisición intercambiables:
 - No resuelve ni evade CAPTCHA, autenticación, paywalls, bloqueos, límites de tasa ni mecanismos
   anti-bot. Ante cualquiera de ellos **se detiene**, no reintenta y registra una incidencia con el
   paso legítimo siguiente. No usa proxies, suplantación ni ocultación de la automatización.
+- Las únicas formas de continuar son legítimas y con una persona: credenciales o token autorizados
+  (también inicio de sesión en dos pantallas), el código de verificación (SMS, correo o app) que
+  escribe el titular de la cuenta y, con la estrategia Navegador, un CAPTCHA que **resuelve usted** en
+  la ventana visible mientras la herramienta espera.
 - Respeta robots.txt (RFC 9309), alcance de dominios/rutas, pausas mínimas (≥ 1 s en remoto),
   concurrencia 1 y topes de páginas, registros, solicitudes, clics, scrolls y tiempo.
 - No admite campos con nombres de datos sensibles (CURP, RFC, tarjetas, contraseñas…) ni secretos
@@ -71,9 +75,9 @@ lista:
 2. **Autorización:** «Extraer datos» o «Solo diagnosticar» (sitios sin permiso: identifica protecciones y no extrae). Para extraer: quién autoriza, permiso o licencia de uso y finalidad (listas desplegables que aceptan otro valor) y una casilla de confirmación.
    Hasta completarla no se hace ninguna solicitud y se indica qué falta.
 3. **Diagnóstico del sitio:** tecnologías y mecanismos detectados, estrategia recomendada con su
-   confianza, barreras con el siguiente paso legítimo e informe descargable. Un CAPTCHA o un bloqueo
-   detienen el flujo. Si el sitio pide iniciar sesión, se ofrece el acceso autorizado con credenciales
-   en variables de entorno.
+   confianza, barreras con el siguiente paso legítimo e informe descargable. Un bloqueo detiene el
+   flujo. Ante un CAPTCHA se indica cómo resolverlo usted con la estrategia Navegador. Si el sitio
+   pide iniciar sesión, se ofrece el acceso autorizado con credenciales en variables de entorno.
 4. **Datos a extraer:** tabla de campos sugeridos con una casilla «Extraer» por campo, reglas de
    limpieza y validación opcionales y **Vista previa**.
 5. **Configuración y ejecución:** estrategia, paginación, páginas, registros, pausa y formatos;
@@ -203,8 +207,10 @@ autorización y se siguen las secciones de la página (diagnóstico, datos a ext
 
 Ante una barrera la herramienta se detiene, no reintenta y dice si se puede continuar y cómo. Por
 ejemplo, si el sitio pide iniciar sesión y el propietario le dio usuario y contraseña o un token, se
-configuran en «Acceso autorizado» con variables de entorno y la extracción continúa. Ante un
-CAPTCHA no se continúa. Los pasos quedan en `intervencion_humana.md` (carpeta del diagnóstico o de la
+configuran en «Acceso autorizado» con variables de entorno y la extracción continúa; si además pide
+un código de verificación, la herramienta se pausa para que usted lo escriba. Ante un CAPTCHA solo se
+continúa si usted lo resuelve en la ventana del navegador (estrategia Navegador y «Resolveré yo el
+CAPTCHA»); por HTTP se detiene. Los pasos quedan en `intervencion_humana.md` (carpeta del diagnóstico o de la
 ejecución) y en `outputs/intervenciones.jsonl`. El log general es `outputs/web_extractor.log`.
 Detalle: [manual de usuario, sección 5](docs/manual_usuario.md).
 

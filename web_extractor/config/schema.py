@@ -181,6 +181,8 @@ class BrowserConfig(StrictModel):
     load_more_selector: str | None = None
     infinite_scroll: bool = False
     scroll_pause_seconds: float = Field(1.0, ge=0.1, le=10)
+    # Si aparece un CAPTCHA, abre el navegador visible y espera a que una persona lo resuelva.
+    human_verification: bool = False
 
 
 class ApiConfig(StrictModel):
@@ -253,6 +255,9 @@ class AuthConfig(StrictModel):
     username_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")
     password_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")
     failure_text: str | None = None
+    # Verificación en dos pasos: el titular de la cuenta escribe el código que recibe (SMS, correo o app).
+    ask_verification_code: bool = False
+    verification_code_field: str | None = Field(None, pattern=r"^[A-Za-z0-9_\-\[\].]{1,64}$")
     header_name: str = Field("Authorization", pattern=r"^[A-Za-z0-9-]{1,64}$")
     header_prefix: str = Field("Bearer ", max_length=20)
     token_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")

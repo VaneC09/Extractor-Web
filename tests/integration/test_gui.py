@@ -224,7 +224,7 @@ def test_diagnosis_only_mode_never_offers_extraction(server):
     assert "Vista previa" not in _labels(at) and "Iniciar extracción" not in _labels(at)
 
 
-def test_captcha_stops_the_flow_with_next_step(fixture_env, monkeypatch):
+def test_captcha_offers_human_verification_in_browser(fixture_env, monkeypatch):
     monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
     at = _app().run()
     option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f09"))
@@ -232,6 +232,21 @@ def test_captcha_stops_the_flow_with_next_step(fixture_env, monkeypatch):
     _button(at, "Cargar").click().run()
     _button(at, "Diagnosticar sitio").click().run()
     assert not at.exception
-    assert any("Barrera detectada: captcha" in e.value and "Siguiente paso legítimo" in e.value
-               and "¿Se puede continuar?" in e.value and "intervenciones.jsonl" in e.value for e in at.error)
+    assert any("Barrera detectada: captcha" in w.value and "Siguiente paso legítimo" in w.value
+               and "usted mismo lo resuelve" in w.value and "intervenciones.jsonl" in w.value for w in at.warning)
+    assert any("Resolveré yo el CAPTCHA" in i.value for i in at.info)
+    at.selectbox(key="w:extraction.method").select("browser").run()
+    assert "Resolveré yo el CAPTCHA si aparece (abre el navegador visible)" in [c.label for c in at.checkbox]
+
+
+def test_captcha_in_diagnosis_only_mode_blocks_extraction(fixture_env, monkeypatch):
+    monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
+    at = _app().run()
+    option = next(o for o in at.selectbox(key="example_choice").options if o.startswith("f09"))
+    at.selectbox(key="example_choice").select(option)
+    _button(at, "Cargar").click().run()
+    at.radio(key="mode").set_value("diagnostico").run()
+    _button(at, "Diagnosticar sitio").click().run()
+    assert not at.exception
+    assert not any("Resolveré yo el CAPTCHA" in i.value for i in at.info)
     assert "Iniciar extracción" not in _labels(at) and "Vista previa" not in _labels(at)

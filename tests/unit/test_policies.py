@@ -70,7 +70,7 @@ class TestBarriers:
 
     def test_next_step_is_legitimate(self):
         step = detect_barrier(200, {}, "g-recaptcha").next_step
-        assert "No resolver ni evadir" in step
+        assert "no resuelve ni evade" in step
 
 
 class TestRobots:

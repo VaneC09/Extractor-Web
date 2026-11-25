@@ -70,9 +70,11 @@ SIMPLE_WIDGETS = [
     "extraction.pagination.page_param", "extraction.pagination.start_page", "extraction.pagination.next_field",
     "extraction.browser.wait_selector", "extraction.browser.load_more_selector",
     "extraction.browser.infinite_scroll", "extraction.browser.wait_timeout_seconds",
+    "extraction.browser.human_verification",
     "extraction.api.documented", "extraction.api.documentation_url",
     "auth.type", "auth.login_url", "auth.username_field", "auth.password_field",
     "auth.username_env", "auth.password_env", "auth.failure_text",
+    "auth.ask_verification_code", "auth.verification_code_field",
     "auth.header_name", "auth.header_prefix", "auth.token_env", "output.formats",
 ]
 DEFAULTS_UA = default_config_dict("https://www.example.org/")["user_agent"]
@@ -89,11 +91,12 @@ DEFAULTS["extraction"].update({
     "pagination": {"mode": "none", "next_selector": None, "url_template": None, "page_param": "page",
                    "start_page": 1, "next_field": None},
     "browser": {"wait_selector": None, "load_more_selector": None, "infinite_scroll": False,
-                "wait_timeout_seconds": 10.0},
+                "wait_timeout_seconds": 10.0, "human_verification": False},
     "api": {"documented": False, "documentation_url": None},
 })
 DEFAULTS["auth"].update({"login_url": None, "username_field": "username", "password_field": "password",
                          "username_env": None, "password_env": None, "failure_text": None,
+                         "ask_verification_code": False, "verification_code_field": None,
                          "header_name": "Authorization", "header_prefix": "Bearer ", "token_env": None})
 
 
@@ -335,9 +338,16 @@ def cb_reset() -> None:
 
 
 # --------------------------------------------------------------------------------- vistas
+HUMAN_BARRIERS = {"auth_required", "captcha", "bot_challenge"}
+
+
 def only_login_barrier(diagnosis) -> bool:
-    """Un 401/inicio de sesión no impide seguir si el propietario dio credenciales; CAPTCHA o bloqueos sí."""
-    return bool(diagnosis.incidents) and all(i.kind == "auth_required" for i in diagnosis.incidents)
+    """Un inicio de sesión o un CAPTCHA no impiden seguir si una persona autorizada interviene; bloqueos sí."""
+    return bool(diagnosis.incidents) and all(i.kind in HUMAN_BARRIERS for i in diagnosis.incidents)
+
+
+def captcha_detected(diagnosis) -> bool:
+    return diagnosis is not None and any(i.kind in ("captcha", "bot_challenge") for i in diagnosis.incidents)
 
 
 def login_detected(diagnosis) -> bool:
@@ -474,6 +484,8 @@ def step_diagnosis(cfg: ProjectConfig):
             show_incident(incident, diagnosis.files.get("intervention"))
         if login_detected(diagnosis) and not any(i.kind == "auth_required" for i in diagnosis.incidents):
             st.info(AUTH_HINT, icon=":material/key:")
+        if captcha_detected(diagnosis) and not diagnosis_only():
+            st.info(HUMAN_HINT, icon=":material/touch_app:")
         best = diagnosis.best
         if best is not None and not diagnosis.stopped:
             st.success(f"**Estrategia recomendada: {METHODS.get(best.method, best.method)}** "
@@ -506,6 +518,9 @@ def show_incident(incident, recorded_in: str | None = None) -> None:
 
 AUTH_HINT = ("El sitio pide iniciar sesión. Solo continúe si el propietario le dio una cuenta o un token: "
              "configúrelo en el paso 5 («Acceso autorizado»). La herramienta no evade inicios de sesión.")
+HUMAN_HINT = ("Puede continuar **solo si usted mismo resuelve el CAPTCHA**: en el paso 5 elija la estrategia "
+              "**Navegador** y active «Resolveré yo el CAPTCHA». Se abrirá una ventana de Chrome; cuando lo "
+              "complete, la extracción sigue sola. La herramienta no lo resuelve ni lo envía a ningún servicio.")
 BASIC_FIELD_COLUMNS = {"html": ["usar", "name", "selector", "attribute", "type"],
                        "table": ["usar", "name", "column", "type"],
                        "path": ["usar", "name", "path", "type"]}
@@ -556,7 +571,10 @@ def step_fields(cfg: ProjectConfig) -> None:
                               placeholder="article.producto")
                 st.text_input("…o selector de una tabla", key=wkey("extraction.table_selector"), placeholder="table#datos")
         if st.button("Vista previa", type="primary", disabled=cfg.extraction.method == "auto"):
-            with st.spinner("Obteniendo una página…"):
+            waiting = ("Obteniendo una página… si aparece un CAPTCHA, resuélvalo en la ventana del navegador "
+                       "(máx. 5 min)" if cfg.extraction.method == "browser"
+                       and cfg.extraction.browser.human_verification else "Obteniendo una página…")
+            with st.spinner(waiting):
                 try:
                     st.session_state["preview"] = ExtractionEngine(cfg).preview(max_records=10)
                 except WebExtractorError as exc:
@@ -603,6 +621,11 @@ def step_config(cfg: ProjectConfig, errors: list[str]) -> None:
                 st.text_input("Botón «cargar más» (opcional)", key=wkey("extraction.browser.load_more_selector"),
                               placeholder="#load-more")
                 st.checkbox("La página carga más al hacer scroll", key=wkey("extraction.browser.infinite_scroll"))
+                st.checkbox("Resolveré yo el CAPTCHA si aparece (abre el navegador visible)",
+                            key=wkey("extraction.browser.human_verification"),
+                            help="La herramienta se pausa hasta 5 min y continúa cuando usted completa la "
+                                 "verificación en la ventana. No lo resuelve ni lo envía a servicios externos; "
+                                 "si se repite más de 3 veces, se detiene.")
             if method == "api":
                 st.checkbox("La API es pública y está documentada por el propietario", key=wkey("extraction.api.documented"))
                 st.text_input("Enlace a la documentación", key=wkey("extraction.api.documentation_url"))
@@ -646,6 +669,16 @@ def show_auth() -> None:
             c1.text_input("Nombre del campo de usuario en el formulario", key=wkey("auth.username_field"),
                           help="Atributo name del campo: username, email, user…")
             c2.text_input("Nombre del campo de contraseña", key=wkey("auth.password_field"))
+            st.caption("Si el sitio pide primero el usuario o correo y la contraseña en otra pantalla, se "
+                       "envían en dos pasos automáticamente.")
+            st.checkbox("Pedirme el código de verificación (SMS, correo o app) si el sitio lo solicita",
+                        key=wkey("auth.ask_verification_code"),
+                        help="Durante la extracción aparecerá un cuadro para que usted, titular de la cuenta, "
+                             "escriba el código. La herramienta no lee SMS ni correos ni genera códigos. "
+                             "Si está desactivado y el sitio pide código, se detiene y registra la incidencia.")
+            if st.session_state.get(wkey("auth.ask_verification_code")):
+                st.caption("El código solo se puede escribir con **Iniciar extracción** (la vista previa se "
+                           "detiene). Tiene 5 minutos.")
             names = [wkey("auth.username_env"), wkey("auth.password_env")]
         elif kind == "header":
             c1, c2 = st.columns(2)
@@ -692,6 +725,15 @@ def job_panel() -> None:
         top[0].markdown(f"**Extrayendo…** {job.elapsed:.0f} s · {counters['solicitudes']} solicitudes · "
                         f"{counters['paginas']} páginas · {counters['registros']} registros")
         top[1].button("Cancelar", on_click=job.request_cancel, width="stretch")
+    if job.running and job.human_request:
+        st.warning(f"**Intervención humana:** {job.human_request}.", icon=":material/touch_app:")
+    if job.running and job.code_request:
+        with st.form("verification_code", clear_on_submit=True):
+            st.warning(f"**Intervención humana:** {job.code_request}. Tiene 5 minutos; no se guarda.",
+                       icon=":material/sms:")
+            code = st.text_input("Código de verificación", type="password", key="verification_code_value")
+            if st.form_submit_button("Enviar código", type="primary") and code.strip():
+                job.provide_code(code.strip())
     if job.error:
         st.error(job.error)
     if not job.running and not st.session_state.get("job_reported") is job:

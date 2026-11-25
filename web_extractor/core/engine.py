@@ -77,8 +77,12 @@ TECHNICAL_ERRORS = (HTTPStatusError, TransientHTTPError, ExtractionError, Browse
 class ExtractionEngine:
     def __init__(self, cfg: ProjectConfig, *, cancel: CancelToken | None = None,
                  logger: logging.Logger | None = None,
-                 on_action: Callable[[ActionEntry], None] | None = None) -> None:
+                 on_action: Callable[[ActionEntry], None] | None = None,
+                 code_provider: Callable[[str], str | None] | None = None,
+                 human_notice: Callable[[str | None], None] | None = None) -> None:
         self.cfg = cfg
+        self.code_provider = code_provider
+        self.human_notice = human_notice
         self.output_dir = Path(cfg.output.directory)
         self.cancel = cancel or CancelToken(self.output_dir / cfg.output.stop_file)
         self.logger = logger or get_logger("engine")
@@ -100,6 +104,8 @@ class ExtractionEngine:
         actions = ActionLog(self.logger, self.on_action)
         incidents = IncidentLog(self.logger)
         client = PoliteHttpClient(self.cfg, budget, rate, self.cancel, actions, self.logger)
+        client.code_provider = self.code_provider
+        client.human_notice = self.human_notice
         return AcquisitionContext(self.cfg, client, budget, rate, self.cancel, actions, incidents, self.logger)
 
     @staticmethod

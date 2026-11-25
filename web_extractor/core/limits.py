@@ -11,8 +11,10 @@ from __future__ import annotations
 
 import threading
 import time
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Iterator
 
 from web_extractor.core.errors import Cancelled, LimitReached
 
@@ -64,6 +66,7 @@ class Budget:
         self.limits = limits
         self.cancel = cancel
         self.started = time.monotonic()
+        self.paused = 0.0
         self.requests = 0
         self.pages = 0
         self.records = 0
@@ -72,7 +75,16 @@ class Budget:
 
     @property
     def elapsed(self) -> float:
-        return time.monotonic() - self.started
+        return time.monotonic() - self.started - self.paused
+
+    @contextmanager
+    def pause(self) -> Iterator[None]:
+        """El tiempo que una persona tarda en intervenir no cuenta para ``max_seconds``."""
+        start = time.monotonic()
+        try:
+            yield
+        finally:
+            self.paused += time.monotonic() - start
 
     def check(self) -> None:
         self.cancel.raise_if_cancelled()

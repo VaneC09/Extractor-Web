@@ -13,8 +13,9 @@ from dataclasses import dataclass
 from typing import Mapping
 
 NEXT_STEPS = {
-    "captcha": "Solicitar al propietario del sitio una vía autorizada (API, exportación o permiso "
-    "explícito). No resolver ni evadir el CAPTCHA.",
+    "captcha": "La herramienta no resuelve ni evade el CAPTCHA. Con autorización, use la estrategia Navegador "
+    "con «Resolveré yo el CAPTCHA»: usted lo resuelve en la ventana visible y la extracción continúa. Si no, "
+    "solicite al propietario una vía autorizada (API, exportación o permiso explícito).",
     "rate_limit": "Detener y reducir frecuencia; consultar con el propietario los límites admitidos "
     "antes de volver a intentar en otro momento.",
     "overload": "Detener: el servidor indica sobrecarga o mantenimiento. Reintentar más tarde solo con "
@@ -23,10 +24,13 @@ NEXT_STEPS = {
     "autorizado para esta finalidad.",
     "auth_required": "Detener: se requiere autenticación. Solo continuar si existe autorización "
     "expresa y credenciales proporcionadas por el usuario (auth.type=form).",
+    "mfa_required": "El sitio pide un código de verificación (SMS, correo o app). Solo el titular de la cuenta "
+    "puede escribirlo cuando la herramienta lo pida; no se obtiene ni se genera automáticamente.",
     "paywall": "Detener: contenido de pago o suscripción. No eludir; obtener licencia o acceso "
     "autorizado.",
-    "bot_challenge": "Detener: desafío anti-bot detectado. No evadir; usar una API o descarga oficial "
-    "documentada por el propietario, o solicitar acceso autorizado.",
+    "bot_challenge": "Desafío anti-bot detectado; no se evade. Con autorización, use la estrategia Navegador con "
+    "«Resolveré yo el CAPTCHA» para completarlo usted en la ventana visible; si no, use una API o descarga "
+    "oficial documentada por el propietario, o solicite acceso autorizado.",
     "tls_error": "Detener: el certificado TLS no es válido para este dominio. No se desactiva la verificación; "
     "usar la dirección oficial con certificado válido (p. ej. la variante con o sin 'www', si el propietario "
     "la publica) o avisar al propietario.",

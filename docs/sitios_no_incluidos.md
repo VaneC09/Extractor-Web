@@ -42,7 +42,7 @@ qué se validó y qué no.
 | robots.txt 5xx o sin respuesta | Asume prohibición total | `robots_disallow` «estado 500» | Reintentar más tarde o pedir permiso | Sesión simulada |
 | robots.txt prohíbe la ruta | No solicita la ruta | `detenido_politica` | Pedir permiso o una vía alternativa | Fixture local (T11) |
 | 403 con «Just a moment… / cf-chl» | Se detiene después de 1 solicitud | `bot_challenge` | Pedir acceso autorizado; no evadir | Sesión simulada + fixture local |
-| CAPTCHA (reCAPTCHA, hCaptcha, Turnstile) | Se detiene después de 1 solicitud | `captcha` | Pedir una vía autorizada (API, exportación) | Sesión simulada + T09 |
+| CAPTCHA (reCAPTCHA, hCaptcha, Turnstile) | Se detiene después de 1 solicitud; con Navegador y «Resolveré yo el CAPTCHA», espera a que usted lo resuelva | `captcha` | Resolverlo usted en la ventana visible o pedir una vía autorizada (API, exportación) | Sesión simulada + T09 + `test_human_captcha.py` |
 | 429 / 503 | Se detiene sin reintentar | `rate_limit` / `overload` | Reducir la frecuencia y consultar los límites | Sesión simulada + T10 |
 | 401 o formulario de contraseña inesperado | Se detiene | `auth_required` | Solo continuar con `auth.type=form` (Requests o navegador) o, en una API documentada, `auth.type=header` con un token emitido por el propietario | Sesión simulada + T08, T19, T20 |
 | Página en ISO-8859-1 sin `charset` en la cabecera | Lee `<meta charset>`; si no lo hay, prueba UTF-8 y luego windows-1252 | — | — | Sesión simulada + fixture local (T17) |
