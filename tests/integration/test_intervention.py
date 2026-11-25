@@ -24,7 +24,8 @@ def test_guides_say_when_extraction_can_continue():
     auth = guide_for("auth_required")
     assert auth["can_continue"] == "si_con_credenciales" and "token" in auth["answer"]
     steps = " ".join(auth["steps"])
-    assert "Acceso autorizado" in steps and "$env:" in steps and "nunca en la configuración" in steps
+    assert "Acceso autorizado" in steps and "$env:" in steps and "Escribirlos aquí" in steps
+    assert "Nunca en la configuración" in steps
     assert guide_for("captcha")["can_continue"] == "con_persona_captcha"
     assert guide_for("access_denied")["can_continue"] == "no"
     assert "no lo envía a servicios de resolución" in guide_for("captcha")["steps"][0]

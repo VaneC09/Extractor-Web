@@ -203,7 +203,10 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
 
 1. Confirme con el propietario que la cuenta o el token le autoriza a extraer esos datos con esa
    finalidad, y anote la evidencia (correo, contrato) en «Permiso o licencia de uso».
-2. Defina las credenciales como variables de entorno **en la misma terminal** desde la que abre la
+2. **Interfaz (lo más simple):** en «Acceso autorizado» elija «Escribirlos aquí» y escriba el usuario
+   o correo y la contraseña. Solo quedan en la memoria de la sesión: no se escriben en la configuración,
+   los logs ni los informes, se ocultan en toda salida y se borran con «Analizar otra URL».
+   **Alternativa (y CLI):** variables de entorno **en la misma terminal** desde la que abre la
    herramienta. Nunca las escriba en la configuración, en capturas ni en archivos de ejemplo:
 
    ```powershell
@@ -212,8 +215,12 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
    ```
 
 3. En «Configuración y ejecución de la extracción» abra «Acceso autorizado»:
-   - **Usuario y contraseña:** página de inicio de sesión, los nombres de las variables
-     (`WE_USUARIO`, `WE_CLAVE`) y el nombre de los campos del formulario (`username`, `email`…).
+   - **Usuario y contraseña:** página de inicio de sesión, las credenciales (o los nombres de las
+     variables `WE_USUARIO`, `WE_CLAVE`) y el nombre de los campos del formulario (`username`, `email`…).
+     Si la página de inicio de sesión está en otra carpeta del mismo sitio (por ejemplo `/login/` y los
+     datos en `/my/`), se agrega sola al alcance.
+   - Empiece con la URL de la página que tiene los datos: el diagnóstico detecta que redirige al inicio
+     de sesión y ofrece este acceso.
    - **Token o API key documentado:** encabezado (por ejemplo `Authorization`) y la variable (`WE_TOKEN`).
 
    Junto a cada nombre aparece ✓ si la variable está definida. En la CLI se usa la sección `auth`

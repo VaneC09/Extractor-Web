@@ -169,7 +169,7 @@ class SeleniumSession:
         from selenium.webdriver.common.by import By
 
         ctx = self.ctx
-        username, password = read_credentials(auth)
+        username, password = read_credentials(auth, ctx.client.credentials)
         self.navigate(auth.login_url, "formulario de acceso autorizado", auth_expected=True)
         user_input = self.driver.find_elements(By.NAME, auth.username_field)
         pass_input = self.driver.find_elements(By.NAME, auth.password_field)

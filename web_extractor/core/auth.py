@@ -44,7 +44,16 @@ def prepare_auth(client: PoliteHttpClient, auth: AuthConfig) -> None:
         apply_header_auth(client, auth)
 
 
-def read_credentials(auth: AuthConfig) -> tuple[str, str]:
+def read_credentials(auth: AuthConfig, provided: tuple[str, str] | None = None) -> tuple[str, str]:
+    """Credenciales de variables de entorno o, si ``credentials_source=interface``, las escritas en la interfaz."""
+    if auth.credentials_source == "interface":
+        username, password = provided or ("", "")
+        if not username or not password:
+            raise AuthFailed("Escriba el usuario y la contraseña en «Acceso autorizado» de la interfaz "
+                             "(no se guardan en ningún archivo).")
+        SECRETS.register(username)
+        SECRETS.register(password)
+        return username, password
     username = os.environ.get(auth.username_env or "", "")
     password = os.environ.get(auth.password_env or "", "")
     if not username or not password:
@@ -129,7 +138,7 @@ def _rejected(result, auth: AuthConfig, field_name: str) -> bool:
 def form_login(client: PoliteHttpClient, auth: AuthConfig) -> None:
     """Formulario de acceso en una o dos pantallas (usuario y luego contraseña) y código 2FA opcional."""
     assert auth.login_url
-    username, password = read_credentials(auth)
+    username, password = read_credentials(auth, client.credentials)
     page = client.get(auth.login_url, purpose="formulario de acceso autorizado", auth_expected=True)
     soup = BeautifulSoup(page.text, "html.parser")
     form = _form_with(soup, auth.password_field)

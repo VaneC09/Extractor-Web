@@ -243,13 +243,15 @@ class ExtractionConfig(StrictModel):
 class AuthConfig(StrictModel):
     """Autenticación solo con autorización expresa y credenciales del usuario.
 
-    - ``form``: formulario de acceso (HTTP o navegador); usuario y contraseña en variables de entorno.
+    - ``form``: formulario de acceso (HTTP o navegador); usuario y contraseña en variables de entorno
+      o, con ``credentials_source: interface``, escritos en la interfaz (solo en memoria, nunca en archivos).
     - ``header``: clave o token de una API/archivo documentado, enviado en un encabezado; el valor
       vive en una variable de entorno y nunca en la configuración.
     """
 
     type: Literal["none", "form", "header"] = "none"
     login_url: str | None = None
+    credentials_source: Literal["env", "interface"] = "env"
     username_field: str = "username"
     password_field: str = "password"
     username_env: str | None = Field(None, pattern=r"^[A-Z_][A-Z0-9_]*$")
@@ -264,8 +266,10 @@ class AuthConfig(StrictModel):
 
     @model_validator(mode="after")
     def _requirements(self) -> "AuthConfig":
-        if self.type == "form" and not (self.login_url and self.username_env and self.password_env):
-            raise ValueError("auth.type=form requiere login_url, username_env y password_env")
+        if self.type == "form" and not self.login_url:
+            raise ValueError("auth.type=form requiere login_url (página de inicio de sesión)")
+        if self.type == "form" and self.credentials_source == "env" and not (self.username_env and self.password_env):
+            raise ValueError("auth.type=form requiere username_env y password_env (variables con usuario y contraseña)")
         if self.type == "header" and not self.token_env:
             raise ValueError("auth.type=header requiere token_env (nombre de la variable de entorno con el token)")
         if self.type == "header" and self.header_name.lower() in ("cookie", "host", "user-agent"):

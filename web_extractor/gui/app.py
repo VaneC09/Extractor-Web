@@ -72,7 +72,7 @@ SIMPLE_WIDGETS = [
     "extraction.browser.infinite_scroll", "extraction.browser.wait_timeout_seconds",
     "extraction.browser.human_verification",
     "extraction.api.documented", "extraction.api.documentation_url",
-    "auth.type", "auth.login_url", "auth.username_field", "auth.password_field",
+    "auth.type", "auth.login_url", "auth.credentials_source", "auth.username_field", "auth.password_field",
     "auth.username_env", "auth.password_env", "auth.failure_text",
     "auth.ask_verification_code", "auth.verification_code_field",
     "auth.header_name", "auth.header_prefix", "auth.token_env", "output.formats",
@@ -94,7 +94,7 @@ DEFAULTS["extraction"].update({
                 "wait_timeout_seconds": 10.0, "human_verification": False},
     "api": {"documented": False, "documentation_url": None},
 })
-DEFAULTS["auth"].update({"login_url": None, "username_field": "username", "password_field": "password",
+DEFAULTS["auth"].update({"login_url": None, "credentials_source": "interface", "username_field": "username", "password_field": "password",
                          "username_env": None, "password_env": None, "failure_text": None,
                          "ask_verification_code": False, "verification_code_field": None,
                          "header_name": "Authorization", "header_prefix": "Bearer ", "token_env": None})
@@ -135,6 +135,8 @@ def wkey(path: str) -> str:
 def load_into_state(data: dict) -> None:
     """Vuelca un diccionario de configuración en los widgets. Solo llamar desde callbacks."""
     merged = deep_merge(DEFAULTS, data)
+    if merged["auth"].get("type") == "none":
+        merged["auth"]["credentials_source"] = "interface"
     for path in SIMPLE_WIDGETS:
         value = get_path(merged, path)
         if path == "authorization.valid_until" and isinstance(value, str):
@@ -195,16 +197,31 @@ def diagnosis_only() -> bool:
     return st.session_state.get("mode") == "diagnostico"
 
 
+def include_login_path(data: dict) -> None:
+    """La página de inicio de sesión del mismo sitio entra en el alcance aunque esté en otra ruta (/login/)."""
+    login = data["auth"].get("login_url") if data["auth"]["type"] == "form" else None
+    prefixes = data["scope"].get("allowed_path_prefixes") or []
+    if not login or not prefixes:
+        return
+    parts = urlsplit(login)
+    if parts.hostname and parts.hostname.lower() in [d.lower() for d in data["scope"].get("allowed_domains") or []]:
+        folder = parts.path.rsplit("/", 1)[0] + "/"
+        if not any(parts.path.startswith(p) for p in prefixes):
+            data["scope"]["allowed_path_prefixes"] = [*prefixes, folder]
+
+
 def derive_limits(data: dict) -> None:
     """La interfaz solo pide páginas, registros y pausa; el resto de topes se deriva de ellos."""
     lim = data["limits"]
     pages = int(lim.get("max_pages") or 1)
     delay = float(lim.get("delay_seconds") or 1.0)
-    lim["max_requests"] = pages + 3
+    # El inicio de sesión usa hasta 5 solicitudes más: formulario, envíos (1 o 2 pasos, código) y redirecciones.
+    lim["max_requests"] = pages + 3 + (5 if data["auth"]["type"] == "form" else 0)
     lim["max_clicks"] = lim["max_scrolls"] = max(pages - 1, 0)
     lim["max_seconds"] = float(min(3600, pages * (delay + float(lim.get("timeout_seconds") or 20)) + 60))
     if data["auth"]["type"] != "none":
         data["authorization"]["allow_authentication"] = True
+    include_login_path(data)
     data["authorization"]["terms_reviewed"] = bool(data["authorization"].get("confirmed"))
 
 
@@ -229,13 +246,28 @@ def validate(data: dict) -> tuple[ProjectConfig | None, list[str]]:
 
 
 FRIENDLY_ERRORS = [
-    ("auth.type=form requiere", "**Acceso autorizado:** falta la página de inicio de sesión o el nombre de las "
-                                "variables de entorno con el usuario y la contraseña (por ejemplo WE_USUARIO y WE_CLAVE)."),
+    ("requiere login_url", "**Acceso autorizado:** falta la página de inicio de sesión."),
+    ("requiere username_env", "**Acceso autorizado:** falta el nombre de las variables de entorno con el usuario y "
+                              "la contraseña (por ejemplo WE_USUARIO y WE_CLAVE)."),
     ("auth.type=header requiere", "**Acceso autorizado:** falta el nombre de la variable de entorno con el token."),
     ("requiere record_selector o table_selector", "**Falta el selector de los registros.** Pulse «Usar los campos "
                                                   "sugeridos por el diagnóstico» o escríbalo en «¿No aparecen los "
                                                   "registros correctos? Cambiar el selector» (paso 4)."),
 ]
+
+
+def gui_credentials() -> tuple[str, str] | None:
+    """Usuario y contraseña escritos en la interfaz (solo en memoria), si se eligió esa opción."""
+    if st.session_state.get(wkey("auth.type")) != "form" or \
+            st.session_state.get(wkey("auth.credentials_source")) != "interface":
+        return None
+    user, password = st.session_state.get("cred_user") or "", st.session_state.get("cred_pass") or ""
+    return (user.strip(), password) if user.strip() and password else None
+
+
+def credentials_missing() -> bool:
+    return (st.session_state.get(wkey("auth.type")) == "form"
+            and st.session_state.get(wkey("auth.credentials_source")) == "interface" and gui_credentials() is None)
 
 
 def friendly(message: str) -> str:
@@ -355,7 +387,7 @@ def cb_start_job(cfg: ProjectConfig) -> None:
     current: ExtractionJob | None = st.session_state.get("job")
     if current and current.running:
         return
-    st.session_state["job"] = ExtractionJob(cfg).start()
+    st.session_state["job"] = ExtractionJob(cfg, credentials=gui_credentials()).start()
 
 
 def cb_reset() -> None:
@@ -600,13 +632,13 @@ def step_fields(cfg: ProjectConfig) -> None:
                 st.text_input("Selector de cada registro (CSS)", key=wkey("extraction.record_selector"),
                               placeholder="article.producto")
                 st.text_input("…o selector de una tabla", key=wkey("extraction.table_selector"), placeholder="table#datos")
-        if st.button("Vista previa", type="primary", disabled=cfg.extraction.method == "auto"):
+        if st.button("Vista previa", type="primary", disabled=cfg.extraction.method == "auto" or credentials_missing()):
             waiting = ("Obteniendo una página… si aparece un CAPTCHA, resuélvalo en la ventana del navegador "
                        "(máx. 5 min)" if cfg.extraction.method == "browser"
                        and cfg.extraction.browser.human_verification else "Obteniendo una página…")
             with st.spinner(waiting):
                 try:
-                    st.session_state["preview"] = ExtractionEngine(cfg).preview(max_records=10)
+                    st.session_state["preview"] = ExtractionEngine(cfg, credentials=gui_credentials()).preview(max_records=10)
                 except WebExtractorError as exc:
                     st.error(str(exc))
                 else:
@@ -677,7 +709,10 @@ def step_config(cfg: ProjectConfig, errors: list[str]) -> None:
             elif message.startswith("authorization.allow_authentication"):
                 st.warning("Confirme el acceso autorizado con cuenta o token.")
         running = bool(job and job.running)
-        st.button("Iniciar extracción", type="primary", disabled=running or cfg.extraction.method == "auto",
+        if credentials_missing():
+            st.warning("Escriba el usuario y la contraseña en «Acceso autorizado» para continuar.", icon=":material/key:")
+        st.button("Iniciar extracción", type="primary",
+                  disabled=running or cfg.extraction.method == "auto" or credentials_missing(),
                   on_click=cb_start_job, args=(cfg,))
         if job:
             job_panel()
@@ -688,14 +723,24 @@ def show_auth() -> None:
         st.selectbox("Tipo", ["none", "form", "header"], key=wkey("auth.type"),
                      format_func={"none": "Sin acceso con cuenta", "form": "Usuario y contraseña",
                                   "header": "Token o API key documentado"}.get)
-        st.caption("Las credenciales no se escriben aquí: indique el nombre de la variable de entorno que las contiene.")
         kind = st.session_state.get(wkey("auth.type"))
         names = []
         if kind == "form":
             st.text_input("Página de inicio de sesión", key=wkey("auth.login_url"))
+            st.radio("¿Cómo da el usuario y la contraseña?", ["interface", "env"], key=wkey("auth.credentials_source"),
+                     horizontal=True, format_func={"interface": "Escribirlos aquí",
+                                                   "env": "Variables de entorno"}.get)
             c1, c2 = st.columns(2)
-            c1.text_input("Variable con el usuario", key=wkey("auth.username_env"), placeholder="WE_USUARIO")
-            c2.text_input("Variable con la contraseña", key=wkey("auth.password_env"), placeholder="WE_CLAVE")
+            if st.session_state.get(wkey("auth.credentials_source")) == "env":
+                st.caption("Indique el nombre de las variables de entorno que contienen las credenciales.")
+                c1.text_input("Variable con el usuario", key=wkey("auth.username_env"), placeholder="WE_USUARIO")
+                c2.text_input("Variable con la contraseña", key=wkey("auth.password_env"), placeholder="WE_CLAVE")
+                names = [wkey("auth.username_env"), wkey("auth.password_env")]
+            else:
+                c1.text_input("Usuario o correo", key="cred_user", autocomplete="username")
+                c2.text_input("Contraseña", key="cred_pass", type="password", autocomplete="current-password")
+                st.caption("Solo se guardan en la memoria de esta sesión: no se escriben en la configuración, "
+                           "los logs ni los informes, y se borran con «Analizar otra URL».")
             c1.text_input("Nombre del campo de usuario en el formulario", key=wkey("auth.username_field"),
                           help="Atributo name del campo: username, email, user…")
             c2.text_input("Nombre del campo de contraseña", key=wkey("auth.password_field"))
@@ -709,7 +754,6 @@ def show_auth() -> None:
             if st.session_state.get(wkey("auth.ask_verification_code")):
                 st.caption("El código solo se puede escribir con **Iniciar extracción** (la vista previa se "
                            "detiene). Tiene 5 minutos.")
-            names = [wkey("auth.username_env"), wkey("auth.password_env")]
         elif kind == "header":
             c1, c2 = st.columns(2)
             c1.text_input("Encabezado", key=wkey("auth.header_name"))

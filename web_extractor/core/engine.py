@@ -79,8 +79,10 @@ class ExtractionEngine:
                  logger: logging.Logger | None = None,
                  on_action: Callable[[ActionEntry], None] | None = None,
                  code_provider: Callable[[str], str | None] | None = None,
-                 human_notice: Callable[[str | None], None] | None = None) -> None:
+                 human_notice: Callable[[str | None], None] | None = None,
+                 credentials: tuple[str, str] | None = None) -> None:
         self.cfg = cfg
+        self._credentials = credentials
         self.code_provider = code_provider
         self.human_notice = human_notice
         self.output_dir = Path(cfg.output.directory)
@@ -106,6 +108,7 @@ class ExtractionEngine:
         client = PoliteHttpClient(self.cfg, budget, rate, self.cancel, actions, self.logger)
         client.code_provider = self.code_provider
         client.human_notice = self.human_notice
+        client.credentials = self._credentials
         return AcquisitionContext(self.cfg, client, budget, rate, self.cancel, actions, incidents, self.logger)
 
     @staticmethod

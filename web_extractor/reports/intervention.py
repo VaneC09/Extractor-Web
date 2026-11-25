@@ -31,11 +31,12 @@ ANSWERS = {
 CREDENTIAL_STEPS = [
     "Confirme con el propietario del sitio que la cuenta o el token le autoriza a extraer estos datos con esta "
     "finalidad. Guarde esa evidencia (correo, contrato) y anótela en «Permiso o licencia de uso».",
-    "Guarde las credenciales en variables de entorno de la terminal desde la que abre la herramienta, nunca en la "
-    "configuración, en capturas ni en archivos de ejemplo. PowerShell: `$env:WE_USUARIO=\"…\"` y "
-    "`$env:WE_CLAVE=\"…\"`, o `$env:WE_TOKEN=\"…\"`; después `python -m web_extractor gui`.",
+    "Interfaz: escriba el usuario y la contraseña en «Acceso autorizado» → «Escribirlos aquí» (solo quedan en "
+    "la memoria de la sesión; nunca en archivos ni logs). Alternativa y CLI: variables de entorno en la terminal "
+    "desde la que abre la herramienta, por ejemplo `$env:WE_USUARIO=\"…\"` y `$env:WE_CLAVE=\"…\"`, o "
+    "`$env:WE_TOKEN=\"…\"`. Nunca en la configuración, en capturas ni en archivos de ejemplo.",
     "Interfaz: sección «Configuración y ejecución de la extracción» → «Acceso autorizado». Elija «Usuario y "
-    "contraseña» (página de inicio de sesión y nombres de las variables) o «Token o API key documentado» "
+    "contraseña» (página de inicio de sesión y credenciales) o «Token o API key documentado» "
     "(encabezado y nombre de la variable). CLI: sección `auth` del YAML (`type: form` o `type: header`).",
     "Pulse «Vista previa»: inicia sesión una sola vez. Si las credenciales se rechazan, se detiene sin reintentar "
     "(incidencia `auth_failed`).",

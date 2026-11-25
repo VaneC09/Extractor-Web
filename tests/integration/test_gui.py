@@ -158,11 +158,45 @@ def test_incomplete_login_keeps_steps_visible_and_explains_what_is_missing(serve
     assert not any("record_selector" in e.value for e in at.error)
     assert _button(at, "Vista previa").disabled and _button(at, "Iniciar extracción").disabled
     assert at.session_state["w:extraction.record_selector"] == "div.evento"
-    at.text_input(key="w:auth.login_url").input(f"{server.base_url}/nuevo/agenda")
-    at.text_input(key="w:auth.username_env").input("WE_USUARIO")
-    at.text_input(key="w:auth.password_env").input("WE_CLAVE").run()
+    at.text_input(key="w:auth.login_url").input(f"{server.base_url}/nuevo/agenda").run()
+    assert not at.error and any("Escriba el usuario y la contraseña" in w.value for w in at.warning)
+    assert _button(at, "Vista previa").disabled
+    at.text_input(key="cred_user").input("usuario_demo")
+    at.text_input(key="cred_pass").input("clave-de-prueba").run()
     assert not at.exception and not at.error
-    assert not _button(at, "Vista previa").disabled
+    assert not _button(at, "Vista previa").disabled and not _button(at, "Iniciar extracción").disabled
+    assert "clave-de-prueba" not in str(at.session_state["w:auth.login_url"])
+
+
+def test_login_page_in_other_folder_is_added_to_scope():
+    from web_extractor.gui.app import include_login_path
+
+    data = default_config_dict("https://cursos.example.edu/my/courses.php")
+    data["auth"].update({"type": "form", "login_url": "https://cursos.example.edu/login/index.php"})
+    include_login_path(data)
+    assert data["scope"]["allowed_path_prefixes"] == ["/my/", "/login/"]
+    other = default_config_dict("https://cursos.example.edu/my/courses.php")
+    other["auth"].update({"type": "form", "login_url": "https://otro.example.org/login"})
+    include_login_path(other)
+    assert other["scope"]["allowed_path_prefixes"] == ["/my/"]
+
+
+def test_credentials_typed_in_interface_log_in_without_being_saved(example, hits):
+    from pathlib import Path as _Path
+
+    from web_extractor.core.engine import ExtractionEngine
+    from web_extractor.devtools.fixture_server import DEFAULT_PASSWORD, DEFAULT_USER
+
+    cfg = example("f08_autenticacion_autorizada.yaml", auth={"credentials_source": "interface",
+                                                             "username_env": None, "password_env": None})
+    result = ExtractionEngine(cfg, credentials=(DEFAULT_USER, DEFAULT_PASSWORD)).run(confirmed=True)
+    assert result.status == "completado" and result.quality.exported == 5
+    for path in _Path(result.run_dir).rglob("*"):
+        if path.is_file():
+            assert DEFAULT_PASSWORD not in path.read_text(encoding="utf-8", errors="ignore"), path.name
+    missing = ExtractionEngine(cfg).run(confirmed=True)
+    assert missing.status == "fallido" and "Escriba el usuario y la contraseña" in missing.status_message
+    assert len(hits("POST /auth/login")) == 1
 
 
 def test_unchecked_fields_are_not_extracted(server):

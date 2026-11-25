@@ -57,6 +57,7 @@ class PoliteHttpClient:
         # Encabezados de autenticación autorizada: solo en solicitudes dentro del alcance, nunca a robots.txt.
         self.auth_headers: dict[str, str] = {}
         self.code_provider: Callable[[str], str | None] | None = None
+        self.credentials: tuple[str, str] | None = None
         self.human_notice: Callable[[str | None], None] | None = None
 
     def close(self) -> None:

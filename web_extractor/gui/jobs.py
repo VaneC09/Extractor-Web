@@ -28,6 +28,7 @@ class ExtractionJob:
     finished: float | None = None
     code_request: str | None = None
     human_request: str | None = None
+    credentials: tuple[str, str] | None = field(default=None, repr=False)
 
     def __post_init__(self) -> None:
         self._lock = threading.Lock()
@@ -41,7 +42,8 @@ class ExtractionJob:
     def _run(self) -> None:
         try:
             engine = ExtractionEngine(self.cfg, cancel=self.cancel, on_action=self._record,
-                                      code_provider=self._ask_code, human_notice=self._human_notice)
+                                      code_provider=self._ask_code, human_notice=self._human_notice,
+                                      credentials=self.credentials)
             self.result = engine.run(confirmed=True)
         except Exception as exc:  # se muestra en la interfaz; el motor ya registró el detalle
             self.error = f"{type(exc).__name__}: {exc}"
