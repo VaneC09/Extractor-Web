@@ -44,6 +44,14 @@ configuración (campos, método y límites) y solo hay que volver a confirmar la
 
 La página avanza de arriba hacia abajo; cada sección aparece cuando la anterior está lista.
 
+En **Autorización** se elige qué hacer:
+
+- **Extraer datos (tengo autorización):** pide quién autoriza, el permiso o licencia, la finalidad y la
+  confirmación.
+- **Solo diagnosticar (no tengo autorización para extraer):** para sitios que no le han dado permiso
+  (por ejemplo tiendas comerciales). Hace pocas solicitudes, respeta robots.txt e identifica las
+  tecnologías y protecciones; la extracción queda bloqueada. Ejemplo: [docs/evidencias/comerciales/](evidencias/comerciales/README.md).
+
 1. **Autorización**: tres listas desplegables que también aceptan un valor escrito (quién autoriza, el permiso o licencia de uso (lista desplegable con las licencias y permisos más comunes; por ejemplo un enlace, y la finalidad) y la
    casilla «Confirmo que tengo autorización y que revisé los términos de uso del sitio». Debajo se
    indica lo que falta. El dominio y la ruta permitidos se ajustan solos a la URL.
@@ -202,8 +210,8 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
    ```
 
 3. En «Configuración y ejecución de la extracción» abra «Acceso autorizado»:
-   - **Usuario y contraseña:** página de inicio de sesión y los nombres de las variables
-     (`WE_USUARIO`, `WE_CLAVE`).
+   - **Usuario y contraseña:** página de inicio de sesión, los nombres de las variables
+     (`WE_USUARIO`, `WE_CLAVE`) y el nombre de los campos del formulario (`username`, `email`…).
    - **Token o API key documentado:** encabezado (por ejemplo `Authorization`) y la variable (`WE_TOKEN`).
 
    Junto a cada nombre aparece ✓ si la variable está definida. En la CLI se usa la sección `auth`

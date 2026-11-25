@@ -159,14 +159,14 @@ comparar los dos `config_efectiva.json` muestra qué cambió.
 
 Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **20/20 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest` (Windows 11, 2026-11-21): **221 pruebas superadas, ninguna omitida**. Incluye:
+`python -m pytest` (Windows 11, 2026-11-21): **224 pruebas superadas, ninguna omitida**. Incluye:
 
 - 10 pruebas con navegador headless (ejecutadas con Edge; 3 de ellas con inicio de sesión).
 - 16 pruebas de `tests/unit/test_reto_final.py`: XML, Excel, indicios de JS/GraphQL/interacción/
   tiempo, exclusión de menús, sugerencia de campos, login opcional frente a muro, linaje por campo
   (`field_sources`) y selección de navegador.
-- 10 pruebas de la interfaz gráfica con `streamlit.testing` (bloqueo sin autorización, recuperación de la configuración de un sitio ya analizado, campos desmarcados, parada ante CAPTCHA y acceso con token).
-- 12 pruebas de `tests/integration/test_intervention.py`: pasos por tipo de barrera, registro central
+- 11 pruebas de la interfaz gráfica con `streamlit.testing` (modo solo diagnóstico, bloqueo sin autorización, recuperación de la configuración de un sitio ya analizado, campos desmarcados, parada ante CAPTCHA y acceso con token).
+- 14 pruebas de `tests/integration/test_intervention.py` (incluyen «Press & Hold» y redirecciones a muros de verificación): pasos por tipo de barrera, registro central
   `intervenciones.jsonl`, archivos y logs del diagnóstico, continuación de `run` con token autorizado y
   detección y parada ante CAPTCHA de rompecabezas o deslizador (sin confundirlo con un carrusel).
 - 15 pruebas de `tests/integration/test_rubrica.py`. Cubren la autenticación en el navegador, el

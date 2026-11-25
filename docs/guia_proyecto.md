@@ -73,7 +73,8 @@ Se abre el navegador en http://127.0.0.1:8611. Para una URL nueva:
 
 1. Escriba la URL en la pantalla inicial (por ejemplo `https://www.datos.gob.mx/dataset/`) y pulse
    **Comenzar**.
-2. En **Autorización**, elija de las listas desplegables (o escriba otro valor) quién autoriza, el permiso o licencia de uso (elíjalo de la lista desplegable o escriba otro, como un enlace)
+2. En **Autorización**, elija «Extraer datos» o «Solo diagnosticar» (para sitios sin permiso; no extrae).
+   Para extraer, elija de las listas desplegables (o escriba otro valor) quién autoriza, el permiso o licencia de uso (elíjalo de la lista desplegable o escriba otro, como un enlace)
    y la finalidad, y marque la confirmación. Debajo verá lo que falta.
 3. En **Diagnóstico del sitio**, pulse **Diagnosticar sitio**. Verá la estrategia recomendada, la
    confianza, las tecnologías y mecanismos detectados y las barreras con su siguiente paso.
@@ -165,7 +166,7 @@ pulsa «Vista previa» y luego «Iniciar extracción». El detalle completo est�
 ### 2.7 Ejecutar las pruebas
 
 ```powershell
-python -m pytest                    # 221 pruebas unitarias y de integración
+python -m pytest                    # 224 pruebas unitarias y de integración
 python -m web_extractor matrix      # 20 escenarios con el sitio de pruebas local
 ```
 
@@ -410,7 +411,7 @@ probados; se demuestran con el sitio de pruebas local.
 | Dataset SQLite, CSV y Excel | `docs/evidencias/reales/dataset_reales.sqlite` y `.xlsx`; CSV por sitio |
 | Informe técnico | `docs/informe_tecnico.md` |
 | Video de 3 a 5 minutos | Guion en `docs/guion_demo.md` (la grabación la hace el equipo) |
-| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (221 + matriz de 20) |
+| Requisitos no funcionales | Seguridad (sin secretos, alcance, robots), límites, cancelación y pruebas (224 + matriz de 20) |
 | Plan en 5 fases | `docs/plan_fases.md` |
 
 ## 6. Límites éticos y legales que aplica el sistema

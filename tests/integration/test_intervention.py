@@ -69,6 +69,24 @@ def test_puzzle_and_slider_captchas_are_detected(html):
     assert detect_barrier(403, {}, html).kind == "captcha"
 
 
+def test_press_and_hold_is_a_captcha():
+    assert detect_barrier(200, {}, "<p>Press &amp; Hold to confirm you are a human</p>").kind == "captcha"
+    assert detect_barrier(200, {}, "<p>Mantén presionado el botón</p>").kind == "captcha"
+
+
+def test_redirect_to_a_verification_wall_is_a_barrier():
+    from web_extractor.core.barriers import barrier_from_redirect
+
+    wall = barrier_from_redirect("https://www.tienda.example/captcha/wall/web-risk-verification?go_url=x")
+    assert wall.kind == "captcha" and "verificación humana o CAPTCHA" in wall.message
+    account = barrier_from_redirect("https://www.tienda.example/gz/account-verification?go=https%3A%2F%2Fx&tid=1")
+    assert account.kind == "captcha"
+    assert barrier_from_redirect("https://x.example/cdn-cgi/challenge-platform/h/b").kind == "bot_challenge"
+    assert barrier_from_redirect("https://x.example/login?next=/datos").kind == "auth_required"
+    assert barrier_from_redirect("https://x.example/login?next=/datos", auth_expected=True) is None
+    assert barrier_from_redirect("https://x.example/catalogo/pagina-2") is None
+
+
 def test_carousel_text_is_not_a_captcha():
     assert detect_barrier(200, {}, "<div class='carrusel'>Desliza para ver más productos</div>") is None
 

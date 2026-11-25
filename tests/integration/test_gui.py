@@ -205,6 +205,25 @@ def test_token_example_round_trips_and_runs(fixture_env, monkeypatch):
     assert any(job.result.run_id in c.value for c in at.caption)
 
 
+def test_diagnosis_only_mode_never_offers_extraction(server):
+    at = _app().run()
+    at.text_input(key="start_url").input("datos.example.org/catalogo")
+    _button(at, "Comenzar").click().run()
+    at.radio(key="mode").set_value("diagnostico").run()
+    assert not at.exception
+    assert "Diagnosticar sitio" in _labels(at)  # sin marcar una autorización que no existe
+    assert not any(c.label.startswith("Confirmo") for c in at.checkbox)
+
+    _button(at, "Analizar otra URL").click().run()
+    at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
+    _button(at, "Comenzar").click().run()
+    at.radio(key="mode").set_value("diagnostico").run()
+    _button(at, "Diagnosticar sitio").click().run()
+    assert not at.exception and at.session_state["diagnosis"].findings
+    assert any("Extracción bloqueada" in i.value for i in at.info)
+    assert "Vista previa" not in _labels(at) and "Iniciar extracción" not in _labels(at)
+
+
 def test_captcha_stops_the_flow_with_next_step(fixture_env, monkeypatch):
     monkeypatch.setenv("WE_GUI_EXAMPLES_DIR", str(ROOT / "examples"))
     at = _app().run()

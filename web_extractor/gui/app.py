@@ -170,6 +170,9 @@ def collect() -> dict:
     data["extraction"]["deduplicate_on"] = [d for d in data["extraction"].get("deduplicate_on") or [] if d in names]
     data["version"] = 1
     data["output"]["directory"] = str(ROOT / "outputs")
+    if diagnosis_only():
+        data["authorization"].update(confirmed=False, authorized_by=DIAG_ONLY_BY, purpose=DIAG_ONLY_PURPOSE,
+                                     evidence_reference=None)
     derive_limits(data)
     auth_type = data["auth"]["type"]
     if auth_type == "none":
@@ -179,6 +182,14 @@ def collect() -> dict:
     else:
         data["auth"] = {k: data["auth"].get(k) for k in ("type", "header_name", "header_prefix", "token_env")}
     return data
+
+
+DIAG_ONLY_BY = "Nadie: solo diagnóstico pasivo, sin extracción"
+DIAG_ONLY_PURPOSE = "Identificar los mecanismos de protección del sitio sin extraer datos"
+
+
+def diagnosis_only() -> bool:
+    return st.session_state.get("mode") == "diagnostico"
 
 
 def derive_limits(data: dict) -> None:
@@ -423,7 +434,19 @@ def combo(container, label: str, path: str, options: list[str], placeholder: str
 
 def step_authorization(cfg: ProjectConfig | None, errors: list[str]) -> bool:
     missing = authorization_missing(cfg) if cfg else ["corregir la configuración"]
-    with section(2, "Autorización", done=not missing):
+    only = diagnosis_only()
+    with section(2, "Autorización", done=only or not missing):
+        st.radio("¿Qué quiere hacer?", ["extraer", "diagnostico"], key="mode", horizontal=True,
+                 format_func={"extraer": "Extraer datos (tengo autorización)",
+                              "diagnostico": "Solo diagnosticar (no tengo autorización para extraer)"}.get)
+        if only:
+            st.info("**Solo diagnóstico.** Se hacen pocas solicitudes, se respeta robots.txt y se identifican las "
+                    "tecnologías y protecciones del sitio (CAPTCHA, anti-bot, inicio de sesión…). **No se extraen "
+                    "datos.** Para extraer necesita autorización del propietario o una licencia.",
+                    icon=":material/policy:")
+            for message in errors:
+                st.error(message)
+            return cfg is not None
         st.caption("Solo se trabaja con sitios y datos cuyo uso esté permitido. Indique quién lo permite y para qué.")
         c1, c2 = st.columns(2)
         combo(c1, "¿Quién autoriza el uso?", "authorization.authorized_by", AUTHORIZERS)
@@ -618,8 +641,11 @@ def show_auth() -> None:
         if kind == "form":
             st.text_input("Página de inicio de sesión", key=wkey("auth.login_url"))
             c1, c2 = st.columns(2)
-            c1.text_input("Variable con el usuario", key=wkey("auth.username_env"))
-            c2.text_input("Variable con la contraseña", key=wkey("auth.password_env"))
+            c1.text_input("Variable con el usuario", key=wkey("auth.username_env"), placeholder="WE_USUARIO")
+            c2.text_input("Variable con la contraseña", key=wkey("auth.password_env"), placeholder="WE_CLAVE")
+            c1.text_input("Nombre del campo de usuario en el formulario", key=wkey("auth.username_field"),
+                          help="Atributo name del campo: username, email, user…")
+            c2.text_input("Nombre del campo de contraseña", key=wkey("auth.password_field"))
             names = [wkey("auth.username_env"), wkey("auth.password_env")]
         elif kind == "header":
             c1, c2 = st.columns(2)
@@ -728,6 +754,11 @@ def main() -> None:
     if not authorized or cfg is None:
         return
     diagnosis = step_diagnosis(cfg)
+    if diagnosis is not None and diagnosis_only():
+        st.info("**Extracción bloqueada: modo solo diagnóstico.** Para extraer datos de este sitio use una vía "
+                "autorizada por el propietario (API documentada, descarga oficial, licencia o permiso por escrito) "
+                "y elija «Extraer datos» en Autorización.", icon=":material/lock:")
+        return
     if diagnosis is None or (diagnosis.stopped and not only_login_barrier(diagnosis)):
         return
     step_fields(cfg)

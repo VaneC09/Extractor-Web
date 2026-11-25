@@ -43,9 +43,18 @@ _PUZZLE_CAPTCHA = re.compile(
     r"geetest|arkoselabs\.com|funcaptcha|slider[-_ ]?captcha|puzzle[-_ ]?captcha|"
     r"slide to (?:verify|complete|unlock)|complete the puzzle|drag the (?:slider|puzzle piece)|"
     r"desliza (?:para (?:verificar|completar)|la pieza)|arrastra (?:la pieza|el control deslizante)|"
-    r"completa(?:r)? el rompecabezas",
+    r"completa(?:r)? el rompecabezas|press (?:&|and|&amp;) hold|mant[eé]n presionado",
     re.I,
 )
+# Destinos de redirección que delatan una barrera aunque la página aún no se haya descargado.
+_REDIRECT_BARRIERS = [
+    ("captcha", re.compile(r"captcha|web-risk|human[-_]?verif|are[-_]?you[-_]?human|verify[-_]?human|"
+                           r"account[-_]?verification|verificacion[-_]?de[-_]?cuenta|"
+                           r"account[-_]?verification|verificacion[-_]?de[-_]?cuenta|"
+                           r"/blocked\b|/punish", re.I)),
+    ("bot_challenge", re.compile(r"/cdn-cgi/challenge|challenge-platform|/challenge\b|bot[-_]?detect", re.I)),
+    ("auth_required", re.compile(r"/(?:login|signin|sign-in|iniciar-sesion|ingresar|account/login|auth)\b", re.I)),
+]
 _BOT_CHALLENGE = re.compile(
     r"cf-browser-verification|cf-chl-|_cf_chl_opt|/cdn-cgi/challenge-platform/|<title>just a moment\.\.\.</title>|"
     r"checking your browser|attention required!|"
@@ -91,6 +100,18 @@ def _content_beyond_login(html: str) -> bool:
     suscriptores conserva su navegación y su contenido (decenas de enlaces).
     """
     return len(_LINK.findall(html)) >= OPTIONAL_LOGIN_MIN_LINKS
+
+
+def barrier_from_redirect(url: str, *, auth_expected: bool = False) -> Barrier | None:
+    """Una redirección hacia una verificación, desafío o inicio de sesión es una barrera: no se sigue."""
+    for kind, pattern in _REDIRECT_BARRIERS:
+        if kind == "auth_required" and auth_expected:
+            continue
+        if match := pattern.search(url):
+            label = {"captcha": "una verificación humana o CAPTCHA", "bot_challenge": "un desafío anti-bot",
+                     "auth_required": "un inicio de sesión"}[kind]
+            return Barrier(kind, f"La página redirige a {label}", f"destino: {url[:200]} ({match.group(0)})", None, url)
+    return None
 
 
 def detect_barrier(

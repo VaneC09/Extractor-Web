@@ -19,7 +19,7 @@ from urllib.parse import urljoin
 import requests
 
 from web_extractor.config.schema import ProjectConfig
-from web_extractor.core.barriers import Barrier, detect_barrier
+from web_extractor.core.barriers import Barrier, barrier_from_redirect, detect_barrier
 from web_extractor.core.errors import BarrierDetected, HTTPStatusError, ScopeError, TransientHTTPError
 from web_extractor.core.limits import Budget, CancelToken, RateLimiter
 from web_extractor.core.robots import RobotsPolicy
@@ -156,6 +156,9 @@ class PoliteHttpClient:
                 if redirects > MAX_REDIRECTS:
                     raise HTTPStatusError(status, url)
                 url = urljoin(url, response.headers["location"])
+                if barrier := barrier_from_redirect(url, auth_expected=auth_expected):
+                    self.actions.record("barrier_detected", url, f"redirección desde {original_url}: {barrier.kind}", "stop")
+                    raise BarrierDetected(barrier)
                 if status == 303 or (status in (301, 302) and method == "POST"):
                     method, data = "GET", None
                 continue
