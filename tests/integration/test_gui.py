@@ -145,6 +145,26 @@ def test_unseen_site_flow_uses_suggested_rules_and_pagination(server):
     assert at.session_state["fields_rows"] == kept  # el diagnóstico no pisa los campos recuperados
 
 
+def test_incomplete_login_keeps_steps_visible_and_explains_what_is_missing(server):
+    at = _app().run()
+    at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")
+    _button(at, "Comenzar").click().run()
+    _authorize(at)
+    _button(at, "Diagnosticar sitio").click().run()
+    at.session_state["w:auth.type"] = "form"
+    at.run()
+    assert not at.exception
+    assert any("falta la página de inicio de sesión" in e.value for e in at.error)
+    assert not any("record_selector" in e.value for e in at.error)
+    assert _button(at, "Vista previa").disabled and _button(at, "Iniciar extracción").disabled
+    assert at.session_state["w:extraction.record_selector"] == "div.evento"
+    at.text_input(key="w:auth.login_url").input(f"{server.base_url}/nuevo/agenda")
+    at.text_input(key="w:auth.username_env").input("WE_USUARIO")
+    at.text_input(key="w:auth.password_env").input("WE_CLAVE").run()
+    assert not at.exception and not at.error
+    assert not _button(at, "Vista previa").disabled
+
+
 def test_unchecked_fields_are_not_extracted(server):
     at = _app().run()
     at.text_input(key="start_url").input(f"{server.base_url}/nuevo/agenda")

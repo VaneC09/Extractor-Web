@@ -209,10 +209,37 @@ def derive_limits(data: dict) -> None:
 
 
 def validate(data: dict) -> tuple[ProjectConfig | None, list[str]]:
+    """Configuración completa o, si solo falta completar la extracción o el acceso, un borrador sin ellos.
+
+    El borrador (método «auto», sin acceso con cuenta) permite seguir viendo los pasos y diagnosticar
+    mientras se completan los datos; con él no se puede hacer vista previa ni extraer.
+    """
     try:
         return parse_config(data), []
     except ConfigError as exc:
-        return None, exc.messages
+        errors = exc.messages
+    draft = copy.deepcopy(data)
+    draft["auth"] = {"type": "none"}
+    draft["authorization"]["allow_authentication"] = False
+    draft["extraction"] = {"method": "auto", "fields": [{"name": "texto"}]}
+    try:
+        return parse_config(draft), errors
+    except ConfigError:
+        return None, errors
+
+
+FRIENDLY_ERRORS = [
+    ("auth.type=form requiere", "**Acceso autorizado:** falta la página de inicio de sesión o el nombre de las "
+                                "variables de entorno con el usuario y la contraseña (por ejemplo WE_USUARIO y WE_CLAVE)."),
+    ("auth.type=header requiere", "**Acceso autorizado:** falta el nombre de la variable de entorno con el token."),
+    ("requiere record_selector o table_selector", "**Falta el selector de los registros.** Pulse «Usar los campos "
+                                                  "sugeridos por el diagnóstico» o escríbalo en «¿No aparecen los "
+                                                  "registros correctos? Cambiar el selector» (paso 4)."),
+]
+
+
+def friendly(message: str) -> str:
+    return next((text for key, text in FRIENDLY_ERRORS if key in message), message)
 
 
 def example_catalog() -> dict[str, Path]:
@@ -531,7 +558,10 @@ def step_fields(cfg: ProjectConfig) -> None:
     with section(4, "Datos a extraer", done=bool(preview and preview.records)):
         st.caption("Marque los campos que necesita. Puede cambiar el nombre, el selector o el tipo, o añadir filas.")
         suggestion = st.session_state.get("suggestion")
-        if suggestion and fields_to_rows(suggestion["fields"]) != st.session_state.get("fields_rows"):
+        selectors_differ = suggestion and any(
+            (suggestion.get(key) or "") != (st.session_state.get(wkey(f"extraction.{key}")) or "")
+            for key in ("record_selector", "table_selector", "records_path"))
+        if suggestion and (selectors_differ or fields_to_rows(suggestion["fields"]) != st.session_state.get("fields_rows")):
             st.button(f"Usar los campos sugeridos por el diagnóstico ({len(suggestion['fields'])})", on_click=cb_apply_suggestion)
         method = st.session_state.get(wkey("extraction.method")) or "auto"
         kind = ("table" if st.session_state.get(wkey("extraction.table_selector"))
@@ -640,7 +670,7 @@ def step_config(cfg: ProjectConfig, errors: list[str]) -> None:
         if st.session_state.get(wkey("auth.type"), "none") != "none" or login_detected(st.session_state.get("diagnosis")):
             show_auth()
         for message in [e for e in errors if not e.startswith("authorization")]:
-            st.error(message)
+            st.error(friendly(message))
         for message in missing_for_extraction(cfg):
             if message.startswith("API "):
                 st.warning("Para usar la API marque que es pública y documentada e indique el enlace a su documentación.")
