@@ -91,6 +91,20 @@ def test_captcha_in_login_form_stops_over_http(example, fixture_env, hits):
     assert hits("POST /auth/con-captcha/login") == []
 
 
+def test_login_that_redirects_to_home_outside_scope(example, fixture_env, hits):
+    result = run(example("f08_autenticacion_autorizada.yaml",
+                         auth={"login_url": f"{fixture_env.base_url}/auth/moodle/login"}))
+    assert result.status == "completado" and result.quality.exported == 5
+    assert len(hits("POST /auth/moodle/login")) == 1 and "GET /" not in hits()
+
+
+@requires_browser
+def test_browser_login_that_redirects_to_home_outside_scope(example, fixture_env, hits):
+    result = run(example("f12_navegador_autenticado.yaml",
+                         auth={"login_url": f"{fixture_env.base_url}/auth/moodle/login"}))
+    assert result.status == "completado" and result.quality.exported == 5
+
+
 def test_gui_job_waits_for_the_code(example, fixture_env):
     job = ExtractionJob(two_step(example, fixture_env, "/auth/pasos-codigo", ask_verification_code=True)).start()
     deadline = time.monotonic() + 30

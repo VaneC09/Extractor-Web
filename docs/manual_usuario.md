@@ -218,7 +218,9 @@ persona. Los pasos se ven en pantalla (interfaz y CLI) y se guardan en disco.
    - **Usuario y contraseña:** página de inicio de sesión, las credenciales (o los nombres de las
      variables `WE_USUARIO`, `WE_CLAVE`) y el nombre de los campos del formulario (`username`, `email`…).
      Si la página de inicio de sesión está en otra carpeta del mismo sitio (por ejemplo `/login/` y los
-     datos en `/my/`), se agrega sola al alcance.
+     datos en `/my/`), se agrega sola al alcance. Si tras iniciar sesión el sitio redirige a otra ruta del
+     mismo dominio (por ejemplo la portada `/`, como Moodle), esa redirección no se sigue por HTTP y no se
+     extrae de ella: la sesión ya quedó iniciada y se continúa con la página de datos.
    - Empiece con la URL de la página que tiene los datos: el diagnóstico detecta que redirige al inicio
      de sesión y ofrece este acceso.
    - Pulse **«Diagnosticar con la sesión iniciada»**: inicia sesión una sola vez y analiza la página

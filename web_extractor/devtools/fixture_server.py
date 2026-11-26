@@ -13,6 +13,8 @@ Rutas dinámicas:
   ``/auth/pasos-codigo/login`` añade un código de verificación (``FIXTURE_MFA_CODE``, por defecto ``123456``)
   en ``/auth/pasos-codigo/verificar``, como el que llegaría por SMS o correo.
   ``/auth/con-captcha/login`` es un formulario de acceso con CAPTCHA.
+  ``/auth/moodle/login`` imita a Moodle: tras aceptar las credenciales pasa por ``?testsession=`` y
+  redirige a la portada ``/`` (fuera de las rutas del alcance de los ejemplos).
 - ``/api/v1/privado``: API documentada que exige ``Authorization: Bearer`` (``FIXTURE_API_TOKEN``).
 - ``/barrier/limite`` (429), ``/barrier/prohibido`` (403), ``/barrier/inestable`` (502 una vez).
 - ``/privado/...``: existe, pero robots.txt lo prohíbe; sirve para comprobar que no se solicita.
@@ -240,6 +242,13 @@ class FixtureHandler(BaseHTTPRequestHandler):
         prefix, _, step = path.rpartition("/")
         if prefix in TWO_STEP_PREFIXES and step == "login":
             return self._send(200, email_form(prefix))
+        if path == "/auth/moodle/login":
+            if "testsession" in query:
+                return self._send(303, "", headers={"Location": "/"})
+            return self._send(200, _page("Acceso", f"""<form method="post" action="/auth/moodle/login">
+<input type="hidden" name="logintoken" value="{secrets.token_hex(8)}">
+<label>Usuario <input name="username"></label><label>Contraseña <input type="password" name="password"></label>
+<button type="submit">Acceder</button></form>"""))
         if path == "/auth/con-captcha/login":
             return self._send(200, _page("Acceso", """<form method="post" action="/auth/con-captcha/login">
 <label>Usuario <input name="username"></label><label>Contraseña <input type="password" name="password"></label>
@@ -327,6 +336,14 @@ setTimeout(function () {{
                 return self._send(303, "", headers={"Location": "/auth/privado",
                                                     "Set-Cookie": f"fixture_session={session}; Path=/; HttpOnly"})
             return self._send(401, "<h1>Credenciales incorrectas</h1>")
+        if urlsplit(self.path).path == "/auth/moodle/login":
+            if form.get("username", [""])[0] != os.environ.get("FIXTURE_LOGIN_USER", DEFAULT_USER) or \
+                    form.get("password", [""])[0] != os.environ.get("FIXTURE_LOGIN_PASSWORD", DEFAULT_PASSWORD):
+                return self._send(200, "<h1>Datos erróneos</h1><form><input type='password' name='password'></form>")
+            session = secrets.token_hex(16)
+            self.sessions.add(session)
+            return self._send(303, "", headers={"Location": "/auth/moodle/login?testsession=1",
+                                                "Set-Cookie": f"fixture_session={session}; Path=/; HttpOnly"})
         prefix, _, step = urlsplit(self.path).path.rpartition("/")
         if prefix in TWO_STEP_PREFIXES:
             return self._two_step_post(prefix, step, form)

@@ -14,7 +14,7 @@ import codecs
 import logging
 import re
 from typing import Callable, Mapping
-from urllib.parse import urljoin
+from urllib.parse import urljoin, urlsplit
 
 import requests
 
@@ -83,13 +83,31 @@ class PoliteHttpClient:
         if self.cfg.scope.respect_robots_txt:
             self.robots.ensure_allowed(url)
 
+    def same_site_outside_paths(self, url: str) -> bool:
+        """Mismo dominio autorizado pero fuera de las rutas del alcance (p. ej. la portada tras iniciar sesión)."""
+        try:
+            check_in_scope(url, self.cfg.scope)
+            return False
+        except ScopeError:
+            parts = urlsplit(url)
+            return (parts.scheme in self.cfg.scope.allowed_schemes and (parts.hostname or "").lower()
+                    in [d.lower() for d in self.cfg.scope.allowed_domains])
+
+    def ensure_login_landing(self, url: str) -> None:
+        """Página a la que el sitio lleva tras iniciar sesión: se acepta si es del mismo dominio autorizado."""
+        if self.same_site_outside_paths(url):
+            self.actions.record("login", url, "página tras el inicio de sesión (mismo dominio, fuera de las rutas "
+                                "del alcance): no se extrae de ella", "ok")
+            return
+        self.ensure_allowed(url)
+
     def get(self, url: str, purpose: str, *, accept: str | None = None, auth_expected: bool = False) -> FetchedDocument:
         headers = {"Accept": accept} if accept else None
         return self._request("GET", url, purpose=purpose, headers=headers, auth_expected=auth_expected)
 
     def post_form(self, url: str, data: Mapping[str, str], purpose: str) -> FetchedDocument:
         return self._request("POST", url, purpose=purpose, data=dict(data), auth_expected=True,
-                             raise_for_status=False)
+                             raise_for_status=False, login_flow=True)
 
     def _request(
         self,
@@ -103,6 +121,7 @@ class PoliteHttpClient:
         auth_expected: bool = False,
         raise_for_status: bool = True,
         check_robots: bool = True,
+        login_flow: bool = False,
     ) -> FetchedDocument:
         limits = self.cfg.limits
         original_url = url
@@ -158,7 +177,15 @@ class PoliteHttpClient:
                 redirects += 1
                 if redirects > MAX_REDIRECTS:
                     raise HTTPStatusError(status, url)
-                url = urljoin(url, response.headers["location"])
+                next_url = urljoin(url, response.headers["location"])
+                if login_flow and self.same_site_outside_paths(next_url):
+                    # La sesión ya quedó en las cookies; no se pide la portada u otra ruta fuera del alcance.
+                    self.actions.record("login", next_url, "redirección tras el inicio de sesión no seguida "
+                                        "(mismo dominio, fuera de las rutas del alcance)", "ok")
+                    return FetchedDocument(url=original_url, final_url=url, status=status,
+                                           content_type=response.headers.get("content-type", "").lower(), text=text,
+                                           fetched_at=utc_now_iso(), headers={}, via="http", truncated=truncated)
+                url = next_url
                 if barrier := barrier_from_redirect(url, auth_expected=auth_expected):
                     self.actions.record("barrier_detected", url, f"redirección desde {original_url}: {barrier.kind}", "stop")
                     raise BarrierDetected(barrier)

@@ -190,7 +190,8 @@ class SeleniumSession:
                 raise AuthFailed("Tras enviar el usuario no apareció el campo de contraseña; no se reintenta.")
             ctx.actions.record("login", self.driver.current_url, "paso 1 de 2 aceptado: se pide la contraseña", "ok")
             self._submit(pass_field, {auth.password_field: password}, auth.password_field)
-        self.check_barrier(auth_expected=True)
+        if not ctx.client.same_site_outside_paths(self.driver.current_url):
+            self.check_barrier(auth_expected=True)
         code_field = find_code_field(self.driver.page_source, auth)
         if code_field:
             code = request_code(ctx.client, auth, self.driver.current_url)
@@ -202,9 +203,11 @@ class SeleniumSession:
         if self._rejected(auth.password_field):
             ctx.actions.record("login", self.driver.current_url, "credenciales rechazadas", "stop")
             raise AuthFailed("El inicio de sesión autorizado fue rechazado; no se reintenta.")
-        ctx.client.ensure_allowed(self.driver.current_url)
-        self.check_barrier()
-        ctx.actions.record("login", self.driver.current_url, "sesión iniciada en el navegador", "ok")
+        landing = self.driver.current_url
+        ctx.client.ensure_login_landing(landing)
+        if not ctx.client.same_site_outside_paths(landing):
+            self.check_barrier()
+        ctx.actions.record("login", landing, "sesión iniciada en el navegador", "ok")
 
     def navigate(self, url: str, purpose: str, *, auth_expected: bool = False) -> None:
         from selenium.common.exceptions import TimeoutException, WebDriverException

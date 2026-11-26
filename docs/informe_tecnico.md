@@ -160,12 +160,12 @@ comparar los dos `config_efectiva.json` muestra qué cambió.
 
 Ejecución de `python -m web_extractor matrix` el 2026-11-18 (UTC): **20/20 casos cumplen lo
 esperado**; detalle en [evidencias/matriz_resultados.md](evidencias/matriz_resultados.md).
-`python -m pytest` (Windows 11, 2026-11-25): **246 pruebas superadas, ninguna omitida**. Incluye:
+`python -m pytest` (Windows 11, 2026-11-25): **248 pruebas superadas, ninguna omitida**. Incluye:
 
 - 12 pruebas con navegador (Chrome o Edge): 4 con inicio de sesión (una en dos pantallas con código de
   verificación) y una con ventana visible que espera a la persona ante un CAPTCHA. En esa prueba la
   «persona» está simulada por el propio fixture, que muestra el contenido tras 1,5 s.
-- 10 pruebas de `tests/integration/test_two_step_login.py`: correo y contraseña en pantallas
+- 12 pruebas de `tests/integration/test_two_step_login.py` (incluye un login tipo Moodle que redirige a la portada, por HTTP y con navegador): correo y contraseña en pantallas
   separadas, usuario rechazado en el primer paso, código de verificación escrito por el titular, código
   incorrecto sin reintento, parada `mfa_required` sin código, espera del código en la interfaz,
   CAPTCHA en el formulario de acceso por HTTP y campo «código postal» que no se confunde con un código.
